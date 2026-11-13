@@ -1,509 +1,510 @@
-# Muggu Studio --- Product, Engineering & Play Store Launch Blueprint
+# Muggu Studio --- Product & Development Requirements
 
-**Document type:** Product requirements + technical implementation
-guide\
-**Product:** Muggu Studio --- Rangoli, Muggu & Kolam\
-**Platform:** Android first (Flutter)\
-**Initial languages:** Telugu, Tamil, English\
-**Business model:** Free with advertising + one-time Premium unlock\
-**Audience:** Indian home, leisure, cultural-art and creative users;
-international users interested in Rangoli/Kolam\
-**Status:** Ready for implementation planning\
-**Version:** 1.0
+**Document purpose:** Source of truth for product scope, UX,
+architecture, content, implementation rules and release acceptance.
 
-------------------------------------------------------------------------
+**Status:** Sprint 1 foundation implemented and verified on 13 November
+2026. Sprint 2 has not started.
 
-## 1. Executive summary
+**Working product name:** Muggu Studio\
+**Platform:** Android first\
+**Framework:** Flutter\
+**Initial languages:** English, Telugu and Tamil\
+**Business model:** Free with non-intrusive ads + optional one-time
+Premium unlock\
+**Development model:** Solo, AI-assisted, local-first
 
-Muggu Studio is an offline-first Android application for discovering,
-learning, practising and creating traditional Indian floor-art designs:
-Muggu, Rangoli and Kolam.
-
-It must not be just another static image gallery. The product combines:
-
-1.  A curated, searchable library of original designs.
-2.  Beginner-friendly, step-by-step drawing lessons.
-3.  A tracing/practice mode.
-4.  An interactive dot-grid and freehand creator.
-5.  Local saving, PNG export and Android sharing.
-6.  Telugu, Tamil and English user interfaces and localized design
-    metadata.
-
-The first release should be deliberately small, polished and reliable.
-It should not require user registration, a cloud backend, AI APIs,
-social networking or ongoing server costs.
-
-### Product promise
-
-**Browse beautiful designs. Learn every step. Create your own.**
-
-Suggested brand line:
-
--   Telugu: మన ముగ్గులు
--   Tamil: நம் கோலங்கள்
--   English: Our Traditions
-
-" M ug gu Studio" is a working product name only. Check trademark,
-domain and Google Play availability before publication.
+> This document describes the intended product. It does not claim that
+> planned features are already implemented. The separate Development Log
+> records verified implementation progress, commands, test results,
+> issues and environment-specific fixes.
 
 ------------------------------------------------------------------------
 
-## 2. Product goals and non-goals
+## 1. Product vision
 
-### 2.1 Goals
+Muggu Studio is a beginner-friendly creative and learning app for
+traditional Indian floor art. It helps people discover regional designs,
+understand how they are made, learn them step by step, practise tracing
+and create their own patterns.
 
--   Make traditional Muggu/Kolam patterns accessible to beginners and
-    regular practitioners.
--   Make it easy to find a design by category, difficulty, dot count or
-    language.
--   Teach the sequence of drawing, rather than showing only a finished
-    picture.
--   Let users practise by tracing a guide.
--   Let users create, save and share original patterns.
--   Work offline for the catalogue, lessons, favourites and creator.
--   Support Telugu, Tamil and English from the initial release.
--   Monetize without interrupting the creative experience.
--   Keep the app maintainable by one developer using Flutter and AI
-    coding assistance.
+The app must be understandable to people who do not know the word
+"Muggu".
 
-### 2.2 Non-goals for version 1
+### Brand positioning
 
-Do not build these in the first release:
+**Muggu Studio**\
+**Rangoli • Kolam • Muggu • Indian Floor Art**
 
--   User accounts or login.
--   Cloud synchronization or backup.
--   Community uploads, comments or social feeds.
--   AI image generation.
--   Subscription billing.
--   WhatsApp/Telegram bots.
--   A web dashboard.
--   A backend API or custom server.
--   Complex 3D room/floor visualization.
--   Video time-lapse export.
--   Unmoderated user-generated content.
+Suggested tagline: **Create. Learn. Preserve. Share.**
 
-These can be reconsidered only after usage data demonstrates demand.
+Suggested product promise:
 
-------------------------------------------------------------------------
+> Discover beautiful traditional floor-art designs, learn them step by
+> step, practise at your own pace and create your own patterns.
 
-## 3. Target users and use cases
+Keep Muggu Studio as the distinctive working brand. Use Rangoli, Kolam
+and Indian Floor Art prominently in onboarding, store listing,
+descriptions and discovery metadata. Do not rename the product solely to
+chase keywords.
 
-### Primary audience
+### Product principles
 
--   People who draw Muggu/Kolam/Rangoli at home.
--   Beginners who want simple instructions.
--   People looking for daily doorstep designs.
--   Festival users preparing Pongal, Sankranti, Diwali and other
-    celebrations.
--   Creative leisure users who enjoy drawing patterns.
--   Users who want to save or share designs with family and friends.
-
-This is a general-audience lifestyle app, not a child-directed app.
-
-### Core user stories
-
-1.  As a user, I can open the app and immediately see a useful daily
-    design.
-2.  As a Telugu user, I can browse and read design details in Telugu.
-3.  As a Tamil user, I can browse and read design details in Tamil.
-4.  As a user, I can find simple designs suitable for my skill level.
-5.  As a beginner, I can follow one drawing step at a time.
-6.  As a learner, I can trace a faint guide with my finger.
-7.  As a creator, I can choose a dot grid and draw a symmetrical
-    pattern.
-8.  As a user, I can undo, redo, change colours and clear the canvas.
-9.  As a user, I can save my creation locally and reopen it later.
-10. As a user, I can export a clean PNG and share it through Android's
-    share sheet.
-11. As a user, I can use the core app without an internet connection.
-12. As a Premium user, I can remove ads and unlock premium content.
-13. As a previous purchaser, I can restore my Premium entitlement.
+1.  Regional traditions must be represented accurately and respectfully.
+2.  Learning is the central differentiator; the creator is an important
+    supporting feature.
+3.  The basic experience must work offline.
+4.  No registration or account is required.
+5.  Original or properly licensed content only.
+6.  Keep the app simple enough for one developer to maintain.
+7.  Build and validate in small increments; do not build the entire
+    product at once.
 
 ------------------------------------------------------------------------
 
-## 4. Market position and competitor differentiation
+## 2. Audience and regional strategy
 
-The category has existing apps with meaningful adoption. The product
-must not claim that the market is empty.
+### Initial audience
 
-Competitor examples identified during initial research:
+-   People who create Muggu, Kolam or Rangoli at home.
+-   Beginners who want simple, guided instructions.
+-   People looking for daily, festival and occasion-based inspiration.
+-   Families who want to preserve and teach traditional designs.
+-   International users interested in Indian floor art and geometric
+    patterns.
 
--   **Kolangal by Nithra:** established design collection, categories,
-    favourites and offline-oriented use. Its listing has shown 100K+
-    installs and a high rating.
--   **Rangoli by Drik Panchang:** festival-oriented collections and
-    drawing instructions; its listing has shown 100K+ installs.
--   **Dot Kolam:** a direct interactive-creator competitor with dot
-    grids, symmetry, drawing, colour and saving features. Its listing
-    showed a comparatively small install badge at the time of the
-    initial audit.
+### Regional content strategy
 
-Store figures change over time and vary by region. Recheck current
-listings, reviews, feature sets and policies before launch. Downloads
-and ratings are adoption signals, not proof of profitability.
+Treat regional names and styles as related but distinct traditions. Do
+not label every design as interchangeable Rangoli or Kolam.
 
-### Differentiation strategy
+Initial launch focus:
 
-Do not compete only on number of designs or the existence of a dot-grid
-canvas.
+1.  Andhra Pradesh and Telangana: Muggu / Muggulu and relevant dot-based
+    traditions.
+2.  Tamil Nadu: Pulli Kolam, Sikku Kolam and other verified Kolam forms.
+3.  A carefully curated general Rangoli collection for broader
+    discovery.
 
-Differentiate through the combined experience:
+Later expansion, only after research and native/regional review:
 
-1.  **Regional-first content:** Telugu, Tamil and English names,
-    descriptions, instructions and search synonyms.
-2.  **Learn + trace:** verified stroke-by-stroke tutorials and a
-    practice mode.
-3.  **Daily inspiration:** a useful daily design and seasonal
-    collections.
-4.  **One integrated creator:** start from a blank canvas or open a
-    library design and modify it.
-5.  **Offline-first:** no account or network required for core features.
-6.  **Beginner-friendly UX:** clear controls, large touch targets and
-    simple difficulty filters.
-7.  **Authentic content:** original or properly licensed artwork with
-    manually verified drawing sequences.
+-   Karnataka: relevant local Rangoli and dot-design traditions.
+-   Maharashtra and Gujarat: regional Rangoli styles.
+-   Bengal: Alpana.
+-   Rajasthan: Mandana.
+-   Other regional traditions, including Aripana and Chowk Purana, only
+    with knowledgeable content review.
 
-### Competitor research checklist
+For every design, record its actual tradition, region, local name and
+technique. Do not infer origin from appearance alone.
 
-Before release, manually revisit the relevant Google Play listings and
-record:
+### Language strategy
 
--   Current install range and rating.
--   Number and recency of reviews.
--   Recent negative reviews and recurring complaints.
--   Languages supported.
--   Offline functionality.
--   Tutorial quality.
--   Creator capabilities.
--   Advertising frequency and user complaints.
--   Premium pricing and unlock model.
--   App size, update cadence and compatibility.
+Initial UI languages: English, Telugu and Tamil.
 
-Do not copy competitor artwork, descriptions, branding, screenshots or
-proprietary content.
+-   Language choice must be independent of the selected regional
+    collection.
+-   A Telugu-speaking user must be able to browse Tamil Kolam designs,
+    and an English-speaking user must be able to explore Muggu.
+-   Add Hindi, Kannada, Marathi, Gujarati and other languages only when
+    translations can be reviewed by fluent speakers.
+-   Use appropriate fonts and test actual rendering on Android devices.
+-   Avoid machine-translated cultural instructions without human review.
+
+### Search terminology
+
+Search should recognise localized names and synonyms, including common
+English spellings and transliterations. Examples include Muggu, Muggulu,
+Rangoli, Kolam, Pulli Kolam, Sikku Kolam, Chukkala Muggu and Chukki
+Rangoli.
+
+Synonyms are discovery aids, not a reason to misclassify the design's
+regional origin.
 
 ------------------------------------------------------------------------
 
-## 5. MVP scope
+## 3. MVP scope
 
-### P0 --- required for first usable release
+### P0 --- Required for first useful release
 
-  -----------------------------------------------------------------------
-  Area                                Required functionality
-  ----------------------------------- -----------------------------------
-  Home                                Daily design, key categories, Learn
-                                      and Create entry points
+#### Home
 
-  Gallery                             Browse 60 designs, category
-                                      filters, search and sorting
+-   Daily design or rotating featured design.
+-   Clear entry points to Explore, Learn and Create.
+-   Regional collections and beginner-friendly collections.
+-   Festival/occasion collection entry points when relevant.
+-   Recently viewed or saved designs where useful.
+-   No login prompt.
 
-  Design detail                       Preview, name, category,
-                                      difficulty, dot count and estimated
-                                      time
+#### Explore and gallery
 
-  Learning                            20 verified step-by-step lessons
+-   Initial target: 60 original or properly licensed designs, added
+    progressively.
+-   Search by localized name, English name, technique, region and
+    synonyms.
+-   Filters: region/tradition, style/technique, difficulty, dot-grid
+    size and occasion.
+-   Sort by recommended, newest and difficulty where meaningful.
+-   Clear empty and no-results states.
+-   Favourites.
 
-  Tracing                             Display a faint guide and accept
-                                      finger tracing
+#### Design detail
 
-  Creator                             Dot grid, touch drawing, basic
-                                      symmetry, colour, undo/redo
+-   Large, clear preview.
+-   Localized name and description.
+-   Region/tradition and technique.
+-   Difficulty, dot-grid dimensions and estimated learning time when
+    known.
+-   Actions: Learn, Trace/Practise, Favourite, Save or Share.
+-   Do not show metadata that has not been verified.
 
-  Saved                               Favourites and locally saved user
-                                      creations
+#### Guided learning
 
-  Export                              PNG image export and Android share
-                                      sheet
+-   Initial target: 20 verified tutorials; begin implementation with 5
+    complete lessons.
+-   Step-by-step drawing order.
+-   Previous/next, play/pause, replay and restart.
+-   Current step and total step count.
+-   Localized short instructions.
+-   Optional tracing/guide overlay.
+-   Allow users to learn at their own pace; no punitive scoring.
+-   A lesson must be checked against the intended original design before
+    it is published.
 
-  Localization                        Telugu, Tamil and English UI and
-                                      content
+#### Practice / tracing
 
-  Offline                             Core content, lessons, creator and
-                                      saved designs work offline
+-   Display a faint guide.
+-   Accept touch input over the guide.
+-   Forgiving guidance; do not require pixel-perfect tracing.
+-   Clear, undo and restart.
+-   Explain the next action in simple language.
+-   Keep the guide and user drawing visually distinguishable.
 
-  Settings                            Language, privacy policy, app
-                                      version and restore purchase
-  -----------------------------------------------------------------------
+#### Creator
 
-### P1 --- include only after the core experience is stable
+-   Dot-grid sizes initially: 5×5, 7×7 and 9×9.
+-   Touch drawing with smooth paths.
+-   Symmetry: none, vertical, horizontal and four-way.
+-   Palette selection and stroke-size control.
+-   Undo, redo and clear.
+-   Save locally, reopen, rename and delete.
+-   Export PNG and share using the Android system share sheet.
+-   Do not request broad storage permissions.
 
--   AdMob advertising.
--   One-time Premium purchase.
--   Premium design packs.
--   Advanced colour palettes.
--   Additional creator templates.
--   Optional daily reminder.
+#### Saved
 
-### P2 --- future possibilities, not release blockers
+-   Separate Favourites and My Creations.
+-   Open, edit, rename, delete and share saved creations.
+-   Persist across app restarts and app upgrades.
 
--   More Indian languages.
--   More design collections.
--   Cloud backup.
--   User-submitted designs with moderation.
--   AI-assisted pattern generation.
--   Time-lapse export.
--   Web version.
--   Community challenges.
+#### Settings
 
-### Initial content target
+-   English/Telugu/Tamil language selection.
+-   App information, privacy policy and Premium entry.
+-   Clear local user data action with confirmation.
+-   Accessible controls and text scaling.
 
-Start with 60 original designs:
+#### Offline
 
-  Collection                       Target count
-  ------------------------------ --------------
-  Simple daily Muggu                         15
-  Pulli / Dot Kolam                          15
-  Sikku / Kambi Kolam                        10
-  Flower and geometric Rangoli               10
-  Pongal / Sankranti / Diwali                10
-  **Total**                              **60**
+-   Core catalogue, thumbnails, lessons, creator and saved data must
+    work offline.
+-   No network dependency for basic browsing, learning or drawing.
 
-At least 20 designs should have complete, verified step sequences in
-version 1. The remaining designs can be gallery-only initially.
+### P1 --- After core experience is stable
 
-Do not publish empty or placeholder categories merely to meet a content
-count.
+-   AdMob monetization.
+-   One-time Premium purchase and restore.
+-   Festival calendar and seasonal collections.
+-   Additional regional content and languages.
+-   Colour-palette inspiration and preview.
+-   Daily design notification, opt-in only.
+-   More tutorial packs.
+
+### P2 --- Defer until user demand is demonstrated
+
+-   AI pattern generation.
+-   Cloud backup or account sync.
+-   Community submissions and public profiles.
+-   Social feed, comments or messaging.
+-   User-uploaded public galleries.
+-   Backend services and custom APIs.
+-   Complex gamification or leaderboards.
+
+Do not add P1/P2 features during Sprint 1 or Sprint 2 unless explicitly
+approved.
 
 ------------------------------------------------------------------------
 
-## 6. Navigation and screen requirements
+## 4. UX and navigation
 
-Use four primary bottom-navigation destinations:
+### Bottom navigation
+
+Use four primary destinations:
 
 1.  Home
 2.  Explore
 3.  Create
 4.  Saved
 
-Settings, language and Premium can be reached from the Home app bar or a
-menu.
+Settings, language and Premium should be accessible from Home/app bar or
+an appropriate menu, not as additional bottom tabs.
 
-### 6.1 Home screen
+### First-time onboarding
 
-Required elements:
+Use a short, skippable onboarding flow:
 
--   Muggu Studio logo/title.
--   Language selector.
--   Daily Muggu feature card.
+1.  Choose app language: English, Telugu or Tamil.
+2.  Choose interests: Muggu, Kolam, Rangoli or all.
+3.  Choose experience level: Beginner or Experienced.
+
+Persist choices locally. Do not require an account. Do not block users
+from changing these choices later.
+
+### Home screen
+
+-   Brand and language access.
+-   Featured/daily design.
 -   "Learn this design" action.
 -   "Create your own" action.
--   Category cards: Daily Muggu, Pulli Kolam, Sikku Kolam, Flower
-    Rangoli and Festivals.
--   Recently added designs.
--   Optional seasonal collection.
+-   Regional collections.
+-   Beginner lessons.
+-   Seasonal collection when relevant.
+-   Recently viewed/saved section when useful.
 
-The daily design should be selected locally from bundled content using a
-deterministic date-based rule. It must not require a backend or daily
-push notification.
+Daily selection can be deterministic and local; no backend is needed.
 
-### 6.2 Explore screen
-
-Required elements:
+### Explore screen
 
 -   Search field.
--   Category chips.
--   Difficulty filter: Easy, Medium, Advanced.
--   Dot-count filter where applicable.
--   Grid/list presentation.
--   Sort: Recommended, Newest, Easy first.
--   Design card with thumbnail, localized title and favourite action.
+-   Region/tradition, technique, difficulty and dot-grid filters.
+-   Clear filter state.
+-   Design cards with readable titles and useful thumbnails.
+-   Search across synonyms and localized metadata.
 
-Search should match localized names and synonyms. For example, Telugu
-searches for "ముగ్గులు" should find relevant entries tagged with Muggu,
-Kolam and Rangoli synonyms.
+### Design detail screen
 
-### 6.3 Design detail screen
+-   Preview with zoom where useful.
+-   Name, region, technique and difficulty.
+-   Learn and Practise actions.
+-   Favourite and share.
+-   Explain unfamiliar terms briefly.
 
-Required elements:
+### Learning screen
 
--   Large design preview.
--   Localized title and description.
--   Category, difficulty, dot grid and estimated drawing time.
--   Start Learning.
--   Practice / Trace.
--   Edit This Design.
--   Favourite.
--   Share.
+-   Large drawing canvas.
+-   Current step / total.
+-   Previous, next, play/pause, replay and restart.
+-   Localized instruction.
+-   Optional guide/tracing mode.
+-   Completion state with option to practise again or save.
 
-### 6.4 Learning screen
+### Creator screen
 
-Required elements:
+-   Canvas and visible dot grid.
+-   Grid-size selection.
+-   Drawing tool and symmetry controls.
+-   Colour palette and stroke size.
+-   Undo/redo and clear.
+-   Save, export and share.
+-   Controls must remain usable on small Android screens and must not
+    obscure the drawing surface.
 
--   Full or large canvas.
--   Current step number and total.
--   Previous/Next controls.
--   Play/Pause animation.
--   Restart lesson.
--   Optional short localized instruction.
--   Tracing mode with faint guide.
--   Completion state and Save/Share actions.
+### Saved screen
 
-A tutorial must represent a valid sequence of strokes. Do not create
-fake lessons by splitting an unrelated static image.
-
-### 6.5 Creator screen
-
-Required elements:
-
--   Canvas.
--   Grid selector: 5x5, 7x7 and 9x9 initially.
--   Draw mode.
--   Basic line/curve stroke support.
--   Symmetry options: none, vertical, horizontal and four-way where
-    appropriate.
--   Colour palette.
--   Stroke size.
--   Undo and redo.
--   Clear canvas with confirmation.
--   Save.
--   Export PNG.
--   Share.
-
-Keep the first creator intentionally simple. Avoid complex polygon
-filling, layers, pressure sensitivity and advanced vector editing until
-the basic drawing flow is reliable.
-
-### 6.6 Saved screen
-
-Sections:
-
--   Favourites from the catalogue.
--   My Creations.
--   Open/edit.
--   Rename.
--   Delete with confirmation.
--   Share/export.
-
-### 6.7 Settings and Premium
-
-Settings:
-
--   Language.
--   Privacy policy.
--   About.
--   App version.
--   Restore purchase.
--   Contact/support route, if configured.
-
-Premium page:
-
--   Remove ads.
--   Unlock Premium designs and tutorials.
--   Show exact one-time price returned by Google Play Billing.
--   Restore purchase.
--   Explain that purchases are linked to the user's Google Play account.
+-   Favourites and My Creations.
+-   Empty states with useful links back to Explore/Create.
+-   Edit, rename, delete and share for user creations.
 
 ------------------------------------------------------------------------
 
-## 7. Visual design system
+## 5. Content model and artwork requirements
 
-### Design direction
+### Content targets
 
-Traditional, warm and modern. Avoid clutter and excessive gradients.
+Initial content plan:
 
-Suggested palette:
+-   15 simple daily Muggu designs.
+-   15 Pulli/Dot Kolam designs.
+-   10 Sikku/Kambi Kolam designs.
+-   10 floral/geometric Rangoli designs.
+-   10 festival/occasion designs.
 
-  Token           Hex         Use
-  --------------- ----------- ------------------------------
-  Deep Maroon     `#862B37`   Primary actions and branding
-  Warm Cream      `#FFF5E8`   Main background
-  Turmeric Gold   `#D8A13B`   Accent
-  Leaf Green      `#55775D`   Secondary accent
-  Dark Brown      `#3C342E`   Primary text
+These are planning targets, not permission to mislabel regional styles.
+Reallocate categories when content review shows a better classification.
 
-Use Material 3 components with a custom theme.
+Build content in stages: - First milestone: 10 verified designs and 5
+complete tutorials. - MVP target: 60 verified designs and 20 complete
+tutorials.
 
-### Typography
+Accuracy and usability matter more than reaching the target count
+quickly.
 
--   English: Roboto or Noto Sans.
--   Telugu: Noto Sans Telugu.
--   Tamil: Noto Sans Tamil.
+### Artwork rights
 
-Verify font rendering on real Android devices. Avoid hard-coded text
-widths that clip regional scripts.
+-   Create original designs or obtain explicit permission/licences.
+-   Do not scrape or copy competitor apps, Pinterest, Instagram or other
+    creators.
+-   Do not reproduce copyrighted illustrations or screenshots.
+-   Keep source files, creator details, licence/permission and
+    attribution records.
+-   Obtain permission before using a contributor's design.
+-   Preserve editable vector source data.
 
-### Accessibility and usability
+### Design data format
 
--   Large touch targets.
--   Adequate contrast.
--   Readable font sizes.
--   Support system font scaling.
--   Clear empty states.
--   Confirm destructive actions.
--   Avoid relying only on colour to communicate status.
--   Test on low-resolution and budget Android devices.
+Prefer vector path data over image-only content so the same design can
+support preview, tutorial animation, tracing and editing.
 
-Light theme is the initial priority. Dark mode can follow after launch.
+Suggested model:
 
-------------------------------------------------------------------------
-
-## 8. Technical architecture
-
-### Architecture decision
-
-Use a **local-first Flutter application**. The core product does not
-need a custom backend.
-
-High-level flow:
-
-``` text
-Flutter UI
-  |
-  +-- Home / Explore / Detail / Learn / Creator / Saved
-  |
-  +-- Riverpod state management
-  |
-  +-- Repository layer
-       |
-       +-- Bundled catalogue JSON
-       +-- Bundled WebP thumbnails/assets
-       +-- Local SQLite database
-       +-- Local design files
-  |
-  +-- Android integrations
-       +-- Google Mobile Ads
-       +-- Google Play Billing
-       +-- Android share sheet
-       +-- PNG export
+``` json
+{
+  "id": "muggu_001",
+  "localizedName": {
+    "en": "Simple Floral Muggu",
+    "te": "సులభమైన పూల ముగ్గు",
+    "ta": "எளிய மலர் கோலம்"
+  },
+  "localizedDescription": {
+    "en": "A beginner-friendly floral dot design."
+  },
+  "region": "andhra_pradesh",
+  "tradition": "muggu",
+  "technique": "dot_muggu",
+  "difficulty": "easy",
+  "grid": {
+    "rows": 5,
+    "columns": 5
+  },
+  "estimatedMinutes": 5,
+  "occasionTags": ["daily"],
+  "searchTags": ["muggu", "muggulu", "rangoli"],
+  "isPremium": false,
+  "thumbnail": "assets/designs/thumbnails/muggu_001.webp",
+  "strokes": [
+    {
+      "id": "stroke_01",
+      "points": [[0.50, 0.10], [0.65, 0.25], [0.50, 0.40]],
+      "type": "curve"
+    }
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "strokeIds": ["stroke_01"],
+      "instruction": {
+        "en": "Draw the first curved line."
+      }
+    }
+  ],
+  "contentReview": {
+    "status": "pending",
+    "reviewer": "",
+    "sourceOrPermission": ""
+  }
+}
 ```
 
-### Recommended stack
+This is an illustrative schema only. Coordinates, regional attribution,
+instructions and artwork must be verified before publication. Add schema
+versioning and validation. Missing translations should use a safe
+fallback rather than crashing.
 
-  Concern            Technology
-  ------------------ --------------------------------------
-  Language           Dart
-  App framework      Flutter
-  State management   Riverpod (`flutter_riverpod`)
-  Navigation         GoRouter
-  UI                 Material 3
-  Drawing            Flutter `CustomPainter` / Canvas
-  Catalogue          Bundled JSON
-  Artwork            WebP thumbnails + vector stroke data
-  Local database     SQLite (`sqflite`)
-  Preferences        `shared_preferences`
-  File paths         `path_provider`
-  Sharing            `share_plus`
-  Localization       Flutter localization / ARB
-  Ads                `google_mobile_ads`
-  Billing            `in_app_purchase`
-  Tests              `flutter_test`, integration tests
+### Content review
 
-Use stable package versions compatible with the installed Flutter SDK.
-Do not blindly pin old versions from this document.
-
-### No backend in version 1
-
-Do not add Firebase, Supabase, a VPS or an API server unless a
-demonstrated requirement emerges.
-
-Core content and user drawings stay on the device. Ads and purchase
-verification use their respective SDK/service flows.
+Each published design must be checked for: - Correct
+regional/traditional label. - Accurate local name and spelling. -
+Correct dot layout and stroke order. - Clear preview and thumbnail. -
+Beginner difficulty assessment. - Tutorial instructions that match the
+design. - Rights/permission record. - Human review of Telugu/Tamil
+wording where applicable.
 
 ------------------------------------------------------------------------
 
-## 9. Project structure
+## 6. Drawing and tutorial engine
 
-Recommended starting structure:
+Use Flutter CustomPainter/Canvas and normalized vector coordinates.
+
+### Rendering
+
+-   Render background, dot grid, guide paths, user strokes and overlays
+    as separate layers.
+-   Preserve aspect ratio.
+-   Convert touch positions to normalized coordinates.
+-   Smooth user paths.
+-   Keep drawing responsive on lower-end Android devices.
+
+### Symmetry
+
+-   None.
+-   Vertical reflection.
+-   Horizontal reflection.
+-   Four-way reflection.
+
+Test centre-line and centre-point behaviour carefully to avoid duplicate
+or unexpected strokes.
+
+### History
+
+-   Undo/redo using a predictable command or snapshot history.
+-   Clear with confirmation or undo support.
+-   Save/load must preserve paths, colours, grid and symmetry settings.
+
+### Tutorial playback
+
+-   Steps reference stroke IDs.
+-   Animate strokes in the correct order.
+-   Support pause, resume, previous, next and restart.
+-   Do not depend on network access.
+
+### Export
+
+-   Render a clean image without editing controls.
+-   Export PNG at a useful resolution.
+-   Use app-specific storage/cache and Android Sharesheet.
+-   Avoid broad external-storage permissions.
+
+### Required tests
+
+-   Normalized coordinate conversion.
+-   Canvas aspect ratio.
+-   Grid rendering and touch mapping.
+-   Vertical, horizontal and four-way symmetry.
+-   Strokes crossing the centre line.
+-   Undo/redo sequences.
+-   Serialization and restoration.
+-   Tutorial stroke order.
+-   PNG export.
+
+------------------------------------------------------------------------
+
+## 7. Architecture and technology
+
+Keep the current Flutter local-first architecture. Do not introduce a
+backend for the first release.
+
+### Stack
+
+-   Flutter / Dart with Material 3.
+-   Riverpod for state management.
+-   GoRouter for navigation.
+-   Flutter CustomPainter/Canvas for drawing.
+-   Bundled JSON catalogue and vector data.
+-   WebP thumbnails.
+-   SQLite (`sqflite`) for favourites, saved creations and progress.
+-   SharedPreferences for language and lightweight settings.
+-   `path_provider` for app-specific file paths.
+-   `share_plus` for sharing.
+-   Flutter localization / ARB.
+-   `google_mobile_ads` when monetization is approved.
+-   `in_app_purchase` for Premium when monetization is approved.
+-   `flutter_test` and `integration_test`.
+
+Use package versions compatible with the verified installed Flutter/Dart
+SDK. Check current package maintenance and compatibility before adding
+dependencies.
+
+### Suggested structure
 
 ``` text
 muggu_studio/
@@ -523,14 +524,13 @@ muggu_studio/
 │   │   ├── theme/
 │   │   ├── localization/
 │   │   ├── storage/
-│   │   ├── ads/
-│   │   ├── billing/
 │   │   └── widgets/
 │   ├── features/
 │   │   ├── home/
 │   │   ├── gallery/
 │   │   ├── design_detail/
 │   │   ├── learning/
+│   │   ├── practice/
 │   │   ├── creator/
 │   │   ├── saved/
 │   │   ├── premium/
@@ -545,915 +545,496 @@ muggu_studio/
 └── README.md
 ```
 
-Keep UI, domain logic and persistence separate. Avoid putting all app
-logic in `main.dart` or a single giant widget.
+Adapt this to the existing repository rather than restructuring files
+unnecessarily.
+
+### Engineering requirements
+
+-   Separate UI, domain logic and persistence.
+-   Keep widgets small and testable.
+-   Use repository abstractions for local data.
+-   Avoid unnecessary global mutable state.
+-   Handle loading, empty and error states.
+-   Add catalogue schema validation.
+-   Version local database migrations and catalogue format.
+-   Compress assets and avoid oversized images.
+-   Never commit secrets, signing keys or production ad IDs.
+-   Document environment-specific build workarounds.
+-   Add GitHub Actions CI for format, analysis and tests when the core
+    workflow is stable.
 
 ------------------------------------------------------------------------
 
-## 10. Muggu design data model
+## 8. Design system and accessibility
 
-Prefer structured vector instructions over storing every design only as
-a bitmap.
+### Brand palette
 
-A design should support localized metadata, a dot grid, strokes,
-tutorial steps, difficulty, tags and Premium status.
+-   Deep Maroon: `#862B37`
+-   Warm Cream: `#FFF5E8`
+-   Turmeric Gold: `#D8A13B`
+-   Leaf Green: `#55775D`
+-   Dark Brown: `#3C342E`
 
-Example catalogue entry:
+Use a warm, traditional but modern visual style. Keep screens
+uncluttered. Material 3.
 
-``` json
-{
-  "id": "muggu_001",
-  "name": {
-    "en": "Simple Floral Muggu",
-    "te": "సులభమైన పూల ముగ్గు",
-    "ta": "எளிய மலர் கோலம்"
-  },
-  "description": {
-    "en": "A beginner-friendly floral dot-grid design.",
-    "te": "ప్రారంభకులకు అనువైన పూల ముగ్గు.",
-    "ta": "தொடக்கநிலைக்கு ஏற்ற மலர் கோலம்."
-  },
-  "category": "dot_muggu",
-  "difficulty": "easy",
-  "grid": {
-    "rows": 5,
-    "columns": 5
-  },
-  "estimatedMinutes": 5,
-  "isPremium": false,
-  "tags": [
-    "daily",
-    "floral",
-    "beginner",
-    "muggu",
-    "kolam",
-    "rangoli"
-  ],
-  "thumbnail": "assets/designs/thumbnails/muggu_001.webp",
-  "steps": [
-    {
-      "step": 1,
-      "instruction": {
-        "en": "Start at the top centre.",
-        "te": "పై మధ్య భాగంలో ప్రారంభించండి.",
-        "ta": "மேல் மையத்தில் தொடங்கவும்."
-      },
-      "strokeIds": ["stroke_01"]
-    },
-    {
-      "step": 2,
-      "instruction": {
-        "en": "Continue the left curve.",
-        "te": "ఎడమ వంపును కొనసాగించండి.",
-        "ta": "இடது வளைவைத் தொடரவும்."
-      },
-      "strokeIds": ["stroke_02"]
-    }
-  ],
-  "strokes": [
-    {
-      "id": "stroke_01",
-      "points": [
-        [0.50, 0.10],
-        [0.65, 0.25],
-        [0.50, 0.40]
-      ],
-      "type": "curve"
-    },
-    {
-      "id": "stroke_02",
-      "points": [
-        [0.50, 0.40],
-        [0.35, 0.55],
-        [0.50, 0.70]
-      ],
-      "type": "curve"
-    }
-  ]
-}
-```
+### Typography
 
-The example coordinates are illustrative only. Content creators must
-supply accurate paths and verified step sequences for each real design.
+-   English: Roboto or Noto Sans.
+-   Telugu: Noto Sans Telugu.
+-   Tamil: Noto Sans Tamil.
 
-### Coordinate system
+Verify actual glyph rendering, line wrapping and clipping on Android
+devices.
 
--   Store normalized coordinates from `0.0` to `1.0`.
--   Map normalized points into the available canvas rectangle.
--   Preserve aspect ratio.
--   Apply symmetry transforms around the relevant canvas axes.
--   Keep dot-grid geometry separate from stroke geometry.
+### Accessibility
 
-### Suggested core models
-
--   `MugguDesign`
--   `LocalizedText`
--   `DotGrid`
--   `DrawingStroke`
--   `TutorialStep`
--   `SavedCreation`
--   `UserPreferences`
--   `PurchaseEntitlement`
-
-### Local persistence
-
-Use SQLite for:
-
--   Favourite design IDs.
--   Saved user creations.
--   Creation metadata.
--   Optional local learning progress.
-
-Store larger exported PNGs in app-specific storage. Store language and
-simple preferences in SharedPreferences.
+-   Large touch targets.
+-   Sufficient colour contrast.
+-   Screen-reader labels for controls.
+-   Support Android font scaling.
+-   Avoid relying on colour alone to communicate state.
+-   Provide clear labels for drawing tools.
+-   Test on small screens and different display densities.
 
 ------------------------------------------------------------------------
 
-## 11. Creator and tutorial engine requirements
+## 9. Monetization
 
-This is the key custom engineering component.
+Do not implement monetization until the core user experience works.
 
-### Rendering
+### Proposed model
 
-Use Flutter `CustomPainter` to render:
+Free with ads + one-time lifetime Premium. No subscription initially.
 
-1.  Background.
-2.  Dot grid.
-3.  Reference design or guide.
-4.  User strokes.
-5.  Selection/interaction overlays.
+Indicative experiment only: ₹149 lifetime Premium. Do not hardcode this
+price; use the localized price returned by Google Play Billing and
+validate willingness to pay.
 
-### Drawing input
-
--   Convert touch positions into normalized canvas coordinates.
--   Capture pointer down, move and up.
--   Smooth strokes where appropriate.
--   Store strokes as reusable data.
--   Support undo and redo with a command/history stack.
--   Keep drawing responsive on lower-end devices.
-
-### Symmetry
-
-Initial modes:
-
--   None.
--   Vertical mirror.
--   Horizontal mirror.
--   Four-way mirror.
-
-The symmetry engine should transform user strokes around the canvas
-centre. Test edge cases where a stroke crosses the centre line to avoid
-duplicated or discontinuous lines.
-
-### Tutorial animation
-
--   Each step references one or more stroke IDs.
--   Animate only the relevant stroke(s).
--   Allow pause, resume, previous, next and restart.
--   Provide a static guide if animation is disabled or reduced-motion
-    settings are used.
--   Keep instructions localized.
-
-### Tracing
-
--   Render the target stroke in a faint guide colour.
--   Accept user pointer input.
--   Give simple visual feedback.
--   Do not require exact pixel-perfect matching in the first version.
--   Avoid shaming or punitive scoring; the goal is practice.
-
-### Export
-
-Render a clean image without editor controls:
-
--   Use a dedicated export canvas.
--   Export PNG at a useful resolution.
--   Preserve transparent or selected background as appropriate.
--   Save in app-specific storage or use the system sharing flow.
--   Do not request broad storage permissions unnecessarily.
-
-------------------------------------------------------------------------
-
-## 12. Localization and content management
-
-Support locales:
-
--   `en`
--   `te`
--   `ta`
-
-Use Flutter ARB localization files for app UI strings:
-
-``` text
-lib/l10n/app_en.arb
-lib/l10n/app_te.arb
-lib/l10n/app_ta.arb
-```
-
-Design catalogue content can use localized JSON fields as shown above.
-
-### Search synonyms
-
-Each design should have language-aware synonyms, for example:
-
--   English: Rangoli, Kolam, Muggu, dots, floral.
--   Telugu: ముగ్గు, ముగ్గులు, చుక్కల ముగ్గు.
--   Tamil: கோலம், புள்ளி கோலம், சிக்கு கோலம்.
-
-Have fluent Telugu and Tamil reviewers verify spelling, natural wording,
-cultural usage and drawing instructions. Do not rely solely on machine
-translation for final published content.
-
-### Content rights
-
--   Create original designs or obtain written licences.
--   Keep a content attribution/rights record for each externally sourced
-    asset.
--   Do not scrape competitor apps or copy Pinterest/Instagram images.
--   Do not assume an image is free to reuse because it is publicly
-    visible.
--   Keep original editable/vector source files.
--   Review festival and religious content for cultural accuracy.
-
-------------------------------------------------------------------------
-
-## 13. Monetization
-
-### Initial model
-
-Free application supported by advertising, with a one-time Premium
-unlock.
-
-Suggested price to test:
-
--   Free: ₹0.
--   Premium lifetime: initially test ₹149, with localized pricing
-    determined by Google Play.
-
-The price is a hypothesis. Check willingness to pay and actual purchase
-conversion after launch.
-
-### Free tier
+### Free tier proposal
 
 -   40 basic designs.
--   Basic gallery and filters.
 -   8 guided tutorials.
--   Creator and basic colour palette.
--   Favourites.
--   Save and share.
--   Non-intrusive ads.
+-   Basic creator and palette.
+-   Favourites, local saving and sharing.
+-   Ads.
 
-### Premium tier
+### Premium proposal
 
--   All 60+ designs.
--   All 20+ guided tutorials.
--   Premium collections.
--   Advanced colour palettes.
--   No advertisements.
--   Future premium content included, subject to the product's stated
-    terms.
+-   60+ designs and future premium packs.
+-   All 20+ tutorials.
+-   Advanced palettes and premium content.
+-   Remove ads.
 
-Do not lock basic creator functionality behind Premium. The free version
-must remain useful.
+Keep the basic creator useful in the free tier.
 
-### Advertising placement
+### Advertising safeguards
 
-Use Google Mobile Ads / AdMob.
+-   Use test ad IDs during development.
+-   Never click live ads during testing.
+-   Use non-intrusive placements, such as a reserved banner area on
+    Home/Explore.
+-   Clearly label ads.
+-   No ads on the drawing canvas or during tutorial steps.
+-   Avoid accidental-click layouts and excessive interstitials.
+-   Use the current consent flow (UMP) where required.
+-   Follow current AdMob and Google Play policies.
 
-Suggested placement:
+### Billing safeguards
 
--   Banner ad at the bottom of Home or Explore, with reserved layout
-    space.
--   Optional native ad in a clearly labelled gallery position if
-    implemented correctly.
--   Rewarded ad to unlock a clearly identified temporary content pack
-    only if it adds value.
-
-Avoid:
-
--   Ads over the drawing canvas.
--   Ads during a tutorial step.
--   Ads immediately after every navigation action.
--   Misleading ad close buttons.
--   Accidental-click layouts.
--   Excessive interstitials.
-
-Follow current AdMob policies and Google Play requirements. Use test ad
-unit IDs during development; never click live ads yourself.
-
-### Billing
-
-Use Google Play Billing through the supported Flutter package.
-
-Requirements:
-
+-   One-time non-consumable product.
 -   Product ID configured in Play Console.
--   Query product details from the store.
--   Display the price returned by Google Play, not a hard-coded currency
-    value.
--   Handle pending, successful, cancelled and failed purchases.
--   Verify purchase status appropriately.
--   Persist entitlement safely.
+-   Query product details and show live localized price.
+-   Handle pending, success, cancellation and failure.
 -   Restore purchases.
--   Unlock Premium only when entitlement is valid.
--   Test with license testers and Play internal testing.
-
-A one-time non-consumable product is the intended purchase type. Confirm
-current Play Billing requirements before release.
-
-### Revenue expectations
-
-Do not promise revenue. Model it using actual usage after launch.
-
-For planning only, an example advertising assumption is ₹30 per 1,000
-impressions. This is not a guaranteed eCPM.
-
-    Monthly active users   Monthly impressions   Illustrative ad revenue
-  ---------------------- --------------------- -------------------------
-                   1,000                15,000                      ₹450
-                   5,000                75,000                    ₹2,250
-                  10,000               150,000                    ₹4,500
-                  50,000               750,000                   ₹22,500
-                 100,000             1,500,000                   ₹45,000
-
-Actual revenue varies by country, ad format, fill rate, user engagement,
-seasonality and policy compliance. Premium sales are additional, less
-store fees, taxes, refunds and other costs.
+-   Persist entitlement safely and handle reinstall/device change.
+-   Test with Play license testers and internal testing.
+-   Never claim a purchase succeeded until the store confirms it.
 
 ------------------------------------------------------------------------
 
-## 14. Privacy, permissions and security
+## 10. Privacy and security
 
-The app should collect as little data as possible.
+The first release should collect as little data as possible.
 
-### Initial privacy approach
-
--   No account.
--   No name, email or phone number collection by the app.
--   User creations stored locally.
--   No cloud upload of drawings.
--   No location permission.
--   No contacts permission.
--   No microphone or camera permission.
--   No broad file-storage permission unless a justified feature requires
-    it.
-
-### Third-party SDKs
-
-AdMob and billing SDKs may process device or transaction-related data.
-The privacy policy and Google Play Data Safety declaration must
-accurately describe the actual SDKs, data processing, sharing and
-retention.
-
-Use the Google consent flow where required for advertising. Review
-applicable privacy rules for the regions in which the app is
-distributed.
-
-### Privacy policy
-
-Publish a publicly accessible privacy policy before production. It must:
-
--   Identify the developer/publisher.
--   Explain local storage.
--   Explain third-party advertising and billing SDKs.
--   Explain any data collected or shared by those SDKs.
--   Explain retention and deletion.
--   Provide a contact route.
--   Match actual app behaviour and Play Console declarations.
-
-Do not publish a generic policy that claims "no data is collected"
-without reviewing SDK behaviour.
+-   No account, name, email, phone or location collection by the app.
+-   No contacts, camera or microphone permissions.
+-   No broad storage permission.
+-   User creations remain on-device.
+-   Use Android Sharesheet and app-specific storage.
+-   Disclose data processed by third-party SDKs such as ads and billing.
+-   Privacy policy and Play Data Safety answers must match actual SDK
+    behaviour.
+-   Do not claim "no data collected" without checking all integrated
+    SDKs.
+-   Provide a way to delete locally stored user data.
+-   Add consent controls where legally or platform-required.
 
 ------------------------------------------------------------------------
 
-## 15. Testing strategy and acceptance criteria
+## 11. Updated roadmap
 
-### Functional tests
+Assumption: one developer, approximately 8--10 hours per week. Estimates
+are planning aids, not deadlines.
 
-  Test                    Expected result
-  ----------------------- ---------------------------------------------
-  Launch app offline      Home and bundled content load
-  Change language         UI and content change correctly
-  Search localized term   Relevant designs appear
-  Filter category         Only matching designs appear
-  Open detail             Correct preview and metadata
-  Start tutorial          Correct stroke sequence appears
-  Pause/restart lesson    Animation state behaves correctly
-  Trace design            Touch input is responsive
-  Change dot grid         Grid updates without layout overflow
-  Draw strokes            Strokes appear in correct coordinates
-  Symmetry                Mirrored strokes are correct
-  Undo/redo               History is restored correctly
-  Save creation           Design persists after restart
-  Export PNG              Clean image is produced
-  Share                   Android share sheet opens
-  Purchase Premium        Premium entitlement unlocks
-  Restore purchase        Valid entitlement is restored
-  Ads                     No ads appear in prohibited/poor placements
+### Sprint 1 --- Foundation (completed; see Development Log)
 
-### Non-functional targets
+-   Flutter scaffold.
+-   Material 3 theme.
+-   English/Telugu/Tamil localization.
+-   Language selector with local persistence.
+-   Home, Explore, Create and Saved navigation.
+-   Placeholder screens.
+-   Android label, launcher icon and launch screen.
+-   Formatting, analysis, widget tests and Android debug APK verified.
 
--   Crash-free sessions target: greater than 99.5% after sufficient
-    usage data.
--   Smooth drawing on representative budget Android devices.
--   No blocking network requirement for core functionality.
+### Sprint 2 --- Catalogue and Explore
+
+Goal: users can browse and find real designs.
+
+-   Finalize catalogue schema and validation.
+-   Add 10 authentic, reviewed designs initially.
+-   Add thumbnails and localized metadata.
+-   Implement Explore gallery, search, filters and sorting.
+-   Add regional/tradition categories.
+-   Add synonym search.
+-   Implement favourites and local persistence.
+-   Add empty/error states.
+-   Do not implement the full drawing engine in this sprint.
+
+Acceptance: - Catalogue loads offline. - All 10 designs display correct
+metadata and images. - Search works for localized names and synonyms. -
+Filters can be combined and cleared. - Favourites persist after app
+restart. - No broken thumbnails or empty category links. - Tests cover
+repository, search, filters and favourites.
+
+### Sprint 3 --- Design detail and learning engine
+
+Goal: a user can open a design and follow a complete lesson.
+
+-   Design detail screen.
+-   Vector rendering foundation.
+-   First 5 verified lessons.
+-   Correct stroke order and instructions.
+-   Previous/next, play/pause and restart.
+-   Localized lesson instructions.
+
+Acceptance: - Lesson matches the verified reference design. - Playback
+controls work. - Rendering preserves proportions. - Lesson works
+offline. - Tests cover stroke ordering and playback state.
+
+### Sprint 4 --- Practice and tracing
+
+Goal: beginners can practise with a guide.
+
+-   Guide overlay.
+-   Touch input and path rendering.
+-   Clear, undo and restart.
+-   Forgiving tracing feedback.
+-   Small-screen and lower-end device performance checks.
+
+Acceptance: - Touch mapping aligns with the guide. - User can practise
+without network. - No punitive scoring. - Tests cover coordinate
+conversion and path handling.
+
+### Sprint 5 --- Creator
+
+Goal: user can create an original dot-grid design.
+
+-   5×5, 7×7 and 9×9 grids.
+-   Drawing and smooth paths.
+-   Symmetry controls.
+-   Colour and stroke-size selection.
+-   Undo/redo/clear.
+-   Save and reopen.
+
+Acceptance: - All symmetry modes behave correctly. - Undo/redo are
+reliable. - Saved creations reopen correctly after restart. - Drawing
+remains responsive on a lower-end Android device.
+
+### Sprint 6 --- Export, sharing and offline hardening
+
+-   PNG export.
+-   Android Sharesheet.
+-   Saved creations management.
+-   Database migration/versioning.
+-   Offline and process-restart testing.
+-   Integration tests.
+
+Acceptance: - Exported PNG has correct dimensions and no editing
+controls. - Sharing opens Android's system sheet. - User data survives
+restart and app upgrade. - Core app works in airplane mode.
+
+### Sprint 7 --- Content expansion and release candidate
+
+-   Expand toward 60 reviewed designs and 20 lessons.
+-   Regional content and language review.
+-   Accessibility, performance and device testing.
+-   Store listing assets and privacy policy draft.
+-   Resolve critical defects.
+
+### Sprint 8 --- Monetization and publishing
+
+-   AdMob integration and consent.
+-   Billing, restore and entitlement handling.
+-   Privacy and Data Safety disclosures.
+-   Play Console testing and production preparation.
+-   Staged rollout and monitoring.
+
+Do not delay a stable core release solely to add AI or community
+features.
+
+------------------------------------------------------------------------
+
+## 12. QA and release acceptance
+
+### Functional
+
+-   Offline launch and browsing.
+-   Language selection and persistence.
+-   Search, synonyms and filters.
+-   Design details and metadata.
+-   Favourites.
+-   Correct tutorial stroke order.
+-   Pause, replay and restart.
+-   Tracing input.
+-   Dot-grid selection.
+-   Drawing, symmetry, undo and redo.
+-   Save, reopen, rename and delete.
+-   PNG export and share.
+-   Purchase and restore, when implemented.
+-   Ads and consent, when implemented.
+
+### Non-functional
+
 -   No clipped Telugu/Tamil text.
--   No broken thumbnails or empty categories.
--   Reasonable app download size; compress artwork.
--   Handle process death and app restart safely.
--   No loss of saved creations during normal app upgrades.
+-   No broken thumbnails or dead navigation.
+-   Responsive drawing on budget Android hardware.
+-   No network dependency for core functionality.
+-   Safe process death/restart and database upgrades.
+-   Reasonable app size and compressed assets.
+-   Test small, mid-range and lower-memory Android phones.
+-   Test supported Android versions, font scaling and display densities.
 
-### Device coverage
+### Release quality
 
-Test at minimum:
+-   No known critical data-loss or navigation defect.
+-   No critical crash in release testing.
+-   Target crash-free sessions above 99.5% once sufficient production
+    data exists; this is a monitoring target, not a pre-launch
+    guarantee.
+-   All published designs have rights and content-review records.
+-   Store listing and privacy declarations match actual app behaviour.
 
--   Small-screen Android phone.
--   Typical mid-range Android phone.
--   Lower-memory device if available.
--   Current Android version.
--   At least one older supported Android version.
--   Different display densities and font scaling.
+### Metrics after launch
 
-------------------------------------------------------------------------
-
-## 16. Analytics and product metrics
-
-Use privacy-conscious, aggregated analytics only if needed and disclosed
-correctly. The first release can begin with basic Play Console and AdMob
-reporting.
-
-Track:
-
--   Installations and store conversion.
--   Daily and monthly active users.
--   Day-1 and Day-7 retention.
+-   Store impressions and install conversion.
+-   DAU/MAU and D1/D7 retention.
 -   Designs opened per session.
 -   Tutorial starts and completions.
 -   Creator sessions.
--   Designs saved.
--   PNG exports and shares.
--   Premium purchase conversion.
--   Ad impressions and estimated revenue.
+-   Saves, exports and shares.
+-   Premium conversion.
+-   Ad impressions/revenue.
 -   Crashes and ANRs.
 
-### Initial product hypotheses
-
-These are targets to evaluate, not guarantees:
-
--   Users should reach a design in a few taps.
--   A meaningful share of users should open multiple designs.
--   Tutorials should have measurable completion.
--   Some users should save or share creations.
--   Retention should improve after adding useful daily and festival
-    content.
-
-Do not add more features just because they sound attractive. Prioritize
-based on actual user behaviour, reviews and support issues.
+Use actual behaviour and reviews to decide what to build next. Do not
+treat target metrics as guaranteed outcomes.
 
 ------------------------------------------------------------------------
 
-## 17. Development roadmap
+## 13. Play Store preparation
 
-Assumption: one developer, AI-assisted, approximately 8--10 hours per
-week. The schedule is a planning estimate, not a deadline guarantee.
+Before release, verify current Google Play requirements rather than
+relying on old tutorials.
 
-### Week 1 --- foundation
+Checklist: - Final permanent application ID / package name. - Play
+Console account and identity/contact verification. - Required target API
+level at release time. - Signed Android App Bundle (AAB) and Play App
+Signing. - Versioning and release build configuration. - App title,
+short/full description, icon, feature graphic and screenshots. -
+Category, tags, content rating and target audience. - Ads declaration. -
+Public privacy policy. - Accurate Data Safety form. - App access
+instructions if any gated functionality exists. - AdMob configuration
+and consent. - Premium product and purchase/restore tests. -
+Internal/closed testing and production-access requirements applicable to
+the account. - Policy warnings resolved. - Staged rollout and
+post-release monitoring.
 
--   Install Flutter and Android Studio.
--   Verify `flutter doctor`.
--   Create Git repository.
--   Create Flutter app.
--   Add theme and routing.
--   Add localization scaffolding.
--   Build Home screen and bottom navigation.
-
-**Deliverable:** App runs on an Android device with three selectable
-languages.
-
-### Week 2 --- catalogue
-
--   Define models.
--   Create catalogue JSON.
--   Add original thumbnails.
--   Build Explore screen.
--   Add categories, filters and search.
--   Add favourites.
-
-**Deliverable:** Offline gallery with real content.
-
-### Week 3 --- learning
-
--   Implement vector renderer.
--   Implement stroke sequence model.
--   Add animation controls.
--   Build lesson detail.
--   Add tracing mode.
--   Add and verify initial lessons.
-
-**Deliverable:** At least 5 complete working lessons; expand toward 20.
-
-### Week 4 --- creator
-
--   Implement dot grid.
--   Implement pointer drawing.
--   Implement symmetry transforms.
--   Implement undo/redo.
--   Add colours and stroke sizes.
--   Add clear/reset.
-
-**Deliverable:** Functional creator.
-
-### Week 5 --- persistence and sharing
-
--   Add SQLite repositories.
--   Save and reopen creations.
--   Add PNG export.
--   Add Android share sheet.
--   Test offline and restart behaviour.
-
-**Deliverable:** Complete core app workflow.
-
-### Week 6 --- monetization and release preparation
-
--   Configure AdMob test IDs.
--   Implement ad placements.
--   Implement one-time billing.
--   Implement entitlement and restore.
--   Add consent handling.
--   Write privacy policy.
--   Complete store listing draft.
-
-**Deliverable:** Release candidate.
-
-### Weeks 7--8 --- testing and Play Store release
-
--   Test on physical devices.
--   Fix crashes, rendering and localization bugs.
--   Verify ads and purchases using test accounts.
--   Prepare screenshots, icon and feature graphic.
--   Run closed testing as required.
--   Apply for production access where applicable.
--   Submit for review.
-
-**Deliverable:** Production submission, subject to Google Play approval.
+The app ID is currently `com.example.muggu_studio` according to the
+development log. Choose the permanent publisher namespace before release
+and update Android configuration consistently. Do not change the
+application ID casually after publication.
 
 ------------------------------------------------------------------------
 
-## 18. Budget
+## 14. AI coding-agent operating instructions
 
-Target budget: ₹5,000--₹15,000.
+You are the senior Flutter engineer implementing Muggu Studio.
 
-Planning allocation:
+1.  Read this entire document before making changes.
+2.  Treat it as the product source of truth. The Development Log is the
+    source of truth for verified progress and environment history.
+3.  Inspect the existing repository before editing. Do not assume files
+    or implementation details.
+4.  Sprint 1 is complete. Do not recreate it.
+5.  Work only on the sprint explicitly requested. Do not implement the
+    entire app in one attempt.
+6.  For Sprint 2, implement only the catalogue and Explore scope
+    described above.
+7.  Propose the exact files to create or modify before implementation.
+8.  Use stable, maintained packages compatible with the installed
+    Flutter/Dart SDK.
+9.  Preserve existing architecture unless there is a clear, documented
+    reason to change it.
+10. Do not add backend, login, AI APIs, cloud sync, ads or billing
+    without explicit approval and the relevant sprint.
+11. Do not use copied competitor artwork or scraped images.
+12. Do not invent regional attribution, translations or tutorial steps.
+13. Keep UI, domain logic and persistence separated.
+14. Handle loading, empty and error states.
+15. Use null-safe Dart and small, testable widgets.
+16. Never commit secrets, signing keys or production ad IDs.
+17. Never hardcode Google Play Billing prices.
+18. Never use live AdMob IDs in development.
+19. Run `dart format`, `flutter analyze` and relevant tests after
+    changes.
+20. Report the exact commands run and actual results. Do not claim a
+    test passed unless it was executed and checked.
+21. Fix issues introduced by the change before declaring the sprint
+    complete.
+22. Update this document only for approved product/scope decisions.
+    Update the Development Log with implementation details, commands,
+    test results, issues, fixes and known limitations.
+23. Stop at the requested sprint's acceptance criteria and wait for
+    approval.
+
+### Required implementation response format
+
+For each sprint or feature, report:
+
+-   Existing implementation inspected.
+-   Scope being implemented.
+-   Exact files to create/modify.
+-   Design/architecture approach.
+-   Implementation completed.
+-   Commands executed and actual results.
+-   Tests added and outcomes.
+-   Known issues and limitations.
+-   Documentation updated.
+-   Items deliberately deferred.
+
+Do not claim a feature is complete based only on code generation or a
+successful build. Verify the user-visible behaviour where practical.
+
+------------------------------------------------------------------------
+
+## 15. Sprint 2 task prompt
+
+Use this prompt in the IDE coding agent after placing this document in
+the repository:
+
+> You are the senior Flutter engineer implementing Muggu Studio.
+>
+> Read the complete `Muggu_Studio_README.md` and the current Development
+> Log before editing. Inspect the repository and current implementation.
+> Sprint 1 is complete; do not recreate or unnecessarily refactor it.
+>
+> Implement **Sprint 2 only: Catalogue and Explore**.
+>
+> The product is a regional Indian floor-art discovery and learning app.
+> It must be understandable to people who do not know the word Muggu.
+> Keep Muggu Studio as the brand and make Muggu, Rangoli and Kolam
+> discoverable. Do not misrepresent distinct regional traditions.
+>
+> Start with 10 original or properly licensed designs. Each design must
+> have a stable ID, localized name/description where available, verified
+> region/tradition, technique, difficulty, grid metadata where relevant,
+> search tags, thumbnail path and content-review status. Use clearly
+> marked original sample/vector designs only; do not scrape or copy
+> artwork. Do not invent cultural attribution.
+>
+> Implement the catalogue model/repository, schema validation, offline
+> loading, Explore gallery, search across localized names and synonyms,
+> regional/technique/difficulty/grid filters, sorting where appropriate,
+> design cards, useful empty states and favourites persisted locally.
+>
+> Keep English, Telugu and Tamil working. Language choice must remain
+> independent of regional collection choice. Do not implement the
+> drawing engine, tutorials, tracing, ads, billing, backend, accounts or
+> AI in this sprint.
+>
+> Before coding, report the current repository structure, the existing
+> relevant files, proposed changes and any compatibility risks. Then
+> implement the smallest coherent slice.
+>
+> Run `dart format`, `flutter analyze`, `flutter test` and the relevant
+> Android build. Add tests for catalogue parsing/validation, search
+> synonyms, filters and favourite persistence. Report actual command
+> results and any limitations. Update the Development Log. Stop after
+> Sprint 2 acceptance criteria and wait for approval.
+
+------------------------------------------------------------------------
+
+## 16. Decision log
 
   -----------------------------------------------------------------------
-  Expense                                                        Estimate
-  ------------------------------ ----------------------------------------
-  Google Play developer            US\$25 one-time; INR equivalent varies
-  registration
+  Decision                            Current choice
+  ----------------------------------- -----------------------------------
+  Product                             Muggu Studio
 
-  Domain/privacy policy                                      ₹800--₹1,200
+  Positioning                         Rangoli, Kolam, Muggu and Indian
+                                      Floor Art
 
-  Branding/assets                                            ₹500--₹1,000
+  Platform                            Android first
 
-  Development tools                                          ₹0 initially
+  Framework                           Flutter
 
-  Backend hosting                                                      ₹0
+  Initial languages                   English, Telugu, Tamil
 
-  Testing/miscellaneous                                      ₹500--₹1,000
+  Initial regional focus              Andhra/Telangana, Tamil Nadu,
+                                      general Rangoli
 
-  Contingency                                              ₹3,000--₹5,000
+  Core experience                     Discover + Learn + Practise +
+                                      Create
+
+  Initial content milestone           10 designs, 5 tutorials
+
+  MVP content target                  60 designs, 20 tutorials
+
+  Architecture                        Local-first, no backend
+
+  Navigation                          Home, Explore, Create, Saved
+
+  Monetization                        Ads + one-time Premium, after core
+                                      validation
+
+  Indicative Premium test             ₹149 lifetime; validate and use
+                                      live store price
+
+  Budget                              ₹5,000--₹15,000 overall planning
+                                      budget; verify actual costs
+
+  Development                         Solo, AI-assisted
+
+  Sprint 1                            Completed and verified on 13
+                                      November 2026
+
+  Next sprint                         Sprint 2 --- Catalogue and Explore
   -----------------------------------------------------------------------
 
-Use original artwork and free development tooling initially. Do not pay
-for AI image APIs, cloud servers or extra subscriptions before they are
-demonstrably necessary.
-
-Actual costs may vary with exchange rates, taxes and vendor pricing.
-
 ------------------------------------------------------------------------
 
-## 19. Google Play publishing checklist
+## 17. Final product direction
 
-Google Play requirements change. Recheck official documentation and Play
-Console notices at the time of submission.
+Build a small, useful and trustworthy app. Do not compete on the number
+of pictures alone.
 
-### Developer account
+The strongest initial experience is:
 
--   [ ] Create/verify Play Console developer account.
--   [ ] Complete identity and contact verification.
--   [ ] Pay registration fee.
--   [ ] Determine whether the account is subject to the new
-    personal-account testing requirement.
--   [ ] Set developer name and support contact.
+**Discover a regional design. Understand its tradition. Learn it step by
+step. Practise it. Create your own.**
 
-### App build
-
--   [ ] Finalize unique application ID/package name.
--   [ ] Configure app version and build number.
--   [ ] Configure target API level required at submission time.
--   [ ] Build a signed Android App Bundle (`.aab`).
--   [ ] Configure Play App Signing.
--   [ ] Remove test ad IDs and debug settings.
--   [ ] Test release build, not just debug build.
-
-### Store listing
-
--   [ ] App name.
--   [ ] Short description.
--   [ ] Full description.
--   [ ] App icon.
--   [ ] Feature graphic.
--   [ ] Phone screenshots.
--   [ ] Correct category and tags.
--   [ ] Support email or contact route.
--   [ ] Public privacy-policy URL.
--   [ ] Accurate content rating.
--   [ ] Accurate target-audience declaration.
--   [ ] Ads declaration.
--   [ ] Data Safety form.
--   [ ] App access instructions if any restricted access exists (not
-    expected for this app).
-
-### Monetization
-
--   [ ] Configure AdMob app and ad units.
--   [ ] Use test ads during development.
--   [ ] Configure consent management.
--   [ ] Configure one-time Premium product.
--   [ ] Test purchase and restore flows.
--   [ ] Check current Play billing and service-fee requirements.
-
-### Testing and publication
-
--   [ ] Internal testing.
--   [ ] Closed testing if required.
--   [ ] Recruit the required testers if the account is subject to that
-    rule.
--   [ ] Meet the required continuous testing duration.
--   [ ] Apply for production access if required.
--   [ ] Resolve Play Console policy warnings.
--   [ ] Submit for review.
--   [ ] Monitor staged rollout, crashes, ANRs and reviews.
-
-### Important policy checks
-
-At the time of the earlier planning research, new apps were required to
-target Android 16 / API 36 from August 31, 2026. Verify the current
-target API requirement before building the final release, because Google
-updates this periodically.
-
-New personal developer accounts created after November 13, 2023 may be
-required to run a closed test with at least 12 continuously opted-in
-testers for 14 days before applying for production access. Confirm the
-requirement shown in the actual Play Console account.
-
-Official resources:
-
--   Google Play Console: https://play.google.com/console/
--   Play Console testing:
-    https://support.google.com/googleplay/android-developer/
--   Android target API requirements:
-    https://developer.android.com/google/play/requirements/target-sdk
--   AdMob: https://admob.google.com/
--   Google Mobile Ads Flutter guide:
-    https://developers.google.com/admob/flutter/quick-start
--   Flutter: https://docs.flutter.dev/
--   Flutter localization:
-    https://docs.flutter.dev/ui/accessibility-and-internationalization/internationalization
--   Google Play Billing:
-    https://developer.android.com/google/play/billing
-
-------------------------------------------------------------------------
-
-## 20. AI coding-agent working agreement
-
-The IDE agent must follow these rules throughout implementation.
-
-### General rules
-
-1.  Read this entire README before changing code.
-2.  Treat this document as the product requirements baseline.
-3.  Build incrementally; do not generate the entire application in one
-    response.
-4.  Do not invent features outside the agreed MVP without asking.
-5.  Prefer stable, maintained Flutter packages.
-6.  Check package compatibility with the installed Flutter/Dart
-    versions.
-7.  Keep code modular and testable.
-8.  Do not hard-code prices returned by Google Play.
-9.  Do not use live AdMob ad IDs during development.
-10. Do not add a backend unless an explicit requirement justifies it.
-11. Do not use copyrighted competitor artwork or scraped images.
-12. Never claim a feature is complete without running relevant tests.
-13. Update this README when an approved product decision changes.
-14. Maintain a `CHANGELOG.md` and a list of known issues.
-15. Ask before making decisions that affect product scope, privacy,
-    billing or content rights.
-
-### Required workflow for every feature
-
-1.  Explain the intended implementation briefly.
-2.  Identify files to create or modify.
-3.  Implement the smallest working slice.
-4.  Run `dart format`.
-5.  Run `flutter analyze`.
-6.  Run relevant unit/widget tests.
-7.  Report commands executed and results.
-8.  List remaining limitations.
-9.  Update documentation.
-
-### Code quality expectations
-
--   Null-safe Dart.
--   Clear naming.
--   Small reusable widgets.
--   Separation of UI and business logic.
--   Repository abstraction for persistence.
--   No unnecessary global mutable state.
--   Error and empty states.
--   Tests for core logic, especially drawing transforms and persistence.
--   No secrets or private keys committed to Git.
-
-### Drawing engine test cases
-
-At minimum, test:
-
--   Normalized coordinate conversion.
--   Canvas aspect-ratio handling.
--   Vertical mirror.
--   Horizontal mirror.
--   Four-way mirror.
--   Strokes crossing the centre.
--   Undo and redo ordering.
--   Save/load serialization.
--   PNG export dimensions.
-
-------------------------------------------------------------------------
-
-## 21. First implementation sprint
-
-Do not begin by implementing ads, billing or the drawing engine. Start
-with a working app scaffold.
-
-### Sprint 1 outcome
-
-A Flutter Android app that:
-
--   Opens without crashing.
--   Shows Muggu Studio branding.
--   Supports English, Telugu and Tamil selection.
--   Displays a Home screen.
--   Has Home, Explore, Create and Saved bottom navigation.
--   Uses the agreed colour palette.
--   Has a clean project structure.
--   Runs on a physical Android device or emulator.
-
-### Initial setup commands
-
-Check Flutter installation first:
-
-``` bash
-flutter doctor
-flutter --version
-```
-
-Create the app (replace the example organization ID with the final
-publisher namespace):
-
-``` bash
-flutter create --org com.example muggu_studio
-cd muggu_studio
-```
-
-Add the initial dependencies:
-
-``` bash
-flutter pub add flutter_riverpod
-flutter pub add go_router
-flutter pub add shared_preferences
-flutter pub add sqflite
-flutter pub add path_provider
-flutter pub add share_plus
-flutter pub add intl
-```
-
-Monetization dependencies can be added in the later monetization sprint:
-
-``` bash
-flutter pub add google_mobile_ads
-flutter pub add in_app_purchase
-```
-
-Run:
-
-``` bash
-flutter analyze
-flutter test
-flutter run
-```
-
-Do not assume the sample organization ID is suitable for publication.
-Choose a unique permanent application ID before publishing; changing it
-after release is disruptive.
-
-------------------------------------------------------------------------
-
-## 22. Copy/paste prompt for the IDE coding agent
-
-Use the following as the first instruction after opening this project in
-your IDE:
-
-> You are the senior Flutter engineer responsible for implementing Muggu
-> Studio.
->
-> First, read the complete `README.md`. It is the source of truth for
-> product scope, architecture, UX, localization, monetization and
-> release requirements.
->
-> We are starting Sprint 1 only. Do not implement the entire
-> application.
->
-> First inspect the current repository and Flutter environment. Report:
->
-> 1.  Flutter and Dart versions.
-> 2.  Whether Android tooling is correctly configured.
-> 3.  Current repository structure.
-> 4.  Any compatibility issues.
->
-> Then propose the exact files you will create or modify for Sprint 1.
->
-> Implement:
->
-> -   Flutter app scaffold.
-> -   Material 3 theme using the documented Muggu Studio colour palette.
-> -   English, Telugu and Tamil localization scaffolding.
-> -   Language selection.
-> -   Home, Explore, Create and Saved navigation.
-> -   Placeholder screens with polished, consistent layouts.
-> -   Responsive UI and basic accessibility.
->
-> Do not implement ads, purchases, a backend, user login, AI features or
-> the drawing engine in this sprint.
->
-> After implementation:
->
-> -   Run `dart format`.
-> -   Run `flutter analyze`.
-> -   Run `flutter test`.
-> -   Fix all errors introduced by your changes.
-> -   Explain how to run the app on an Android device.
-> -   Update this README if any implementation detail differs from the
->     requirements.
->
-> Do not claim that a command succeeded unless you actually ran it and
-> inspected its result. Stop after Sprint 1 and wait for approval before
-> proceeding.
-
-------------------------------------------------------------------------
-
-## 23. Definition of a successful first release
-
-Muggu Studio version 1 is ready for production consideration when:
-
--   The core app works offline.
--   The catalogue contains original, properly licensed designs.
--   Telugu, Tamil and English are reviewed.
--   Users can discover and favourite designs.
--   At least 20 lessons have accurate step sequences.
--   Users can trace a guide.
--   Users can create symmetrical dot-grid designs.
--   Users can undo/redo, save and export.
--   Premium purchase and restore work.
--   Ads follow applicable policies and do not disrupt learning or
-    drawing.
--   Privacy disclosures match actual SDK behaviour.
--   Play Store listing and testing requirements are satisfied.
--   No critical crashes, data-loss defects or broken navigation remain.
-
-**The priority is a small, useful, trustworthy app---not a large feature
-list.** Launch the core experience, observe real usage, read reviews,
-and expand only where users demonstrate a need.
-
-------------------------------------------------------------------------
-
-## 24. Project decision log
-
-  Decision                       Current choice
-  ------------------------------ -----------------------------------------------
-  Product                        Muggu Studio
-  Category                       Rangoli / Muggu / Kolam
-  Platform                       Android first
-  Framework                      Flutter
-  Initial locales                Telugu, Tamil, English
-  Core experience                Gallery + learning/tracing + creator
-  Architecture                   Local-first, no custom backend
-  Content target                 60 designs, 20 guided lessons
-  Monetization                   Ads + one-time Premium
-  Suggested Premium test price   ₹149 lifetime
-  Target development budget      ₹5,000--₹15,000
-  Development model              Solo, AI-assisted
-  Initial navigation             Home, Explore, Create, Saved
-  First sprint                   App scaffold, theme, localization, navigation
-  Working name                   Muggu Studio; availability not yet verified
-
-**End of product and engineering blueprint.**
+Prioritize content accuracy, beginner usability, offline reliability and
+a smooth drawing experience. Launch the core product, observe real usage
+and reviews, then expand only where users demonstrate a need.

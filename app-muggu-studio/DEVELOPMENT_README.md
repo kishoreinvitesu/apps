@@ -135,6 +135,15 @@ issues, fixes and next steps. Product requirements remain in
 
 Sprint 1 is ready for review. Sprint 2 has not been started.
 
+## 2026-11-13 — Product requirements baseline updated
+
+- Replaced `Muggu_Studio_README.md` with the updated requirements document
+  supplied in Downloads.
+- Preserved the previous requirements as
+  `Muggu_Studio_README_Version_1.md`.
+- The updated document is now the product source of truth; Sprint 2 remains
+  unstarted.
+
 ## Next
 
 - Start the next development phase after approving the Sprint 1 foundation.
