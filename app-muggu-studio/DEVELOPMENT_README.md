@@ -78,6 +78,27 @@ issues, fixes and next steps. Product requirements remain in
   sees the emulator, Flutter lists it as a connected device, and the app
   process is running.
 
+## 2026-11-13 — Emulator verification
+
+### Issues and fixes
+
+- After reboot, the AVD repeatedly appeared offline and briefly showed a
+  "System UI isn't responding" prompt. Stopped only the identified AVD
+  processes and relaunched it with `-no-snapshot-load` (without wiping data).
+  ADB and Flutter then detected `emulator-5554`.
+- `flutter build apk --debug --target-platform android-x64` succeeded.
+  `flutter install` then looked for a release APK, so installed the generated
+  debug APK directly with `adb install -r`.
+
+### Verified on emulator
+
+- Muggu Studio launches and displays the Home screen.
+- Explore navigation opens its localized placeholder screen.
+- Selecting Tamil updates the app UI, including the navigation labels.
+- After force-stopping and relaunching the app, Tamil remains selected.
+- The app process remained alive, and no Flutter fatal exception was found
+  in the checked log window.
+
 ## 2026-11-13 — GitHub publication
 
 - Published the app under `kishoreinvitesu/apps/app-muggu-studio` on `main`.
@@ -88,6 +109,4 @@ issues, fixes and next steps. Product requirements remain in
 
 ## Next
 
-- Reconnect Flutter to the running app if hot reload/debugging is needed.
-- Begin the next phase only after reviewing and approving the Sprint 1
-  foundation.
+- Start the next development phase after approving the Sprint 1 foundation.
