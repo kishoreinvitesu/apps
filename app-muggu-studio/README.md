@@ -15,6 +15,7 @@ The foundation includes:
 - English, Telugu and Tamil localization.
 - Language selection saved on the device.
 - Home, Explore, Create and Saved navigation.
+- Muggu Studio Android app label, launcher icon and warm-cream launch screen.
 - Placeholder states for features planned in later sprints.
 
 The Android application ID currently uses the setup placeholder
