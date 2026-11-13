@@ -164,6 +164,22 @@ Sprint 1 is ready for review. Sprint 2 has not been started.
   with fluent speakers, and validate offline use, accessibility and Android
   rendering as features are added.
 
+## 2026-11-13 — In-app brand heading update
+
+- Kept the product title as `Muggu Studio` in English, Telugu and Tamil, in
+  line with the updated brief's instruction to preserve the working brand.
+- Replaced the generic Home brand line with the specified positioning:
+  `Rangoli • Kolam • Muggu • Indian Floor Art`. The canonical English terms
+  remain visible in each UI language; surrounding Home content stays localized.
+- Updated widget assertions to check the title and descriptor across locales.
+
+### Validation
+
+- `flutter gen-l10n` — passed.
+- `dart format lib test` — passed; no formatting changes were needed.
+- `flutter analyze` — passed with no issues.
+- `flutter test` — passed; both widget tests succeeded.
+
 ## Next
 
 - Start the next development phase after approving the Sprint 1 foundation.

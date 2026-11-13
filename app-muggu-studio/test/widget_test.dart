@@ -32,6 +32,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Muggu Studio'), findsOneWidget);
+    expect(
+      find.text('Rangoli • Kolam • Muggu • Indian Floor Art'),
+      findsOneWidget,
+    );
     expect(find.text('Daily Muggu'), findsOneWidget);
 
     await tester.tap(find.text('Explore').last);
@@ -70,7 +74,11 @@ void main() {
     await tester.tap(find.text('தமிழ்'));
     await tester.pumpAndSettle();
 
-    expect(find.text('முக்கு ஸ்டுடியோ'), findsOneWidget);
+    expect(find.text('Muggu Studio'), findsOneWidget);
+    expect(
+      find.text('Rangoli • Kolam • Muggu • Indian Floor Art'),
+      findsOneWidget,
+    );
     expect(storage.languageCode, 'ta');
 
     await tester.tap(find.byTooltip('மொழியைத் தேர்ந்தெடுக்கவும்'));
@@ -78,7 +86,11 @@ void main() {
     await tester.tap(find.text('తెలుగు'));
     await tester.pumpAndSettle();
 
-    expect(find.text('ముగ్గు స్టూడియో'), findsOneWidget);
+    expect(find.text('Muggu Studio'), findsOneWidget);
+    expect(
+      find.text('Rangoli • Kolam • Muggu • Indian Floor Art'),
+      findsOneWidget,
+    );
     expect(find.text('నేటి ముగ్గు'), findsOneWidget);
     expect(storage.languageCode, 'te');
   });

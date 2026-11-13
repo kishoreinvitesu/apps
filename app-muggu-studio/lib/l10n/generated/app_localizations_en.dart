@@ -13,7 +13,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appName => 'Muggu Studio';
 
   @override
-  String get brandLine => 'Our Traditions';
+  String get brandLine => 'Rangoli • Kolam • Muggu • Indian Floor Art';
 
   @override
   String get home => 'Home';

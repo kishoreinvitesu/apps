@@ -109,7 +109,7 @@ abstract class AppLocalizations {
   /// No description provided for @brandLine.
   ///
   /// In en, this message translates to:
-  /// **'Our Traditions'**
+  /// **'Rangoli • Kolam • Muggu • Indian Floor Art'**
   String get brandLine;
 
   /// No description provided for @home.

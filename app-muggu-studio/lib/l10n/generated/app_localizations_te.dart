@@ -10,10 +10,10 @@ class AppLocalizationsTe extends AppLocalizations {
   AppLocalizationsTe([String locale = 'te']) : super(locale);
 
   @override
-  String get appName => 'ముగ్గు స్టూడియో';
+  String get appName => 'Muggu Studio';
 
   @override
-  String get brandLine => 'మన సంప్రదాయాలు';
+  String get brandLine => 'Rangoli • Kolam • Muggu • Indian Floor Art';
 
   @override
   String get home => 'హోమ్';
