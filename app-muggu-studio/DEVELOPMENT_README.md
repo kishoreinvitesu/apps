@@ -78,6 +78,14 @@ issues, fixes and next steps. Product requirements remain in
   sees the emulator, Flutter lists it as a connected device, and the app
   process is running.
 
+## 2026-11-13 — GitHub publication
+
+- Published the app under `kishoreinvitesu/apps/app-muggu-studio` on `main`.
+- Initial commit: `26e31159f369086ab891ca2ade8c294eab1b4ee9`.
+- The existing standalone `mobile_apps_dev/muggu_studio` folder was left
+  untouched as requested. The repo checkout is the copy to use for GitHub
+  changes; removal or consolidation of the standalone copy is deferred.
+
 ## Next
 
 - Reconnect Flutter to the running app if hot reload/debugging is needed.
