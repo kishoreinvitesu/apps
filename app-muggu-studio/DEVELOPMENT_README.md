@@ -144,6 +144,26 @@ Sprint 1 is ready for review. Sprint 2 has not been started.
 - The updated document is now the product source of truth; Sprint 2 remains
   unstarted.
 
+### Key product direction recorded from the updated brief
+
+- Position Muggu Studio for discovery across Muggu, Kolam, Rangoli and Indian
+  Floor Art, while treating regional traditions as distinct and validating
+  names, origins and techniques with knowledgeable reviewers.
+- The first content milestone is 10 verified designs and 5 complete tutorials;
+  the broader MVP targets 60 designs and 20 tutorials. Use only original or
+  properly licensed artwork and retain rights/review records.
+- Sprint 2 is limited to the offline catalogue and Explore: begin with 10
+  reviewed designs, localized metadata, synonym search, combinable/clearable
+  filters, relevant sorting, useful empty/error states and locally persisted
+  favourites. Do not build the drawing engine in this sprint.
+- Keep the product local-first with no account or backend. Defer tutorials,
+  tracing and creator work to later sprints; defer ads and one-time Premium
+  until the core experience is validated. AI, community and cloud features
+  remain out of scope absent explicit approval.
+- Preserve English, Telugu and Tamil support, review regional-language content
+  with fluent speakers, and validate offline use, accessibility and Android
+  rendering as features are added.
+
 ## Next
 
 - Start the next development phase after approving the Sprint 1 foundation.
