@@ -192,6 +192,17 @@ Sprint 1 is ready for review. Sprint 2 has not been started.
   app.
 - APK: `build\app\outputs\flutter-apk\app-debug.apk` (debug build).
 
+## 2026-11-14 — Dependency hygiene
+
+- Retained `material_ui`: the installed Flutter SDK deprecates the old
+  `package:flutter/material.dart` entrypoint and directs apps to the official
+  Flutter package.
+- Removed unused direct dependencies `cupertino_ui` and `cupertino_icons`.
+  `cupertino_ui` remains transitively required by `material_ui`.
+- `flutter analyze` — passed with no issues.
+- `flutter test` — passed; both widget tests succeeded.
+
 ## Next
 
-- Start the next development phase after approving the Sprint 1 foundation.
+- Finalize the Sprint 2 catalogue content and review approach before
+  implementation.
