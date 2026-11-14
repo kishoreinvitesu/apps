@@ -180,6 +180,18 @@ Sprint 1 is ready for review. Sprint 2 has not been started.
 - `flutter analyze` — passed with no issues.
 - `flutter test` — passed; both widget tests succeeded.
 
+## 2026-11-14 — Updated title APK verification
+
+- Built the universal debug APK with `flutter build apk --debug`.
+- Installed it on `emulator-5554` with `adb install -r` and visually verified
+  the Home screen shows `Muggu Studio` and
+  `Rangoli • Kolam • Muggu • Indian Floor Art`.
+- The connected Android target was the emulator; no physical phone was
+  connected over ADB. A phone with an older install must install this new APK
+  to receive the title update; pushing source code does not update an installed
+  app.
+- APK: `build\app\outputs\flutter-apk\app-debug.apk` (debug build).
+
 ## Next
 
 - Start the next development phase after approving the Sprint 1 foundation.
