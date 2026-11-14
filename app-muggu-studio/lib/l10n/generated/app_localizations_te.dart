@@ -77,6 +77,110 @@ class AppLocalizationsTe extends AppLocalizations {
       'కొత్త ముగ్గులు, కోలాలు, రంగోలి నమూనాలు ఇక్కడ కనిపిస్తాయి.';
 
   @override
+  String get exploreSearchHint => 'డిజైన్‌లు లేదా కీలక పదాలను వెతకండి';
+
+  @override
+  String get filters => 'వడపోతలు';
+
+  @override
+  String get sort => 'క్రమబద్ధీకరణ';
+
+  @override
+  String get clear => 'తొలగించు';
+
+  @override
+  String get apply => 'వర్తింపజేయి';
+
+  @override
+  String get exploreNoResultsTitle => 'డిజైన్‌లు కనబడలేదు';
+
+  @override
+  String get exploreNoResultsDescription =>
+      'శోధన లేదా వడపోతలను మార్చి మళ్లీ ప్రయత్నించండి.';
+
+  @override
+  String get sampleContentNotice =>
+      'ఇవి అసలు జ్యామితీయ నమూనాలు. సమీక్ష పూర్తయ్యే వరకు ప్రాంతం, సంప్రదాయం కేటాయించలేదు.';
+
+  @override
+  String get pendingReview => 'సమీక్ష పెండింగ్‌లో ఉంది';
+
+  @override
+  String get unassigned => 'కేటాయించలేదు';
+
+  @override
+  String get noReviewedCategories =>
+      'సమీక్షించిన ప్రాంతం లేదా సంప్రదాయం వర్గాలు ఇంకా అందుబాటులో లేవు.';
+
+  @override
+  String get noDotGridCategories =>
+      'చుక్కల గ్రిడ్ వర్గాలు ఇంకా అందుబాటులో లేవు.';
+
+  @override
+  String get region => 'ప్రాంతం';
+
+  @override
+  String get tradition => 'సంప్రదాయం';
+
+  @override
+  String get technique => 'విధానం';
+
+  @override
+  String get difficulty => 'కఠినత';
+
+  @override
+  String get dotGrid => 'చుక్కల గ్రిడ్';
+
+  @override
+  String get easy => 'సులభం';
+
+  @override
+  String get intermediate => 'మధ్యస్థం';
+
+  @override
+  String get advanced => 'కఠినం';
+
+  @override
+  String get sortRecommended => 'సిఫార్సు చేయబడినవి';
+
+  @override
+  String get sortName => 'పేరు';
+
+  @override
+  String get techniqueGeometricLines => 'జ్యామితీయ రేఖలు';
+
+  @override
+  String get favoriteAdd => 'ఇష్టమైన వాటిలో చేర్చు';
+
+  @override
+  String get favoriteRemove => 'ఇష్టమైన వాటి నుంచి తీసివేయి';
+
+  @override
+  String get favoriteAdded => 'ఇష్టమైన వాటిలో చేర్చబడింది';
+
+  @override
+  String get favoriteRemoved => 'ఇష్టమైన వాటి నుంచి తీసివేయబడింది';
+
+  @override
+  String get favoriteUpdateError => 'ఇష్టమైనదాన్ని నవీకరించలేకపోయాము.';
+
+  @override
+  String get catalogLoadError => 'డిజైన్‌ల సేకరణను లోడ్ చేయలేకపోయాము.';
+
+  @override
+  String get retry => 'మళ్లీ ప్రయత్నించు';
+
+  @override
+  String get thumbnailUnavailable => 'చిత్రం అందుబాటులో లేదు';
+
+  @override
+  String get savedFavoritesTitle => 'ఇష్టమైన డిజైన్‌లు';
+
+  @override
+  String get savedCreationsComing =>
+      'నా సృష్టులు తదుపరి నవీకరణలో అందుబాటులో ఉంటాయి.';
+
+  @override
   String get createEmptyTitle => 'మీ సృజనాత్మక వేదిక త్వరలో వస్తుంది';
 
   @override

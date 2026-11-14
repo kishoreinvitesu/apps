@@ -76,6 +76,110 @@ class AppLocalizationsTa extends AppLocalizations {
       'புதிய முக்கு, கோலம், ரங்கோலி வடிவங்கள் இங்கே இடம்பெறும்.';
 
   @override
+  String get exploreSearchHint =>
+      'வடிவங்கள் அல்லது முக்கியச் சொற்களைத் தேடுங்கள்';
+
+  @override
+  String get filters => 'வடிகட்டிகள்';
+
+  @override
+  String get sort => 'வரிசைப்படுத்து';
+
+  @override
+  String get clear => 'அழி';
+
+  @override
+  String get apply => 'செயல்படுத்து';
+
+  @override
+  String get exploreNoResultsTitle => 'வடிவங்கள் எதுவும் இல்லை';
+
+  @override
+  String get exploreNoResultsDescription =>
+      'தேடல் அல்லது வடிகட்டிகளை மாற்றி மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get sampleContentNotice =>
+      'இவை அசல் வடிவியல் மாதிரிகள். மதிப்பாய்வு முடியும் வரை பகுதி மற்றும் மரபு குறிப்பிடப்படவில்லை.';
+
+  @override
+  String get pendingReview => 'மதிப்பாய்வு நிலுவையில் உள்ளது';
+
+  @override
+  String get unassigned => 'குறிப்பிடப்படவில்லை';
+
+  @override
+  String get noReviewedCategories =>
+      'மதிப்பாய்வு செய்யப்பட்ட பகுதி அல்லது மரபு வகைகள் இன்னும் இல்லை.';
+
+  @override
+  String get noDotGridCategories => 'புள்ளிக் கட்ட வகைகள் இன்னும் இல்லை.';
+
+  @override
+  String get region => 'பகுதி';
+
+  @override
+  String get tradition => 'மரபு';
+
+  @override
+  String get technique => 'நுட்பம்';
+
+  @override
+  String get difficulty => 'சிரமம்';
+
+  @override
+  String get dotGrid => 'புள்ளிக் கட்டம்';
+
+  @override
+  String get easy => 'எளிது';
+
+  @override
+  String get intermediate => 'நடுத்தரம்';
+
+  @override
+  String get advanced => 'கடினம்';
+
+  @override
+  String get sortRecommended => 'பரிந்துரைக்கப்படுபவை';
+
+  @override
+  String get sortName => 'பெயர்';
+
+  @override
+  String get techniqueGeometricLines => 'வடிவியல் கோடுகள்';
+
+  @override
+  String get favoriteAdd => 'விருப்பங்களில் சேர்';
+
+  @override
+  String get favoriteRemove => 'விருப்பங்களிலிருந்து நீக்கு';
+
+  @override
+  String get favoriteAdded => 'விருப்பங்களில் சேர்க்கப்பட்டது';
+
+  @override
+  String get favoriteRemoved => 'விருப்பங்களிலிருந்து நீக்கப்பட்டது';
+
+  @override
+  String get favoriteUpdateError => 'விருப்பத்தைப் புதுப்பிக்க முடியவில்லை.';
+
+  @override
+  String get catalogLoadError => 'வடிவத் தொகுப்பை ஏற்ற முடியவில்லை.';
+
+  @override
+  String get retry => 'மீண்டும் முயற்சி';
+
+  @override
+  String get thumbnailUnavailable => 'சிறுபடம் கிடைக்கவில்லை';
+
+  @override
+  String get savedFavoritesTitle => 'விருப்பமான வடிவங்கள்';
+
+  @override
+  String get savedCreationsComing =>
+      'எனது படைப்புகள் அடுத்த புதுப்பிப்பில் கிடைக்கும்.';
+
+  @override
   String get createEmptyTitle => 'உங்கள் படைப்புத் தளம் விரைவில் வரும்';
 
   @override

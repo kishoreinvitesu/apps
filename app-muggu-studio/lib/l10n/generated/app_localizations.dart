@@ -226,6 +226,204 @@ abstract class AppLocalizations {
   /// **'Original Muggu, Kolam and Rangoli designs will appear here.'**
   String get exploreEmptyDescription;
 
+  /// No description provided for @exploreSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search designs or keywords'**
+  String get exploreSearchHint;
+
+  /// No description provided for @filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get filters;
+
+  /// No description provided for @sort.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get sort;
+
+  /// No description provided for @clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// No description provided for @apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apply;
+
+  /// No description provided for @exploreNoResultsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No designs found'**
+  String get exploreNoResultsTitle;
+
+  /// No description provided for @exploreNoResultsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Try changing your search or filters.'**
+  String get exploreNoResultsDescription;
+
+  /// No description provided for @sampleContentNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'These are original geometric samples. Region and tradition are unassigned while content review is pending.'**
+  String get sampleContentNotice;
+
+  /// No description provided for @pendingReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending review'**
+  String get pendingReview;
+
+  /// No description provided for @unassigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Unassigned'**
+  String get unassigned;
+
+  /// No description provided for @noReviewedCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'No reviewed region or tradition categories are available yet.'**
+  String get noReviewedCategories;
+
+  /// No description provided for @noDotGridCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'No dot-grid categories are available yet.'**
+  String get noDotGridCategories;
+
+  /// No description provided for @region.
+  ///
+  /// In en, this message translates to:
+  /// **'Region'**
+  String get region;
+
+  /// No description provided for @tradition.
+  ///
+  /// In en, this message translates to:
+  /// **'Tradition'**
+  String get tradition;
+
+  /// No description provided for @technique.
+  ///
+  /// In en, this message translates to:
+  /// **'Technique'**
+  String get technique;
+
+  /// No description provided for @difficulty.
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty'**
+  String get difficulty;
+
+  /// No description provided for @dotGrid.
+  ///
+  /// In en, this message translates to:
+  /// **'Dot grid'**
+  String get dotGrid;
+
+  /// No description provided for @easy.
+  ///
+  /// In en, this message translates to:
+  /// **'Easy'**
+  String get easy;
+
+  /// No description provided for @intermediate.
+  ///
+  /// In en, this message translates to:
+  /// **'Intermediate'**
+  String get intermediate;
+
+  /// No description provided for @advanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get advanced;
+
+  /// No description provided for @sortRecommended.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended'**
+  String get sortRecommended;
+
+  /// No description provided for @sortName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get sortName;
+
+  /// No description provided for @techniqueGeometricLines.
+  ///
+  /// In en, this message translates to:
+  /// **'Geometric lines'**
+  String get techniqueGeometricLines;
+
+  /// No description provided for @favoriteAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to favourites'**
+  String get favoriteAdd;
+
+  /// No description provided for @favoriteRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from favourites'**
+  String get favoriteRemove;
+
+  /// No description provided for @favoriteAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to favourites'**
+  String get favoriteAdded;
+
+  /// No description provided for @favoriteRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from favourites'**
+  String get favoriteRemoved;
+
+  /// No description provided for @favoriteUpdateError.
+  ///
+  /// In en, this message translates to:
+  /// **'Your favourite could not be updated.'**
+  String get favoriteUpdateError;
+
+  /// No description provided for @catalogLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'The design library could not be loaded.'**
+  String get catalogLoadError;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @thumbnailUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Thumbnail unavailable'**
+  String get thumbnailUnavailable;
+
+  /// No description provided for @savedFavoritesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Favourite designs'**
+  String get savedFavoritesTitle;
+
+  /// No description provided for @savedCreationsComing.
+  ///
+  /// In en, this message translates to:
+  /// **'My Creations will be available in a later update.'**
+  String get savedCreationsComing;
+
   /// No description provided for @createEmptyTitle.
   ///
   /// In en, this message translates to:

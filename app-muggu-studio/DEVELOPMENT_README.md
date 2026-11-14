@@ -202,7 +202,52 @@ Sprint 1 is ready for review. Sprint 2 has not been started.
 - `flutter analyze` — passed with no issues.
 - `flutter test` — passed; both widget tests succeeded.
 
-## Next
+## 2026-11-14 — Sprint 2 catalogue and Explore
 
-- Finalize the Sprint 2 catalogue content and review approach before
-  implementation.
+### Implemented
+
+- Added a versioned bundled JSON catalogue with 10 original geometric
+  vector samples and a repeatable thumbnail generator. Each sample has an
+  English fallback, generic geometry tags, a WebP thumbnail, null region
+  and tradition, and pending content-review status.
+- Added typed catalogue models and validation for identifiers, localized
+  text, difficulty/review values, grids, thumbnail paths, and vector points;
+  duplicate IDs are rejected.
+- Implemented offline loading, case-insensitive localized-name/description
+  and keyword search, combined filters, and recommended/name/difficulty
+  sorting.
+- Added an Explore gallery with visible unassigned/pending-review guidance.
+  Region, tradition, and dot-grid filters explain when no reviewed choices
+  exist instead of inventing categories.
+- Added version-1 SQLite favourites and a Saved favourites view. My
+  Creations remains explicitly deferred.
+- Added English, Telugu, and Tamil UI strings for Explore, filters, sorting,
+  favourites, and loading/error states.
+- Added `sqflite` and test-only `sqflite_common_ffi`. Installed Pillow for
+  local generation of original WebP thumbnails; Python tooling requirements
+  are listed in `tools/requirements.txt`.
+
+### Validation
+
+- `flutter pub get` — passed.
+- `flutter gen-l10n` — completed using the project `l10n.yaml`.
+- `dart format lib test` — passed.
+- `flutter analyze` — passed with no issues.
+- `flutter test --reporter expanded` — passed; all 8 repository, database,
+  and widget tests succeeded.
+- `python tools\generate_sample_catalog.py` — generated 10 vector-backed
+  catalogue entries and 10 WebP thumbnails.
+- `flutter build apk --debug` — passed; installed on `emulator-5554`.
+- Emulator verification confirmed the Explore gallery, thumbnails,
+  unassigned/review-pending messaging, filter sheet empty-category guidance,
+  and a favourite retained in Saved after restarting the app.
+- `git diff --check` — passed.
+
+### Limitations and deferred work
+
+- These are generic geometric samples, not verified Muggu, Kolam, or
+  Rangoli works. All are intentionally unassigned and pending human review.
+  Regional/tradition/dot-grid filter choices will appear only when reviewed
+  catalogue data provides them.
+- Design details, lessons, drawing, tracing, user creations, and other later
+  sprint work remain out of scope.

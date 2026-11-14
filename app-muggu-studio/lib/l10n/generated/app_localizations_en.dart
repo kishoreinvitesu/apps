@@ -77,6 +77,109 @@ class AppLocalizationsEn extends AppLocalizations {
       'Original Muggu, Kolam and Rangoli designs will appear here.';
 
   @override
+  String get exploreSearchHint => 'Search designs or keywords';
+
+  @override
+  String get filters => 'Filters';
+
+  @override
+  String get sort => 'Sort';
+
+  @override
+  String get clear => 'Clear';
+
+  @override
+  String get apply => 'Apply';
+
+  @override
+  String get exploreNoResultsTitle => 'No designs found';
+
+  @override
+  String get exploreNoResultsDescription =>
+      'Try changing your search or filters.';
+
+  @override
+  String get sampleContentNotice =>
+      'These are original geometric samples. Region and tradition are unassigned while content review is pending.';
+
+  @override
+  String get pendingReview => 'Pending review';
+
+  @override
+  String get unassigned => 'Unassigned';
+
+  @override
+  String get noReviewedCategories =>
+      'No reviewed region or tradition categories are available yet.';
+
+  @override
+  String get noDotGridCategories => 'No dot-grid categories are available yet.';
+
+  @override
+  String get region => 'Region';
+
+  @override
+  String get tradition => 'Tradition';
+
+  @override
+  String get technique => 'Technique';
+
+  @override
+  String get difficulty => 'Difficulty';
+
+  @override
+  String get dotGrid => 'Dot grid';
+
+  @override
+  String get easy => 'Easy';
+
+  @override
+  String get intermediate => 'Intermediate';
+
+  @override
+  String get advanced => 'Advanced';
+
+  @override
+  String get sortRecommended => 'Recommended';
+
+  @override
+  String get sortName => 'Name';
+
+  @override
+  String get techniqueGeometricLines => 'Geometric lines';
+
+  @override
+  String get favoriteAdd => 'Add to favourites';
+
+  @override
+  String get favoriteRemove => 'Remove from favourites';
+
+  @override
+  String get favoriteAdded => 'Added to favourites';
+
+  @override
+  String get favoriteRemoved => 'Removed from favourites';
+
+  @override
+  String get favoriteUpdateError => 'Your favourite could not be updated.';
+
+  @override
+  String get catalogLoadError => 'The design library could not be loaded.';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get thumbnailUnavailable => 'Thumbnail unavailable';
+
+  @override
+  String get savedFavoritesTitle => 'Favourite designs';
+
+  @override
+  String get savedCreationsComing =>
+      'My Creations will be available in a later update.';
+
+  @override
   String get createEmptyTitle => 'Your creative space is coming';
 
   @override
