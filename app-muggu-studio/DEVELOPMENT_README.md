@@ -282,3 +282,21 @@ Sprint 1 is ready for review. Sprint 2 has not been started.
   not verified traditional lessons.
 - Step instructions are generic until authenticated regional content and
   human-reviewed lesson metadata are available.
+
+## 2026-11-21 - Home and practice entry-point polish
+
+### Implemented
+
+- Home selects a deterministic daily design based on the local calendar date,
+  showing its thumbnail and localized name and opening its detail screen.
+- Added loading, empty-catalogue and retry states for the Home feature.
+- Added a localized Practise / Trace action on design details that opens a
+  guide preview and explains that tracing tools are planned for a future
+  update; touch tracing itself remains in Sprint 4.
+
+### Validation
+
+- `dart format lib test` - passed.
+- `flutter analyze` - passed with no issues.
+- `flutter test --reporter expanded` - passed; all 12 tests succeeded.
+- `flutter build apk --debug --target-platform android-x64` - passed.

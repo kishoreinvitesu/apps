@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../data/repositories/design_repository.dart';
@@ -143,6 +144,12 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
           value: design.tradition ?? l10n.metadataUnassigned,
         ),
         const SizedBox(height: 16),
+        FilledButton.icon(
+          onPressed: () => context.push('/design/${design.id}/practice'),
+          icon: const Icon(Icons.gesture_rounded),
+          label: Text(l10n.practiceDesign),
+        ),
+        const SizedBox(height: 12),
         Wrap(
           spacing: 8,
           runSpacing: 8,

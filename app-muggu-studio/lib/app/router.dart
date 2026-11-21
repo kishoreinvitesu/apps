@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../features/create/presentation/create_screen.dart';
 import '../features/explore/presentation/explore_screen.dart';
 import '../features/design/presentation/design_detail_screen.dart';
+import '../features/design/presentation/practice_screen.dart';
 import '../features/home/presentation/home_screen.dart';
 import '../features/saved/presentation/saved_screen.dart';
 import 'shell/app_shell.dart';
@@ -24,6 +25,13 @@ GoRouter createAppRouter() {
             path: '/design/:designId',
             builder: (context, state) =>
                 DesignDetailScreen(designId: state.pathParameters['designId']!),
+            routes: [
+              GoRoute(
+                path: 'practice',
+                builder: (context, state) =>
+                    PracticeScreen(designId: state.pathParameters['designId']!),
+              ),
+            ],
           ),
           GoRoute(
             path: '/create',

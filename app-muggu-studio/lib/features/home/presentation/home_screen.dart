@@ -1,16 +1,36 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../data/models/muggu_design.dart';
+import '../../../data/repositories/design_repository.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../application/daily_design.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final textTheme = Theme.of(context).textTheme;
+    final catalog = ref.watch(catalogProvider);
+    final List<MugguDesign> designs;
+    if (catalog.hasValue) {
+      designs = catalog.requireValue;
+    } else {
+      designs = const [];
+    }
+    final index = dailyDesignIndex(DateTime.now(), designs.length);
+    final dailyDesign = index == null ? null : designs[index];
+    final statusMessage = catalog.hasError
+        ? l10n.catalogLoadError
+        : catalog.isLoading
+        ? null
+        : designs.isEmpty
+        ? l10n.exploreEmptyDescription
+        : null;
 
     return SafeArea(
       top: false,
@@ -49,10 +69,23 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(height: 24),
                 _DailyMugguCard(
                   title: l10n.dailyMuggu,
-                  description: l10n.dailyMugguDescription,
+                  description:
+                      dailyDesign?.descriptionFor(
+                        Localizations.localeOf(context).languageCode,
+                      ) ??
+                      l10n.dailyMugguDescription,
+                  design: dailyDesign,
+                  statusMessage: statusMessage,
+                  isLoading: catalog.isLoading,
                   learnLabel: l10n.learnThisDesign,
+                  retryLabel: l10n.retry,
                   createLabel: l10n.createYourOwn,
-                  onLearn: () => context.go('/explore'),
+                  onLearn: dailyDesign == null
+                      ? null
+                      : () => context.push('/design/${dailyDesign.id}'),
+                  onRetry: catalog.hasError
+                      ? () => ref.invalidate(catalogProvider)
+                      : null,
                   onCreate: () => context.go('/create'),
                 ),
                 const SizedBox(height: 28),
@@ -90,16 +123,26 @@ class _DailyMugguCard extends StatelessWidget {
     required this.title,
     required this.description,
     required this.learnLabel,
+    required this.retryLabel,
     required this.createLabel,
+    required this.design,
+    required this.statusMessage,
+    required this.isLoading,
     required this.onLearn,
+    required this.onRetry,
     required this.onCreate,
   });
 
   final String title;
   final String description;
   final String learnLabel;
+  final String retryLabel;
   final String createLabel;
-  final VoidCallback onLearn;
+  final MugguDesign? design;
+  final String? statusMessage;
+  final bool isLoading;
+  final VoidCallback? onLearn;
+  final VoidCallback? onRetry;
   final VoidCallback onCreate;
 
   @override
@@ -117,25 +160,75 @@ class _DailyMugguCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  color: MugguColors.warmCream.withValues(alpha: 0.16),
-                  shape: BoxShape.circle,
+              if (design == null)
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: MugguColors.warmCream.withValues(alpha: 0.16),
+                    shape: BoxShape.circle,
+                  ),
+                  child: SizedBox(
+                    width: 48,
+                    height: 48,
+                    child: isLoading
+                        ? const Padding(
+                            padding: EdgeInsets.all(14),
+                            child: CircularProgressIndicator(
+                              color: MugguColors.warmCream,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Icon(
+                            Icons.spa_rounded,
+                            color: MugguColors.warmCream,
+                          ),
+                  ),
+                )
+              else
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(
+                    design!.thumbnail,
+                    width: 64,
+                    height: 64,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const SizedBox(
+                          width: 64,
+                          height: 64,
+                          child: Icon(
+                            Icons.image_not_supported_outlined,
+                            color: MugguColors.warmCream,
+                          ),
+                        ),
+                  ),
                 ),
-                child: const SizedBox(
-                  width: 48,
-                  height: 48,
-                  child: Icon(Icons.spa_rounded, color: MugguColors.warmCream),
-                ),
-              ),
               const SizedBox(width: 14),
               Expanded(
-                child: Text(
-                  title,
-                  style: textTheme.titleLarge?.copyWith(
-                    color: MugguColors.warmCream,
-                    fontWeight: FontWeight.w700,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: textTheme.titleLarge?.copyWith(
+                        color: MugguColors.warmCream,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    if (design != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        design!.nameFor(
+                          Localizations.localeOf(context).languageCode,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: MugguColors.warmCream,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
             ],
@@ -148,6 +241,15 @@ class _DailyMugguCard extends StatelessWidget {
               height: 1.45,
             ),
           ),
+          if (statusMessage != null) ...[
+            const SizedBox(height: 8),
+            Text(
+              statusMessage!,
+              style: textTheme.bodySmall?.copyWith(
+                color: MugguColors.warmCream.withValues(alpha: 0.9),
+              ),
+            ),
+          ],
           const SizedBox(height: 20),
           FilledButton.icon(
             onPressed: onLearn,
@@ -159,6 +261,21 @@ class _DailyMugguCard extends StatelessWidget {
               minimumSize: const Size.fromHeight(48),
             ),
           ),
+          if (onRetry != null) ...[
+            const SizedBox(height: 8),
+            OutlinedButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(Icons.refresh_rounded),
+              label: Text(retryLabel),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: MugguColors.warmCream,
+                minimumSize: const Size.fromHeight(48),
+                side: BorderSide(
+                  color: MugguColors.warmCream.withValues(alpha: 0.6),
+                ),
+              ),
+            ),
+          ],
           const SizedBox(height: 8),
           TextButton.icon(
             onPressed: onCreate,

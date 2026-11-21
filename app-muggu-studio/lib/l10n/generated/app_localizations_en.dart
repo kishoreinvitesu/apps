@@ -247,4 +247,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get metadataUnassigned => 'Not assigned until content review';
+
+  @override
+  String get practiceDesign => 'Practise / Trace';
+
+  @override
+  String get practiceComingSoon => 'Practice is coming soon';
+
+  @override
+  String get practiceComingSoonDescription =>
+      'This guide is ready for the tracing tools planned for a future update.';
 }

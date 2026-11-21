@@ -61,19 +61,22 @@
   "languageMenuLabel": "App language",
   "english": "English",
   "telugu": "తెలుగు",
-  "tamil": "தமிழ்"
-  ,"designDetails": "Design details"
-  ,"learnDesign": "Learn design"
-  ,"previewLesson": "Vector preview"
-  ,"sampleLessonNotice": "This is an original vector preview, not a culturally verified lesson."
-  ,"step": "Step"
-  ,"ofLabel": "of"
-  ,"previous": "Previous"
-  ,"next": "Next"
-  ,"play": "Play"
-  ,"pause": "Pause"
-  ,"restart": "Restart"
-  ,"drawNextStroke": "Draw the next stroke"
-  ,"lessonComplete": "Preview complete"
-  ,"metadataUnassigned": "Not assigned until content review"
+  "tamil": "தமிழ்",
+  "designDetails": "Design details",
+  "learnDesign": "Learn design",
+  "previewLesson": "Vector preview",
+  "sampleLessonNotice": "This is an original vector preview, not a culturally verified lesson.",
+  "step": "Step",
+  "ofLabel": "of",
+  "previous": "Previous",
+  "next": "Next",
+  "play": "Play",
+  "pause": "Pause",
+  "restart": "Restart",
+  "drawNextStroke": "Draw the next stroke",
+  "lessonComplete": "Preview complete",
+  "metadataUnassigned": "Not assigned until content review",
+  "practiceDesign": "Practise / Trace",
+  "practiceComingSoon": "Practice is coming soon",
+  "practiceComingSoonDescription": "This guide is ready for the tracing tools planned for a future update."
 }

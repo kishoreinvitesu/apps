@@ -247,4 +247,14 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get metadataUnassigned => 'மதிப்பாய்வு வரை ஒதுக்கப்படவில்லை';
+
+  @override
+  String get practiceDesign => 'பயிற்சி / தடமறி';
+
+  @override
+  String get practiceComingSoon => 'பயிற்சி விரைவில் கிடைக்கும்';
+
+  @override
+  String get practiceComingSoonDescription =>
+      'எதிர்காலப் புதுப்பிப்பில் வரவிருக்கும் தடமறிதல் கருவிகளுக்கு இந்த வழிகாட்டி தயாராக உள்ளது.';
 }

@@ -248,4 +248,14 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get metadataUnassigned => 'సమీక్ష పూర్తయ్యే వరకు కేటాయించలేదు';
+
+  @override
+  String get practiceDesign => 'సాధన / ట్రేస్';
+
+  @override
+  String get practiceComingSoon => 'సాధన త్వరలో అందుబాటులోకి వస్తుంది';
+
+  @override
+  String get practiceComingSoonDescription =>
+      'భవిష్యత్ నవీకరణలో రానున్న ట్రేసింగ్ సాధనాల కోసం ఈ మార్గదర్శిని సిద్ధంగా ఉంది.';
 }

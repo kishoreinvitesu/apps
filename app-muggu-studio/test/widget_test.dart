@@ -58,7 +58,25 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Daily Muggu'), findsOneWidget);
+    expect(find.text('Geometric Sample 01'), findsOneWidget);
 
+    await tester.ensureVisible(find.text('Learn this design'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Learn this design'));
+    await tester.pumpAndSettle();
+    expect(find.text('Geometric Sample 01'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Design details'), 250);
+    await tester.pumpAndSettle();
+    expect(find.text('Design details'), findsOneWidget);
+
+    await tester.scrollUntilVisible(find.text('Practise / Trace'), 250);
+    await tester.tap(find.text('Practise / Trace'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Practice is coming soon'), 250);
+    expect(find.text('Practice is coming soon'), findsOneWidget);
+
+    await tester.tap(find.text('Home').last);
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Explore').last);
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
@@ -87,6 +105,7 @@ void main() {
           localeStorageProvider.overrideWithValue(storage),
           initialLocaleProvider.overrideWithValue(const Locale('en')),
           favoritesDaoProvider.overrideWithValue(_MemoryFavorites()),
+          catalogProvider.overrideWith((ref) async => _testCatalog()),
         ],
         child: const MugguStudioApp(),
       ),

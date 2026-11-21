@@ -555,6 +555,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not assigned until content review'**
   String get metadataUnassigned;
+
+  /// No description provided for @practiceDesign.
+  ///
+  /// In en, this message translates to:
+  /// **'Practise / Trace'**
+  String get practiceDesign;
+
+  /// No description provided for @practiceComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice is coming soon'**
+  String get practiceComingSoon;
+
+  /// No description provided for @practiceComingSoonDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'This guide is ready for the tracing tools planned for a future update.'**
+  String get practiceComingSoonDescription;
 }
 
 class _AppLocalizationsDelegate
