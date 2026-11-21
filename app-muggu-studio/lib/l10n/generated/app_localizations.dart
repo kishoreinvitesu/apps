@@ -471,6 +471,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'தமிழ்'**
   String get tamil;
+
+  /// No description provided for @designDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Design details'**
+  String get designDetails;
+
+  /// No description provided for @learnDesign.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn design'**
+  String get learnDesign;
+
+  /// No description provided for @previewLesson.
+  ///
+  /// In en, this message translates to:
+  /// **'Vector preview'**
+  String get previewLesson;
+
+  /// No description provided for @sampleLessonNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'This is an original vector preview, not a culturally verified lesson.'**
+  String get sampleLessonNotice;
+
+  /// No description provided for @step.
+  ///
+  /// In en, this message translates to:
+  /// **'Step'**
+  String get step;
+
+  /// No description provided for @ofLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'of'**
+  String get ofLabel;
+
+  /// No description provided for @previous.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get previous;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @play.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get play;
+
+  /// No description provided for @pause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pause;
+
+  /// No description provided for @restart.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart'**
+  String get restart;
+
+  /// No description provided for @drawNextStroke.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw the next stroke'**
+  String get drawNextStroke;
+
+  /// No description provided for @lessonComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview complete'**
+  String get lessonComplete;
+
+  /// No description provided for @metadataUnassigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Not assigned until content review'**
+  String get metadataUnassigned;
 }
 
 class _AppLocalizationsDelegate

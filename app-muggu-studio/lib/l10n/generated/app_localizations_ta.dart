@@ -204,4 +204,47 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get tamil => 'தமிழ்';
+
+  @override
+  String get designDetails => 'வடிவ விவரங்கள்';
+
+  @override
+  String get learnDesign => 'வடிவத்தைக் கற்க';
+
+  @override
+  String get previewLesson => 'திசையன் முன்னோட்டம்';
+
+  @override
+  String get sampleLessonNotice =>
+      'இது கலாசார ரீதியாக சரிபார்க்கப்பட்ட பாடம் அல்ல; அசல் திசையன் முன்னோட்டம்.';
+
+  @override
+  String get step => 'படி';
+
+  @override
+  String get ofLabel => '/';
+
+  @override
+  String get previous => 'முந்தைய';
+
+  @override
+  String get next => 'அடுத்த';
+
+  @override
+  String get play => 'இயக்கு';
+
+  @override
+  String get pause => 'நிறுத்து';
+
+  @override
+  String get restart => 'மீண்டும் தொடங்கு';
+
+  @override
+  String get drawNextStroke => 'அடுத்த கோட்டை வரையுங்கள்';
+
+  @override
+  String get lessonComplete => 'முன்னோட்டம் முடிந்தது';
+
+  @override
+  String get metadataUnassigned => 'மதிப்பாய்வு வரை ஒதுக்கப்படவில்லை';
 }

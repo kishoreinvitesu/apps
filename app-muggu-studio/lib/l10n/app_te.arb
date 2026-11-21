@@ -62,4 +62,18 @@
   "english": "English",
   "telugu": "తెలుగు",
   "tamil": "தமிழ்"
+  ,"designDetails": "డిజైన్ వివరాలు"
+  ,"learnDesign": "డిజైన్ నేర్చుకోండి"
+  ,"previewLesson": "వెక్టర్ ప్రివ్యూ"
+  ,"sampleLessonNotice": "ఇది సాంస్కృతికంగా ధృవీకరించబడిన పాఠం కాదు, అసలు వెక్టర్ ప్రివ్యూ."
+  ,"step": "అడుగు"
+  ,"ofLabel": "/"
+  ,"previous": "మునుపటి"
+  ,"next": "తదుపరి"
+  ,"play": "ప్లే"
+  ,"pause": "పాజ్"
+  ,"restart": "మళ్లీ ప్రారంభించు"
+  ,"drawNextStroke": "తదుపరి గీతను గీయండి"
+  ,"lessonComplete": "ప్రివ్యూ పూర్తయింది"
+  ,"metadataUnassigned": "సమీక్ష పూర్తయ్యే వరకు కేటాయించలేదు"
 }

@@ -62,4 +62,18 @@
   "english": "English",
   "telugu": "తెలుగు",
   "tamil": "தமிழ்"
+  ,"designDetails": "வடிவ விவரங்கள்"
+  ,"learnDesign": "வடிவத்தைக் கற்க"
+  ,"previewLesson": "திசையன் முன்னோட்டம்"
+  ,"sampleLessonNotice": "இது கலாசார ரீதியாக சரிபார்க்கப்பட்ட பாடம் அல்ல; அசல் திசையன் முன்னோட்டம்."
+  ,"step": "படி"
+  ,"ofLabel": "/"
+  ,"previous": "முந்தைய"
+  ,"next": "அடுத்த"
+  ,"play": "இயக்கு"
+  ,"pause": "நிறுத்து"
+  ,"restart": "மீண்டும் தொடங்கு"
+  ,"drawNextStroke": "அடுத்த கோட்டை வரையுங்கள்"
+  ,"lessonComplete": "முன்னோட்டம் முடிந்தது"
+  ,"metadataUnassigned": "மதிப்பாய்வு வரை ஒதுக்கப்படவில்லை"
 }

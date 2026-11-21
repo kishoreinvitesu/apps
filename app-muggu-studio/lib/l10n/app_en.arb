@@ -62,4 +62,18 @@
   "english": "English",
   "telugu": "తెలుగు",
   "tamil": "தமிழ்"
+  ,"designDetails": "Design details"
+  ,"learnDesign": "Learn design"
+  ,"previewLesson": "Vector preview"
+  ,"sampleLessonNotice": "This is an original vector preview, not a culturally verified lesson."
+  ,"step": "Step"
+  ,"ofLabel": "of"
+  ,"previous": "Previous"
+  ,"next": "Next"
+  ,"play": "Play"
+  ,"pause": "Pause"
+  ,"restart": "Restart"
+  ,"drawNextStroke": "Draw the next stroke"
+  ,"lessonComplete": "Preview complete"
+  ,"metadataUnassigned": "Not assigned until content review"
 }

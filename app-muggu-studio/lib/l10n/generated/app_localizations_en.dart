@@ -204,4 +204,47 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tamil => 'தமிழ்';
+
+  @override
+  String get designDetails => 'Design details';
+
+  @override
+  String get learnDesign => 'Learn design';
+
+  @override
+  String get previewLesson => 'Vector preview';
+
+  @override
+  String get sampleLessonNotice =>
+      'This is an original vector preview, not a culturally verified lesson.';
+
+  @override
+  String get step => 'Step';
+
+  @override
+  String get ofLabel => 'of';
+
+  @override
+  String get previous => 'Previous';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get play => 'Play';
+
+  @override
+  String get pause => 'Pause';
+
+  @override
+  String get restart => 'Restart';
+
+  @override
+  String get drawNextStroke => 'Draw the next stroke';
+
+  @override
+  String get lessonComplete => 'Preview complete';
+
+  @override
+  String get metadataUnassigned => 'Not assigned until content review';
 }

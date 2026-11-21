@@ -205,4 +205,47 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get tamil => 'தமிழ்';
+
+  @override
+  String get designDetails => 'డిజైన్ వివరాలు';
+
+  @override
+  String get learnDesign => 'డిజైన్ నేర్చుకోండి';
+
+  @override
+  String get previewLesson => 'వెక్టర్ ప్రివ్యూ';
+
+  @override
+  String get sampleLessonNotice =>
+      'ఇది సాంస్కృతికంగా ధృవీకరించబడిన పాఠం కాదు, అసలు వెక్టర్ ప్రివ్యూ.';
+
+  @override
+  String get step => 'అడుగు';
+
+  @override
+  String get ofLabel => '/';
+
+  @override
+  String get previous => 'మునుపటి';
+
+  @override
+  String get next => 'తదుపరి';
+
+  @override
+  String get play => 'ప్లే';
+
+  @override
+  String get pause => 'పాజ్';
+
+  @override
+  String get restart => 'మళ్లీ ప్రారంభించు';
+
+  @override
+  String get drawNextStroke => 'తదుపరి గీతను గీయండి';
+
+  @override
+  String get lessonComplete => 'ప్రివ్యూ పూర్తయింది';
+
+  @override
+  String get metadataUnassigned => 'సమీక్ష పూర్తయ్యే వరకు కేటాయించలేదు';
 }

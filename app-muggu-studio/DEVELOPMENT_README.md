@@ -251,3 +251,34 @@ Sprint 1 is ready for review. Sprint 2 has not been started.
   catalogue data provides them.
 - Design details, lessons, drawing, tracing, user creations, and other later
   sprint work remain out of scope.
+
+## 2026-11-21 - Sprint 3 design detail and vector preview
+
+### Implemented
+
+- Added design detail routes for catalogue cards.
+- Added a bundled-vector preview renderer that preserves normalized catalogue
+  proportions and shows stroke order.
+- Added previous, next, play/pause and restart controls for stroke playback.
+- Added English, Telugu and Tamil detail, lesson and metadata labels.
+- Clearly labeled vector playback as an original preview rather than a
+  culturally verified lesson.
+- Kept unverified region and tradition metadata hidden behind an explicit
+  unassigned state.
+
+### Validation
+
+- `dart format lib test` - passed.
+- `flutter analyze` - passed with no issues.
+- `flutter test --reporter expanded` - passed; all 10 tests succeeded.
+- `flutter build apk --debug --target-platform android-x64` - passed.
+- APK:
+  `build\app\outputs\flutter-apk\app-debug.apk`
+
+### Limitations
+
+- The existing 10 catalogue entries are original geometric samples with
+  pending cultural review, so this sprint provides a vector playback preview,
+  not verified traditional lessons.
+- Step instructions are generic until authenticated regional content and
+  human-reviewed lesson metadata are available.
