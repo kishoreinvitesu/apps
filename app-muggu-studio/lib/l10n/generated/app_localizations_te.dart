@@ -34,11 +34,10 @@ class AppLocalizationsTe extends AppLocalizations {
   String get languageSaveError => 'మీ భాష ప్రాధాన్యతను సేవ్ చేయలేకపోయాము.';
 
   @override
-  String get dailyMuggu => 'నేటి ముగ్గు';
+  String get designOfTheDay => 'నేటి డిజైన్';
 
   @override
-  String get dailyMugguDescription =>
-      'మీ సృజనాత్మక సంప్రదాయానికి ఒక చిన్న ప్రేరణ.';
+  String get designOfTheDayDescription => 'ఈరోజు అసలు జ్యామితీయ నమూనా.';
 
   @override
   String get learnThisDesign => 'ఈ ముగ్గును నేర్చుకోండి';
@@ -258,4 +257,7 @@ class AppLocalizationsTe extends AppLocalizations {
   @override
   String get practiceComingSoonDescription =>
       'భవిష్యత్ నవీకరణలో రానున్న ట్రేసింగ్ సాధనాల కోసం ఈ మార్గదర్శిని సిద్ధంగా ఉంది.';
+
+  @override
+  String get back => 'వెనక్కి';
 }

@@ -8,8 +8,8 @@
   "saved": "சேமித்தவை",
   "chooseLanguage": "மொழியைத் தேர்ந்தெடுக்கவும்",
   "languageSaveError": "மொழி விருப்பத்தைச் சேமிக்க முடியவில்லை.",
-  "dailyMuggu": "இன்றைய கோலம்",
-  "dailyMugguDescription": "உங்கள் கலை மரபிற்கு ஒரு சிறிய உத்வேகம்.",
+  "designOfTheDay": "இன்றைய வடிவம்",
+  "designOfTheDayDescription": "இன்றைய அசல் வடிவியல் மாதிரி.",
   "learnThisDesign": "இந்தக் கோலத்தைக் கற்கவும்",
   "createYourOwn": "உங்கள் கோலத்தை உருவாக்கவும்",
   "journeyTitle": "அர்த்தமுள்ள ஒன்றை உருவாக்குங்கள்",
@@ -78,5 +78,6 @@
   "metadataUnassigned": "மதிப்பாய்வு வரை ஒதுக்கப்படவில்லை",
   "practiceDesign": "பயிற்சி / தடமறி",
   "practiceComingSoon": "பயிற்சி விரைவில் கிடைக்கும்",
-  "practiceComingSoonDescription": "எதிர்காலப் புதுப்பிப்பில் வரவிருக்கும் தடமறிதல் கருவிகளுக்கு இந்த வழிகாட்டி தயாராக உள்ளது."
+  "practiceComingSoonDescription": "எதிர்காலப் புதுப்பிப்பில் வரவிருக்கும் தடமறிதல் கருவிகளுக்கு இந்த வழிகாட்டி தயாராக உள்ளது.",
+  "back": "பின்னால்"
 }

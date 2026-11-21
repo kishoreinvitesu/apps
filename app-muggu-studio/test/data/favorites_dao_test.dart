@@ -12,13 +12,16 @@ void main() {
     final directory = await Directory.systemTemp.createTemp(
       'muggu_favorites_test_',
     );
-    addTearDown(() => directory.delete(recursive: true));
-    final databasePath = '${directory.path}\\favorites.db';
+    final databasePath =
+        '${directory.path}${Platform.pathSeparator}favorites.db';
     final firstDatabase = AppDatabase(
       factory: databaseFactoryFfi,
       databasePath: databasePath,
     );
-    addTearDown(firstDatabase.close);
+    addTearDown(() async {
+      await firstDatabase.close();
+      await directory.delete(recursive: true);
+    });
     final firstDao = FavoritesDao(firstDatabase);
 
     expect(await firstDao.favoriteDesignIds(), isEmpty);
@@ -34,5 +37,28 @@ void main() {
     expect(await reopenedDao.favoriteDesignIds(), ['geometric_sample_001']);
     expect(await reopenedDao.toggleFavorite('geometric_sample_001'), isFalse);
     expect(await reopenedDao.favoriteDesignIds(), isEmpty);
+  });
+
+  test('a failed database open can be retried', () async {
+    final directory = await Directory.systemTemp.createTemp(
+      'muggu_database_retry_test_',
+    );
+    final databasePath = '${directory.path}${Platform.pathSeparator}blocked.db';
+    await Directory(databasePath).create();
+
+    final database = AppDatabase(
+      factory: databaseFactoryFfi,
+      databasePath: databasePath,
+    );
+    addTearDown(() async {
+      await database.close();
+      await directory.delete(recursive: true);
+    });
+
+    await expectLater(database.database, throwsA(anything));
+    await Directory(databasePath).delete(recursive: true);
+
+    final openedDatabase = await database.database;
+    expect(await openedDatabase.getVersion(), 1);
   });
 }

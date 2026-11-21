@@ -1,18 +1,22 @@
-import 'dart:async';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../app/app_tab.dart';
 import '../../../data/repositories/design_repository.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../application/lesson_playback.dart';
 import 'vector_preview.dart';
 
 class DesignDetailScreen extends ConsumerStatefulWidget {
-  const DesignDetailScreen({required this.designId, super.key});
+  const DesignDetailScreen({
+    required this.designId,
+    this.originTab = AppTab.explore,
+    super.key,
+  });
 
   final String designId;
+  final AppTab originTab;
 
   @override
   ConsumerState<DesignDetailScreen> createState() => _DesignDetailScreenState();
@@ -21,11 +25,10 @@ class DesignDetailScreen extends ConsumerStatefulWidget {
 class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
   LessonPlaybackController? _playback;
   LessonPlaybackState _state = LessonPlaybackState.initial(0);
-  Timer? _uiTimer;
 
   @override
   void dispose() {
-    _uiTimer?.cancel();
+    _playback?.removeListener(_onPlaybackChanged);
     _playback?.dispose();
     super.dispose();
   }
@@ -37,31 +40,21 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
     _playback?.dispose();
     _playback = LessonPlaybackController(strokeCount: strokeCount);
     _state = _playback!.state;
+    _playback!.addListener(_onPlaybackChanged);
   }
 
-  void _syncPlayback() {
-    setState(() => _state = _playback!.state);
+  void _onPlaybackChanged() {
+    if (mounted) {
+      setState(() => _state = _playback!.state);
+    }
   }
 
   void _playPause() {
     if (_state.isPlaying) {
       _playback!.pause();
-      _syncPlayback();
-      _uiTimer?.cancel();
-      return;
+    } else {
+      _playback!.play();
     }
-    _playback!.play();
-    _syncPlayback();
-    _uiTimer?.cancel();
-    _uiTimer = Timer.periodic(_playback!.stepDuration, (_) {
-      if (!mounted) {
-        return;
-      }
-      _syncPlayback();
-      if (_state.isComplete) {
-        _uiTimer?.cancel();
-      }
-    });
   }
 
   @override
@@ -145,7 +138,10 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
         ),
         const SizedBox(height: 16),
         FilledButton.icon(
-          onPressed: () => context.push('/design/${design.id}/practice'),
+          onPressed: () => context.push(
+            '/design/${design.id}/practice',
+            extra: widget.originTab,
+          ),
           icon: const Icon(Icons.gesture_rounded),
           label: Text(l10n.practiceDesign),
         ),
@@ -156,13 +152,7 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
           alignment: WrapAlignment.center,
           children: [
             OutlinedButton.icon(
-              onPressed: _state.step == 0
-                  ? null
-                  : () {
-                      _playback!.previous();
-                      _uiTimer?.cancel();
-                      _syncPlayback();
-                    },
+              onPressed: _state.step == 0 ? null : _playback!.previous,
               icon: const Icon(Icons.skip_previous_rounded),
               label: Text(l10n.previous),
             ),
@@ -176,20 +166,13 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
               label: Text(_state.isPlaying ? l10n.pause : l10n.play),
             ),
             OutlinedButton.icon(
-              onPressed: _state.isComplete
-                  ? null
-                  : () {
-                      _playback!.advance();
-                      _syncPlayback();
-                    },
+              onPressed: _state.isComplete ? null : _playback!.advance,
               icon: const Icon(Icons.skip_next_rounded),
               label: Text(l10n.next),
             ),
             TextButton.icon(
               onPressed: () {
                 _playback!.restart();
-                _uiTimer?.cancel();
-                _syncPlayback();
               },
               icon: const Icon(Icons.replay_rounded),
               label: Text(l10n.restart),

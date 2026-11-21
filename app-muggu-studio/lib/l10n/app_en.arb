@@ -8,8 +8,8 @@
   "saved": "Saved",
   "chooseLanguage": "Choose language",
   "languageSaveError": "Your language preference could not be saved.",
-  "dailyMuggu": "Daily Muggu",
-  "dailyMugguDescription": "A little inspiration for your creative tradition.",
+  "designOfTheDay": "Design of the day",
+  "designOfTheDayDescription": "Today's original geometric sample.",
   "learnThisDesign": "Learn this design",
   "createYourOwn": "Create your own",
   "journeyTitle": "Make something meaningful",
@@ -78,5 +78,6 @@
   "metadataUnassigned": "Not assigned until content review",
   "practiceDesign": "Practise / Trace",
   "practiceComingSoon": "Practice is coming soon",
-  "practiceComingSoonDescription": "This guide is ready for the tracing tools planned for a future update."
+  "practiceComingSoonDescription": "This guide is ready for the tracing tools planned for a future update.",
+  "back": "Back"
 }

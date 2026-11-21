@@ -5,13 +5,20 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../core/localization/locale_controller.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../app_tab.dart';
 
 class AppShell extends ConsumerWidget {
-  const AppShell({required this.currentPath, required this.child, super.key});
+  const AppShell({
+    required this.currentPath,
+    required this.selectedTab,
+    required this.child,
+    super.key,
+  });
 
   static const _paths = ['/', '/explore', '/create', '/saved'];
 
   final String currentPath;
+  final AppTab selectedTab;
   final Widget child;
 
   @override
@@ -19,9 +26,25 @@ class AppShell extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final selectedIndex = _selectedIndexForPath(currentPath);
     final currentLocale = ref.watch(localeProvider);
+    final isNestedRoute = currentPath.startsWith('/design/');
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: isNestedRoute
+            ? IconButton(
+                tooltip: l10n.back,
+                onPressed: () {
+                  final router = GoRouter.of(context);
+                  if (router.canPop()) {
+                    router.pop();
+                  } else {
+                    router.go(_paths[selectedTab.index]);
+                  }
+                },
+                icon: const Icon(Icons.arrow_back_rounded),
+              )
+            : null,
         title: Text(
           l10n.appName,
           style: const TextStyle(fontWeight: FontWeight.w700),
@@ -109,7 +132,8 @@ class AppShell extends ConsumerWidget {
       '/explore' => 1,
       '/create' => 2,
       '/saved' => 3,
-      _ => 0,
+      '/' => 0,
+      _ => selectedTab.index,
     };
   }
 

@@ -148,17 +148,17 @@ abstract class AppLocalizations {
   /// **'Your language preference could not be saved.'**
   String get languageSaveError;
 
-  /// No description provided for @dailyMuggu.
+  /// No description provided for @designOfTheDay.
   ///
   /// In en, this message translates to:
-  /// **'Daily Muggu'**
-  String get dailyMuggu;
+  /// **'Design of the day'**
+  String get designOfTheDay;
 
-  /// No description provided for @dailyMugguDescription.
+  /// No description provided for @designOfTheDayDescription.
   ///
   /// In en, this message translates to:
-  /// **'A little inspiration for your creative tradition.'**
-  String get dailyMugguDescription;
+  /// **'Today\'s original geometric sample.'**
+  String get designOfTheDayDescription;
 
   /// No description provided for @learnThisDesign.
   ///
@@ -573,6 +573,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This guide is ready for the tracing tools planned for a future update.'**
   String get practiceComingSoonDescription;
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
 }
 
 class _AppLocalizationsDelegate

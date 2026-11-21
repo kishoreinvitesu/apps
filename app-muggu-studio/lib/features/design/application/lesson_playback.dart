@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+
+@immutable
 class LessonPlaybackState {
   const LessonPlaybackState({
     required this.step,
@@ -42,7 +45,7 @@ class LessonPlaybackState {
   );
 }
 
-class LessonPlaybackController {
+class LessonPlaybackController extends ChangeNotifier {
   LessonPlaybackController({
     required int strokeCount,
     this.stepDuration = const Duration(milliseconds: 1400),
@@ -52,7 +55,11 @@ class LessonPlaybackController {
   LessonPlaybackState state;
   Timer? _timer;
 
-  void dispose() => _timer?.cancel();
+  @override
+  void dispose() {
+    _cancelTimer();
+    super.dispose();
+  }
 
   void play() {
     if (state.isComplete) {
@@ -61,30 +68,40 @@ class LessonPlaybackController {
     if (state.strokeCount == 0) {
       return;
     }
-    state = state.copyWith(isPlaying: true);
-    _timer?.cancel();
+    _setState(state.copyWith(isPlaying: true));
+    _cancelTimer();
     _timer = Timer.periodic(stepDuration, (_) => advance());
   }
 
   void pause() {
-    _timer?.cancel();
-    state = state.copyWith(isPlaying: false);
+    _cancelTimer();
+    _setState(state.copyWith(isPlaying: false));
   }
 
   void advance() {
-    state = state.next();
+    _setState(state.next());
     if (state.isComplete) {
-      _timer?.cancel();
+      _cancelTimer();
     }
   }
 
   void previous() {
     pause();
-    state = state.previous();
+    _setState(state.previous());
   }
 
   void restart() {
+    _cancelTimer();
+    _setState(LessonPlaybackState.initial(state.strokeCount));
+  }
+
+  void _setState(LessonPlaybackState next) {
+    state = next;
+    notifyListeners();
+  }
+
+  void _cancelTimer() {
     _timer?.cancel();
-    state = LessonPlaybackState.initial(state.strokeCount);
+    _timer = null;
   }
 }

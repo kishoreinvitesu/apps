@@ -57,7 +57,7 @@ void main() {
       find.text('Rangoli • Kolam • Muggu • Indian Floor Art'),
       findsOneWidget,
     );
-    expect(find.text('Daily Muggu'), findsOneWidget);
+    expect(find.text('Design of the day'), findsOneWidget);
     expect(find.text('Geometric Sample 01'), findsOneWidget);
 
     await tester.ensureVisible(find.text('Learn this design'));
@@ -68,12 +68,31 @@ void main() {
     await tester.scrollUntilVisible(find.text('Design details'), 250);
     await tester.pumpAndSettle();
     expect(find.text('Design details'), findsOneWidget);
+    expect(
+      tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
+      0,
+    );
 
+    await tester.tap(find.byTooltip('Back'));
+    await tester.pumpAndSettle();
+    expect(find.text('Design of the day'), findsOneWidget);
+    await tester.ensureVisible(find.text('Learn this design'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Learn this design'));
+    await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.text('Practise / Trace'), 250);
+
     await tester.tap(find.text('Practise / Trace'));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.text('Practice is coming soon'), 250);
     expect(find.text('Practice is coming soon'), findsOneWidget);
+    expect(
+      tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
+      0,
+    );
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    expect(find.text('Design details'), findsOneWidget);
 
     await tester.tap(find.text('Home').last);
     await tester.pumpAndSettle();
@@ -82,6 +101,23 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     expect(find.textContaining('original geometric samples'), findsOneWidget);
     expect(find.text('Geometric Sample 01'), findsOneWidget);
+    final designCard = find.byKey(
+      const ValueKey('design-card-geometric_sample_001'),
+    );
+    await tester.ensureVisible(designCard);
+    await tester.pumpAndSettle();
+    await tester.tap(designCard);
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
+      1,
+    );
+    await tester.tap(find.byTooltip('Back'));
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
+      1,
+    );
 
     await tester.tap(find.text('Create').last);
     await tester.pumpAndSettle();
@@ -93,7 +129,7 @@ void main() {
 
     await tester.tap(find.text('Home').last);
     await tester.pumpAndSettle();
-    expect(find.text('Daily Muggu'), findsOneWidget);
+    expect(find.text('Design of the day'), findsOneWidget);
   });
 
   testWidgets('language changes update the UI and persist', (tester) async {
@@ -134,8 +170,37 @@ void main() {
       find.text('Rangoli • Kolam • Muggu • Indian Floor Art'),
       findsOneWidget,
     );
-    expect(find.text('నేటి ముగ్గు'), findsOneWidget);
+    expect(find.text('నేటి డిజైన్'), findsOneWidget);
     expect(storage.languageCode, 'te');
+  });
+
+  testWidgets('Explore clear empties the search field and restores results', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          localeStorageProvider.overrideWithValue(_MemoryLocaleStorage()),
+          initialLocaleProvider.overrideWithValue(const Locale('en')),
+          favoritesDaoProvider.overrideWithValue(_MemoryFavorites()),
+          catalogProvider.overrideWith((ref) async => _testCatalog()),
+        ],
+        child: const MugguStudioApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Explore').last);
+    await tester.pumpAndSettle();
+
+    final searchField = find.byType(TextField);
+    await tester.enterText(searchField, 'no matching design');
+    await tester.pumpAndSettle();
+    expect(find.text('No designs found'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Clear'));
+    await tester.pumpAndSettle();
+    expect(tester.widget<TextField>(searchField).controller!.text, isEmpty);
+    expect(find.text('Geometric Sample 01'), findsOneWidget);
   });
 
   testWidgets('favourites appear in Saved and can be removed', (tester) async {

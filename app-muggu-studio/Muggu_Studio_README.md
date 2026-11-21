@@ -3,8 +3,9 @@
 **Document purpose:** Source of truth for product scope, UX,
 architecture, content, implementation rules and release acceptance.
 
-**Status:** Sprint 1 foundation implemented and verified on 13 November
-2026. Sprint 2 has not started.
+**Status:** Sprint 1–3 foundations and prototypes are implemented; review-led
+stabilization is underway before the planned combined Sprint 4 Creator and
+Tracing Engine. See the Development Log for verified implementation status.
 
 **Working product name:** Muggu Studio\
 **Platform:** Android first\
@@ -725,28 +726,33 @@ offline. - Tests cover stroke ordering and playback state.
 
 ### Sprint 4 --- Practice and tracing
 
-Goal: beginners can practise with a guide.
+Goal: provide a basic offline drawing engine for both creation and guided
+practice. This scope combines the creator engine and tracing work shown in
+the Sprint 4 architecture diagram; stabilization and content governance
+must be completed first. Before implementation, also finish the reviewed
+lesson-step model and catalogue-localization groundwork so practice and
+future lessons do not treat vector strokes as teaching steps.
 
--   Guide overlay.
--   Touch input and path rendering.
--   Clear, undo and restart.
--   Forgiving tracing feedback.
+-   CustomPainter drawing engine with normalized pointer-down/move/up input.
+-   Dot-grid overlays for 5×5, 7×7 and 9×9.
+-   Symmetry: none, vertical, horizontal and four-way.
+-   Command history with undo and redo.
+-   Practice/tracing mode with a faint design guide and touch drawing.
+-   Clear and restart; forgiving, non-scoring guidance.
 -   Small-screen and lower-end device performance checks.
 
 Acceptance: - Touch mapping aligns with the guide. - User can practise
-without network. - No punitive scoring. - Tests cover coordinate
-conversion and path handling.
+without network. - All symmetry modes render correctly. - Undo and redo
+are reliable. - No punitive scoring. - Tests cover coordinate conversion,
+path handling and history.
 
-### Sprint 5 --- Creator
+### Sprint 5 --- Creator polish and persistence
 
-Goal: user can create an original dot-grid design.
+Goal: let users customize, save and reopen original dot-grid designs.
 
--   5×5, 7×7 and 9×9 grids.
--   Drawing and smooth paths.
--   Symmetry controls.
 -   Colour and stroke-size selection.
--   Undo/redo/clear.
--   Save and reopen.
+-   Save and reopen locally.
+-   Rename and delete saved creations.
 
 Acceptance: - All symmetry modes behave correctly. - Undo/redo are
 reliable. - Saved creations reopen correctly after restart. - Drawing
@@ -1020,7 +1026,10 @@ the repository:
   Sprint 1                            Completed and verified on 13
                                       November 2026
 
-  Next sprint                         Sprint 2 --- Catalogue and Explore
+  Next step                           Complete review-led stabilization,
+                                      content governance and lesson-model
+                                      groundwork before Sprint 4 Creator
+                                      and Tracing Engine
   -----------------------------------------------------------------------
 
 ------------------------------------------------------------------------

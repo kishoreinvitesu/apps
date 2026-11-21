@@ -35,11 +35,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your language preference could not be saved.';
 
   @override
-  String get dailyMuggu => 'Daily Muggu';
+  String get designOfTheDay => 'Design of the day';
 
   @override
-  String get dailyMugguDescription =>
-      'A little inspiration for your creative tradition.';
+  String get designOfTheDayDescription => 'Today\'s original geometric sample.';
 
   @override
   String get learnThisDesign => 'Learn this design';
@@ -257,4 +256,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get practiceComingSoonDescription =>
       'This guide is ready for the tracing tools planned for a future update.';
+
+  @override
+  String get back => 'Back';
 }

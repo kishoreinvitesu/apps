@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../app/app_tab.dart';
 import '../../../data/local/favorites_dao.dart';
 import '../../../data/models/muggu_design.dart';
 import '../../../l10n/generated/app_localizations.dart';
@@ -11,12 +12,14 @@ class DesignCard extends ConsumerWidget {
     required this.design,
     required this.languageCode,
     required this.isFavorite,
+    required this.originTab,
     super.key,
   });
 
   final MugguDesign design;
   final String languageCode;
   final bool isFavorite;
+  final AppTab originTab;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,7 +30,7 @@ class DesignCard extends ConsumerWidget {
       child: GestureDetector(
         key: ValueKey('design-card-${design.id}'),
         behavior: HitTestBehavior.opaque,
-        onTap: () => context.push('/design/${design.id}'),
+        onTap: () => context.push('/design/${design.id}', extra: originTab),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -55,7 +58,10 @@ class DesignCard extends ConsumerWidget {
                     shape: const CircleBorder(),
                     child: IconButton(
                       tooltip: l10n.learnDesign,
-                      onPressed: () => context.push('/design/${design.id}'),
+                      onPressed: () => context.push(
+                        '/design/${design.id}',
+                        extra: originTab,
+                      ),
                       icon: const Icon(Icons.open_in_new_rounded),
                     ),
                   ),

@@ -300,3 +300,54 @@ Sprint 1 is ready for review. Sprint 2 has not been started.
 - `flutter analyze` - passed with no issues.
 - `flutter test --reporter expanded` - passed; all 12 tests succeeded.
 - `flutter build apk --debug --target-platform android-x64` - passed.
+
+## 2026-11-21 - Review-led stabilization
+
+### Review considered
+
+- Reviewed the supplied static code review for commit `35cae8a` against the
+  current implementation.
+- Confirmed the playback timer duplication, nested-tab/back behavior,
+  Explore search-field synchronization, failed database-open caching, and
+  Windows-only SQLite test path still needed attention.
+- Confirmed generated geometric samples should not be labelled as validated
+  Muggu content. Renamed the Home feature to "Design of the day" in all
+  supported UI languages.
+
+### Implemented before feature expansion
+
+- Made the playback controller the single owner of its timer and observable
+  state; completion, pause, previous, restart and disposal cancel timers.
+- Preserved the originating tab through design and practice navigation,
+  added an app-bar Back control, and defined the deep-link fallback as
+  Explore. Covered app-bar and system Back in widget tests.
+- Synchronized the Explore search controller with query state. Clearing
+  search immediately empties the field without clearing active filters.
+- Cleared the cached database-open future after failure so a later call can
+  retry without deleting data.
+- Replaced the Windows-only SQLite test path with the platform separator and
+  added a failed-open retry test.
+- Added repository-root GitHub Actions CI pinned to Flutter 3.50.0 for
+  localization generation, format, analysis, tests and a debug APK build.
+- Updated the sprint plan to combine creator-engine and tracing work as
+  described in the supplied Sprint 4 diagram, but deferred that feature work.
+
+### Validation
+
+- `flutter gen-l10n` - passed.
+- `dart format --output=none --set-exit-if-changed lib test` - passed.
+- `flutter analyze` - passed with no issues.
+- `flutter test --reporter expanded` - passed; all 17 tests succeeded.
+- `flutter build apk --debug --target-platform android-x64` - passed.
+- `git diff --check` - passed.
+
+### Remaining gates before Sprint 4
+
+- Separate rights/provenance checks from cultural review, and ensure
+  unreviewed content cannot be represented as production-validated.
+- Add explicit lesson-step data separate from vector strokes.
+- Add reviewed Telugu/Tamil catalogue content and localized taxonomy values.
+- The review was static; physical-device accessibility, screen-size and
+  lower-end-device checks remain necessary.
+- GitHub Actions has not yet run on the remote repository. Configure branch
+  protection to require its validation job if CI must block merges.

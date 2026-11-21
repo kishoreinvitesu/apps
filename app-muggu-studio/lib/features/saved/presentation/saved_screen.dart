@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../app/app_tab.dart';
 import '../../../data/local/favorites_dao.dart';
 import '../../../data/models/muggu_design.dart';
 import '../../../data/repositories/design_repository.dart';
@@ -87,6 +88,7 @@ class SavedScreen extends ConsumerWidget {
             design: favorites[index],
             languageCode: Localizations.localeOf(context).languageCode,
             isFavorite: true,
+            originTab: AppTab.saved,
           ),
         ),
         const SizedBox(height: 20),

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../app/app_tab.dart';
 import '../../../data/local/favorites_dao.dart';
 import '../../../data/models/dot_grid.dart';
 import '../../../data/models/muggu_design.dart';
@@ -9,11 +10,52 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../application/explore_controller.dart';
 import 'design_card.dart';
 
-class ExploreScreen extends ConsumerWidget {
+class ExploreScreen extends ConsumerStatefulWidget {
   const ExploreScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ExploreScreen> createState() => _ExploreScreenState();
+}
+
+class _ExploreScreenState extends ConsumerState<ExploreScreen> {
+  late final TextEditingController _searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController(
+      text: ref.read(exploreControllerProvider).searchQuery,
+    );
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _clearSearch() {
+    _searchController.clear();
+    ref.read(exploreControllerProvider.notifier).setSearchQuery('');
+  }
+
+  void _resetSearchAndFilters() {
+    _searchController.clear();
+    ref.read(exploreControllerProvider.notifier).resetAll();
+  }
+
+  void _syncSearchText(String query) {
+    if (_searchController.text != query) {
+      _searchController.value = TextEditingValue(
+        text: query,
+        selection: TextSelection.collapsed(offset: query.length),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ref = this.ref;
     final catalog = ref.watch(catalogProvider);
     final favoriteIds = ref.watch(favoriteIdsProvider);
     final l10n = AppLocalizations.of(context)!;
@@ -34,6 +76,7 @@ class ExploreScreen extends ConsumerWidget {
     final designs = catalog.requireValue;
     final favorites = favoriteIds.requireValue.toSet();
     final state = ref.watch(exploreControllerProvider);
+    _syncSearchText(state.searchQuery);
     final results = DesignRepository.query(
       designs: designs,
       searchQuery: state.searchQuery,
@@ -61,6 +104,7 @@ class ExploreScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 12),
         TextField(
+          controller: _searchController,
           onChanged: ref
               .read(exploreControllerProvider.notifier)
               .setSearchQuery,
@@ -73,9 +117,7 @@ class ExploreScreen extends ConsumerWidget {
                 ? null
                 : IconButton(
                     tooltip: l10n.clear,
-                    onPressed: () => ref
-                        .read(exploreControllerProvider.notifier)
-                        .setSearchQuery(''),
+                    onPressed: _clearSearch,
                     icon: const Icon(Icons.close_rounded),
                   ),
           ),
@@ -133,7 +175,7 @@ class ExploreScreen extends ConsumerWidget {
           _NoResults(
             title: l10n.exploreNoResultsTitle,
             description: l10n.exploreNoResultsDescription,
-            onClear: ref.read(exploreControllerProvider.notifier).resetAll,
+            onClear: _resetSearchAndFilters,
             clearLabel: l10n.clear,
           )
         else
@@ -151,6 +193,7 @@ class ExploreScreen extends ConsumerWidget {
               design: results[index],
               languageCode: Localizations.localeOf(context).languageCode,
               isFavorite: favorites.contains(results[index].id),
+              originTab: AppTab.explore,
             ),
           ),
       ],

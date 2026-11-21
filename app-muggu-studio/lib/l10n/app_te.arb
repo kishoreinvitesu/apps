@@ -8,8 +8,8 @@
   "saved": "దాచినవి",
   "chooseLanguage": "భాషను ఎంచుకోండి",
   "languageSaveError": "మీ భాష ప్రాధాన్యతను సేవ్ చేయలేకపోయాము.",
-  "dailyMuggu": "నేటి ముగ్గు",
-  "dailyMugguDescription": "మీ సృజనాత్మక సంప్రదాయానికి ఒక చిన్న ప్రేరణ.",
+  "designOfTheDay": "నేటి డిజైన్",
+  "designOfTheDayDescription": "ఈరోజు అసలు జ్యామితీయ నమూనా.",
   "learnThisDesign": "ఈ ముగ్గును నేర్చుకోండి",
   "createYourOwn": "మీ ముగ్గును సృష్టించండి",
   "journeyTitle": "అర్థవంతమైనదాన్ని సృష్టించండి",
@@ -78,5 +78,6 @@
   "metadataUnassigned": "సమీక్ష పూర్తయ్యే వరకు కేటాయించలేదు",
   "practiceDesign": "సాధన / ట్రేస్",
   "practiceComingSoon": "సాధన త్వరలో అందుబాటులోకి వస్తుంది",
-  "practiceComingSoonDescription": "భవిష్యత్ నవీకరణలో రానున్న ట్రేసింగ్ సాధనాల కోసం ఈ మార్గదర్శిని సిద్ధంగా ఉంది."
+  "practiceComingSoonDescription": "భవిష్యత్ నవీకరణలో రానున్న ట్రేసింగ్ సాధనాల కోసం ఈ మార్గదర్శిని సిద్ధంగా ఉంది.",
+  "back": "వెనక్కి"
 }

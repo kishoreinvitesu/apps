@@ -9,7 +9,23 @@ class AppDatabase {
   final String? databasePath;
   Future<Database>? _database;
 
-  Future<Database> get database => _database ??= _open();
+  Future<Database> get database async {
+    final existing = _database;
+    if (existing != null) {
+      return existing;
+    }
+
+    final opening = _open();
+    _database = opening;
+    try {
+      return await opening;
+    } catch (error, stackTrace) {
+      if (identical(_database, opening)) {
+        _database = null;
+      }
+      Error.throwWithStackTrace(error, stackTrace);
+    }
+  }
 
   Future<Database> _open() async {
     final path = databasePath ?? '${await getDatabasesPath()}/muggu_studio.db';

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../app/app_tab.dart';
 import '../../../data/models/muggu_design.dart';
 import '../../../data/repositories/design_repository.dart';
 import '../../../l10n/generated/app_localizations.dart';
@@ -67,13 +68,13 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                _DailyMugguCard(
-                  title: l10n.dailyMuggu,
+                _DesignOfTheDayCard(
+                  title: l10n.designOfTheDay,
                   description:
                       dailyDesign?.descriptionFor(
                         Localizations.localeOf(context).languageCode,
                       ) ??
-                      l10n.dailyMugguDescription,
+                      l10n.designOfTheDayDescription,
                   design: dailyDesign,
                   statusMessage: statusMessage,
                   isLoading: catalog.isLoading,
@@ -82,7 +83,10 @@ class HomeScreen extends ConsumerWidget {
                   createLabel: l10n.createYourOwn,
                   onLearn: dailyDesign == null
                       ? null
-                      : () => context.push('/design/${dailyDesign.id}'),
+                      : () => context.push(
+                          '/design/${dailyDesign.id}',
+                          extra: AppTab.home,
+                        ),
                   onRetry: catalog.hasError
                       ? () => ref.invalidate(catalogProvider)
                       : null,
@@ -118,8 +122,8 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
-class _DailyMugguCard extends StatelessWidget {
-  const _DailyMugguCard({
+class _DesignOfTheDayCard extends StatelessWidget {
+  const _DesignOfTheDayCard({
     required this.title,
     required this.description,
     required this.learnLabel,

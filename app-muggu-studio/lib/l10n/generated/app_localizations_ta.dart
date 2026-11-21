@@ -34,10 +34,10 @@ class AppLocalizationsTa extends AppLocalizations {
   String get languageSaveError => 'மொழி விருப்பத்தைச் சேமிக்க முடியவில்லை.';
 
   @override
-  String get dailyMuggu => 'இன்றைய கோலம்';
+  String get designOfTheDay => 'இன்றைய வடிவம்';
 
   @override
-  String get dailyMugguDescription => 'உங்கள் கலை மரபிற்கு ஒரு சிறிய உத்வேகம்.';
+  String get designOfTheDayDescription => 'இன்றைய அசல் வடிவியல் மாதிரி.';
 
   @override
   String get learnThisDesign => 'இந்தக் கோலத்தைக் கற்கவும்';
@@ -257,4 +257,7 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get practiceComingSoonDescription =>
       'எதிர்காலப் புதுப்பிப்பில் வரவிருக்கும் தடமறிதல் கருவிகளுக்கு இந்த வழிகாட்டி தயாராக உள்ளது.';
+
+  @override
+  String get back => 'பின்னால்';
 }

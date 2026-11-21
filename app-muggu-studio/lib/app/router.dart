@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 
+import 'app_tab.dart';
 import '../features/create/presentation/create_screen.dart';
 import '../features/explore/presentation/explore_screen.dart';
 import '../features/design/presentation/design_detail_screen.dart';
@@ -13,8 +14,11 @@ GoRouter createAppRouter() {
     initialLocation: '/',
     routes: [
       ShellRoute(
-        builder: (context, state, child) =>
-            AppShell(currentPath: state.uri.path, child: child),
+        builder: (context, state, child) => AppShell(
+          currentPath: state.uri.path,
+          selectedTab: appTabFromExtra(state.extra, state.uri.path),
+          child: child,
+        ),
         routes: [
           GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
           GoRoute(
@@ -23,8 +27,10 @@ GoRouter createAppRouter() {
           ),
           GoRoute(
             path: '/design/:designId',
-            builder: (context, state) =>
-                DesignDetailScreen(designId: state.pathParameters['designId']!),
+            builder: (context, state) => DesignDetailScreen(
+              designId: state.pathParameters['designId']!,
+              originTab: appTabFromExtra(state.extra, '/explore'),
+            ),
             routes: [
               GoRoute(
                 path: 'practice',
