@@ -4,6 +4,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from PIL import Image
+
 from tools import generate_sample_catalog as generator
 
 
@@ -87,6 +89,21 @@ class GenerateSampleCatalogTests(unittest.TestCase):
         self.assertEqual(len(points), 5)
         self.assertAlmostEqual(points[-1][0], 0.5)
         self.assertAlmostEqual(points[-1][1], 0.75)
+
+    def test_thumbnail_check_compares_decoded_pixels_not_file_encoding(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            temporary_path = Path(temporary_directory)
+            image = Image.new("RGB", (4, 4), "#862B37")
+            webp_path = temporary_path / "pattern.webp"
+            png_path = temporary_path / "pattern.png"
+            image.save(webp_path, format="WEBP", lossless=True)
+            image.save(png_path, format="PNG")
+
+            self.assertNotEqual(webp_path.read_bytes(), png_path.read_bytes())
+            self.assertEqual(
+                generator._decoded_thumbnail(webp_path),
+                generator._decoded_thumbnail(png_path),
+            )
 
     def test_catalog_writer_emits_json_and_all_thumbnails(self):
         with tempfile.TemporaryDirectory() as temporary_directory:

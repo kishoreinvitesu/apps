@@ -96,7 +96,8 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
         Text(design.descriptionFor(languageCode)),
         const SizedBox(height: 16),
         VectorPreview(
-          design: design,
+          paths: design.paths,
+          grid: design.grid,
           visibleGroupIds: visibleGroupIds,
           showAllPaths: !hasReviewedLesson,
         ),

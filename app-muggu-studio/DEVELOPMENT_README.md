@@ -407,9 +407,16 @@ Sprint 1 is ready for review. Sprint 2 has not been started.
   records remain pending.
 - Updated the shared preview and detail/practice flows to render paths,
   explicit dots and lesson geometry groups.
+- Added a Dart recipe registry for the radial-flower and dot-grid generators,
+  with bounded parameter validation, and replaced the Create placeholder with
+  adjustable live previews, layout choices and reset. The preview-only controls
+  use English temporarily; approved Telugu/Tamil strings are still pending.
 - Reworked the Python catalogue generator to emit schema v3 and deterministic
-  thumbnails. Added tests for normalized geometry, recipe parameters,
-  thumbnail output and curved-path flattening.
+  lossless thumbnails. Its consistency check compares decoded artwork rather
+  than platform-dependent WebP bytes. Added tests for normalized geometry,
+  recipe parameters, thumbnail output and curved-path flattening.
+- Tightened geometry limits and validation for path structure, dot-grid
+  dimensions and duplicate coordinates.
 - Added CI steps to test the Python generator and fail when generated
   catalogue or thumbnail assets are stale.
 
@@ -421,27 +428,27 @@ Sprint 1 is ready for review. Sprint 2 has not been started.
   remain independently renderable.
 - Reuse fixed legacy geometry directly for preview and grouped learning or
   tracing steps. Do not infer recipe parameters from arbitrary artwork.
-- The Python tool is build-time catalogue tooling, not the interactive Create
-  experience. The Create screen remains a placeholder; a later user-facing
-  flow should offer bounded family parameters, immediate preview, reset/undo
-  and local save.
+- The Python tool remains build-time catalogue tooling. Interactive Create
+  calls the Dart registry and shared renderer; the current MVP is preview-only.
 - No historical attribution, Telugu/Tamil translation or publication
   approval is inferred by generation.
 
 ### Validation
 
-- Python generator syntax check and focused tests — passed.
-- Generated catalog and thumbnail consistency check — passed.
-- `dart format --output=none --set-exit-if-changed lib test` — passed.
+- Python generator tests — passed; five tests.
+- Generated catalog and decoded-thumbnail consistency check — passed after
+  regenerating the lossless WebP assets.
+- `flutter test` — passed; all 31 tests.
 - `flutter analyze` — passed with no issues.
-- `flutter test --reporter expanded` — passed; all 21 tests succeeded.
-- `flutter build apk --debug --target-platform android-x64` — passed.
+- `flutter build apk --debug --target-platform android-x64` — passed; APK
+  installed and launched on `emulator-5554`.
+- `git diff --check` — passed.
 
 ### Next-phase plan
 
-1. **Interactive Creator MVP:** expose the radial and dot-grid families from
-   Create with bounded controls, immediate shared-renderer preview, reset,
-   undo and clear. Keep these explicitly original geometric patterns.
+1. **Creator editing and persistence:** add undo/redo, clear and local save to
+   the current preview-only generator. Keep saved creations separate from the
+   curated catalogue.
 2. **Drawing and tracing:** add normalized pointer input, 5×5/7×7/9×9 dot
    grids, the agreed symmetry modes, and reliable undo/redo. Reuse existing
    fixed paths as guides; do not infer recipes from legacy artwork.
@@ -457,5 +464,6 @@ Sprint 1 is ready for review. Sprint 2 has not been started.
 
 Generic original-pattern creation can proceed without making cultural claims.
 Rights, cultural, Telugu/Tamil localization and lesson reviews remain pending
-for every generated catalogue example; the interactive Create screen has not
-been implemented yet.
+for every generated catalogue example. Create now supports generated previews;
+drawing, undo/redo, save/export and approved Telugu/Tamil controls remain future
+work.

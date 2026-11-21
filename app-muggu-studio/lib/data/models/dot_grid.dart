@@ -1,5 +1,8 @@
 import 'design_geometry.dart';
 
+const maxDotGridDimension = 31;
+const maxDotGridDots = maxDotGridDimension * maxDotGridDimension;
+
 class DotGrid {
   const DotGrid({
     required this.layout,
@@ -30,14 +33,22 @@ class DotGrid {
         ].contains(layout) ||
         rows is! int ||
         rows < 1 ||
+        rows > maxDotGridDimension ||
         columns is! int ||
-        columns < 1) {
+        columns < 1 ||
+        columns > maxDotGridDimension) {
       throw FormatException(
-        '$fieldName requires a supported layout and positive row/column counts.',
+        '$fieldName requires a supported layout and row/column counts up to $maxDotGridDimension.',
       );
     }
+    if (layout == 'square' && rows != columns) {
+      throw FormatException('$fieldName square layouts need equal dimensions.');
+    }
     final rawDots = value['dots'];
-    if (rawDots is! List || rawDots.isEmpty) {
+    if (rawDots is! List ||
+        rawDots.isEmpty ||
+        rawDots.length > maxDotGridDots ||
+        (layout != 'custom' && rawDots.length != rows * columns)) {
       throw FormatException('$fieldName.dots must contain grid coordinates.');
     }
     final dots = List<DesignPoint>.unmodifiable([
@@ -49,6 +60,10 @@ class DotGrid {
         '$fieldName custom layouts need at least two dots.',
       );
     }
+    final coordinates = <(double, double)>{};
+    if (dots.any((dot) => !coordinates.add((dot.x, dot.y)))) {
+      throw FormatException('$fieldName.dots must not contain duplicates.');
+    }
     return DotGrid(layout: layout, rows: rows, columns: columns, dots: dots);
   }
 
@@ -58,7 +73,9 @@ class DotGrid {
     double margin = 0.12,
   }) {
     if (rows < 2 ||
+        rows > maxDotGridDimension ||
         columns < 2 ||
+        columns > maxDotGridDimension ||
         !margin.isFinite ||
         margin < 0 ||
         margin >= 0.5) {

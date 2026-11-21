@@ -494,7 +494,13 @@ def draw_thumbnail(paths, destination, grid=None):
             width=4,
             joint="curve",
         )
-    image.save(destination, format="WEBP", quality=90, method=6)
+    image.save(
+        destination,
+        format="WEBP",
+        lossless=True,
+        quality=100,
+        method=6,
+    )
 
 
 def _catalog_json(designs):
@@ -503,6 +509,13 @@ def _catalog_json(designs):
         indent=2,
         ensure_ascii=False,
     ) + "\n"
+
+
+def _decoded_thumbnail(path):
+    with Image.open(path) as image:
+        image.load()
+        converted = image.convert("RGB")
+        return converted.size, converted.tobytes()
 
 
 def write_catalog(catalog_path=CATALOG_PATH, thumbnail_dir=THUMBNAIL_DIR):
@@ -533,24 +546,42 @@ def main():
             expected_catalog = temporary_path / "catalog.json"
             expected_thumbnails = temporary_path / "thumbnails"
             write_catalog(expected_catalog, expected_thumbnails)
-            catalog_matches = (
-                CATALOG_PATH.exists()
-                and CATALOG_PATH.read_bytes() == expected_catalog.read_bytes()
-            )
+            if (
+                not CATALOG_PATH.exists()
+                or CATALOG_PATH.read_bytes() != expected_catalog.read_bytes()
+            ):
+                raise SystemExit(
+                    "catalog.json differs from generated output; run "
+                    "python tools/generate_sample_catalog.py."
+                )
+
             expected_files = {
-                path.name: path.read_bytes()
+                path.name: path
                 for path in expected_thumbnails.glob("*.webp")
             }
             actual_files = {
-                path.name: path.read_bytes()
+                path.name: path
                 for path in THUMBNAIL_DIR.glob("*.webp")
             }
-            if not catalog_matches or actual_files != expected_files:
+            missing = sorted(expected_files.keys() - actual_files.keys())
+            extra = sorted(actual_files.keys() - expected_files.keys())
+            if missing or extra:
                 raise SystemExit(
-                    "Generated catalog or thumbnails are stale; run "
-                    "python tools/generate_sample_catalog.py."
+                    f"Thumbnail files differ; missing={missing}, extra={extra}. "
+                    "Run python tools/generate_sample_catalog.py."
                 )
-        print("Catalog and thumbnails match the deterministic generator output.")
+            mismatched = [
+                name
+                for name, expected_path in expected_files.items()
+                if _decoded_thumbnail(expected_path)
+                != _decoded_thumbnail(actual_files[name])
+            ]
+            if mismatched:
+                raise SystemExit(
+                    f"Thumbnail artwork differs: {sorted(mismatched)}. "
+                    "Run python tools/generate_sample_catalog.py."
+                )
+        print("Catalog and decoded thumbnail artwork match generated output.")
         return
     designs = write_catalog()
     print(

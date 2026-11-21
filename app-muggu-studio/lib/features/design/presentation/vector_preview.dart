@@ -2,18 +2,19 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../data/models/design_geometry.dart';
 import '../../../data/models/dot_grid.dart';
-import '../../../data/models/muggu_design.dart';
 import '../application/geometry_path_builder.dart';
 
 class VectorPreview extends StatelessWidget {
   const VectorPreview({
-    required this.design,
+    required this.paths,
+    required this.grid,
     this.visibleGroupIds,
     this.showAllPaths = true,
     super.key,
   });
 
-  final MugguDesign design;
+  final List<DesignPath> paths;
+  final DotGrid? grid;
   final Set<String>? visibleGroupIds;
   final bool showAllPaths;
 
@@ -31,8 +32,8 @@ class VectorPreview extends StatelessWidget {
         ),
         child: CustomPaint(
           painter: _VectorPreviewPainter(
-            paths: design.paths,
-            grid: design.grid,
+            paths: paths,
+            grid: grid,
             visibleGroupIds: visibleGroupIds,
             showAllPaths: showAllPaths,
             color: Theme.of(context).colorScheme.primary,

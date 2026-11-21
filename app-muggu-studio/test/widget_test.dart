@@ -137,7 +137,26 @@ void main() {
 
     await tester.tap(find.text('Create').last);
     await tester.pumpAndSettle();
-    expect(find.text('Your creative space is coming'), findsOneWidget);
+    expect(find.text('Create a pattern'), findsOneWidget);
+    expect(find.text('Radial flower'), findsOneWidget);
+    expect(find.byKey(const ValueKey('pattern-preview')), findsOneWidget);
+    final dotGridChoice = find.byKey(
+      const ValueKey('generator-dot_grid_diamonds'),
+    );
+    await tester.ensureVisible(dotGridChoice);
+    await tester.tap(dotGridChoice);
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Dot layout'), 300);
+    expect(find.text('Grid size: 5 × 5'), findsOneWidget);
+    await tester.ensureVisible(find.text('Staggered'));
+    await tester.tap(find.byKey(const ValueKey('grid-layout-staggered')));
+    await tester.pumpAndSettle();
+    expect(find.text('Dot layout'), findsOneWidget);
+    final resetButton = find.byKey(const ValueKey('creator-reset'));
+    await tester.scrollUntilVisible(resetButton, 300);
+    await tester.tap(resetButton);
+    await tester.pumpAndSettle();
+    expect(find.text('Petals: 8'), findsOneWidget);
 
     await tester.tap(find.text('Saved').last);
     await tester.pumpAndSettle();

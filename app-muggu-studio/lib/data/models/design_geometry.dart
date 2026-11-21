@@ -24,6 +24,8 @@ class DesignPoint {
 
 enum PathCommandType { moveTo, lineTo, quadraticTo, cubicTo, arcTo, close }
 
+const maxPathCommandCount = 4096;
+
 class PathCommand {
   const PathCommand({
     required this.type,
@@ -164,7 +166,9 @@ class DesignPath {
         '$fieldName requires stable id and groupId values.',
       );
     }
-    if (rawCommands is! List || rawCommands.length < 2) {
+    if (rawCommands is! List ||
+        rawCommands.length < 2 ||
+        rawCommands.length > maxPathCommandCount) {
       throw FormatException('$fieldName.commands must contain path commands.');
     }
     if (fillColor != null &&
@@ -176,17 +180,50 @@ class DesignPath {
       for (var index = 0; index < rawCommands.length; index++)
         PathCommand.fromJson(rawCommands[index], '$fieldName.commands[$index]'),
     ]);
-    final hasDrawingSegment = commands
-        .skip(1)
-        .any(
-          (command) =>
-              command.type != PathCommandType.moveTo &&
-              command.type != PathCommandType.close,
-        );
-    if (commands.first.type != PathCommandType.moveTo || !hasDrawingSegment) {
+    var hasDrawingSegment = false;
+    var currentSubpathHasSegment = false;
+    var currentSubpathIsClosed = false;
+    for (var index = 0; index < commands.length; index++) {
+      final command = commands[index];
+      switch (command.type) {
+        case PathCommandType.moveTo:
+          if (fillColor != null &&
+              currentSubpathHasSegment &&
+              !currentSubpathIsClosed) {
+            throw FormatException(
+              '$fieldName filled subpaths must be closed before moveTo.',
+            );
+          }
+          currentSubpathHasSegment = false;
+          currentSubpathIsClosed = false;
+        case PathCommandType.lineTo ||
+            PathCommandType.quadraticTo ||
+            PathCommandType.cubicTo ||
+            PathCommandType.arcTo:
+          if (index == 0) {
+            throw FormatException(
+              '$fieldName drawing commands must follow moveTo.',
+            );
+          }
+          hasDrawingSegment = true;
+          currentSubpathHasSegment = true;
+          currentSubpathIsClosed = false;
+        case PathCommandType.close:
+          if (!currentSubpathHasSegment || currentSubpathIsClosed) {
+            throw FormatException(
+              '$fieldName close commands must follow an open subpath.',
+            );
+          }
+          currentSubpathIsClosed = true;
+      }
+    }
+    if (!hasDrawingSegment) {
       throw FormatException(
         '$fieldName.commands must start with moveTo and draw a segment.',
       );
+    }
+    if (fillColor != null && !currentSubpathIsClosed) {
+      throw FormatException('$fieldName filled paths must be closed.');
     }
     return DesignPath(
       id: id,
