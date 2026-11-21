@@ -6,50 +6,47 @@ import 'package:flutter/foundation.dart';
 class LessonPlaybackState {
   const LessonPlaybackState({
     required this.step,
-    required this.strokeCount,
+    required this.stepCount,
     required this.isPlaying,
   });
 
-  factory LessonPlaybackState.initial(int strokeCount) =>
-      LessonPlaybackState(step: 0, strokeCount: strokeCount, isPlaying: false);
+  factory LessonPlaybackState.initial(int stepCount) =>
+      LessonPlaybackState(step: 0, stepCount: stepCount, isPlaying: false);
 
   final int step;
-  final int strokeCount;
+  final int stepCount;
   final bool isPlaying;
 
-  bool get isComplete => strokeCount > 0 && step >= strokeCount;
-  int get displayedStrokeCount => step.clamp(0, strokeCount);
+  bool get isComplete => stepCount > 0 && step >= stepCount;
+  int get displayedStepCount => step.clamp(0, stepCount);
 
   LessonPlaybackState next() {
     if (isComplete) {
       return copyWith(isPlaying: false);
     }
-    final nextStep = (step + 1).clamp(0, strokeCount);
+    final nextStep = (step + 1).clamp(0, stepCount);
     return copyWith(
       step: nextStep,
-      isPlaying: nextStep < strokeCount && isPlaying,
+      isPlaying: nextStep < stepCount && isPlaying,
     );
   }
 
   LessonPlaybackState previous() =>
-      copyWith(step: (step - 1).clamp(0, strokeCount));
+      copyWith(step: (step - 1).clamp(0, stepCount));
 
-  LessonPlaybackState copyWith({
-    int? step,
-    int? strokeCount,
-    bool? isPlaying,
-  }) => LessonPlaybackState(
-    step: step ?? this.step,
-    strokeCount: strokeCount ?? this.strokeCount,
-    isPlaying: isPlaying ?? this.isPlaying,
-  );
+  LessonPlaybackState copyWith({int? step, int? stepCount, bool? isPlaying}) =>
+      LessonPlaybackState(
+        step: step ?? this.step,
+        stepCount: stepCount ?? this.stepCount,
+        isPlaying: isPlaying ?? this.isPlaying,
+      );
 }
 
 class LessonPlaybackController extends ChangeNotifier {
   LessonPlaybackController({
-    required int strokeCount,
+    required int stepCount,
     this.stepDuration = const Duration(milliseconds: 1400),
-  }) : state = LessonPlaybackState.initial(strokeCount);
+  }) : state = LessonPlaybackState.initial(stepCount);
 
   final Duration stepDuration;
   LessonPlaybackState state;
@@ -65,7 +62,7 @@ class LessonPlaybackController extends ChangeNotifier {
     if (state.isComplete) {
       restart();
     }
-    if (state.strokeCount == 0) {
+    if (state.stepCount == 0) {
       return;
     }
     _setState(state.copyWith(isPlaying: true));
@@ -92,7 +89,7 @@ class LessonPlaybackController extends ChangeNotifier {
 
   void restart() {
     _cancelTimer();
-    _setState(LessonPlaybackState.initial(state.strokeCount));
+    _setState(LessonPlaybackState.initial(state.stepCount));
   }
 
   void _setState(LessonPlaybackState next) {

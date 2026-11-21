@@ -38,10 +38,7 @@ class PracticeScreen extends ConsumerWidget {
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(height: 16),
-        VectorPreview(
-          design: design,
-          visibleStrokeCount: design.strokes.length,
-        ),
+        VectorPreview(design: design),
         const SizedBox(height: 16),
         Card(
           color: Theme.of(context).colorScheme.secondaryContainer,

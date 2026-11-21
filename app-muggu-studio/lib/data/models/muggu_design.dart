@@ -1,3 +1,4 @@
+import 'design_geometry.dart';
 import 'content_review.dart';
 import 'design_lesson_step.dart';
 import 'dot_grid.dart';
@@ -18,68 +19,6 @@ enum DesignDifficulty {
   }
 }
 
-class DesignPoint {
-  const DesignPoint({required this.x, required this.y});
-
-  final double x;
-  final double y;
-
-  factory DesignPoint.fromJson(Object? value, String fieldName) {
-    if (value is! List || value.length != 2) {
-      throw FormatException('$fieldName must contain an x and y coordinate.');
-    }
-    final x = value[0];
-    final y = value[1];
-    if (x is! num || y is! num || !x.isFinite || !y.isFinite) {
-      throw FormatException('$fieldName coordinates must be finite numbers.');
-    }
-    if (x < 0 || x > 1 || y < 0 || y > 1) {
-      throw FormatException('$fieldName coordinates must be between 0 and 1.');
-    }
-    return DesignPoint(x: x.toDouble(), y: y.toDouble());
-  }
-}
-
-class DesignStroke {
-  const DesignStroke({
-    required this.id,
-    required this.points,
-    required this.closed,
-  });
-
-  final String id;
-  final List<DesignPoint> points;
-  final bool closed;
-
-  factory DesignStroke.fromJson(Object? value, String fieldName) {
-    if (value is! Map<String, dynamic>) {
-      throw FormatException('$fieldName must be an object.');
-    }
-    final id = value['id'];
-    final rawPoints = value['points'];
-    final closed = value['closed'];
-    if (id is! String ||
-        id.trim().isEmpty ||
-        rawPoints is! List ||
-        rawPoints.length < 2) {
-      throw FormatException(
-        '$fieldName requires an id and at least two points.',
-      );
-    }
-    if (closed != null && closed is! bool) {
-      throw FormatException('$fieldName.closed must be a boolean.');
-    }
-    return DesignStroke(
-      id: id,
-      points: List.unmodifiable([
-        for (var index = 0; index < rawPoints.length; index++)
-          DesignPoint.fromJson(rawPoints[index], '$fieldName.points[$index]'),
-      ]),
-      closed: closed as bool? ?? false,
-    );
-  }
-}
-
 class MugguDesign {
   const MugguDesign({
     required this.id,
@@ -95,7 +34,8 @@ class MugguDesign {
     required this.grid,
     required this.searchTags,
     required this.thumbnail,
-    required this.strokes,
+    required this.paths,
+    required this.recipe,
     required this.rightsReview,
     required this.culturalReview,
     required this.localizationReview,
@@ -116,7 +56,8 @@ class MugguDesign {
   final DotGrid? grid;
   final List<String> searchTags;
   final String thumbnail;
-  final List<DesignStroke> strokes;
+  final List<DesignPath> paths;
+  final PatternRecipe? recipe;
   final ReviewRecord rightsReview;
   final ReviewRecord culturalReview;
   final ReviewRecord localizationReview;
@@ -140,6 +81,8 @@ class MugguDesign {
       lessonReview.isApproved &&
       lessonSteps.isNotEmpty &&
       lessonSteps.every((step) => _supportsInitialLanguages(step.instruction));
+
+  Set<String> get geometryGroupIds => paths.map((path) => path.groupId).toSet();
 
   String nameFor(String languageCode) =>
       localizedName.forLanguage(languageCode);
@@ -165,7 +108,7 @@ class MugguDesign {
     final technique = value['technique'];
     final thumbnail = value['thumbnail'];
     final rawTags = value['searchTags'];
-    final rawStrokes = value['strokes'];
+    final rawPaths = value['paths'];
     final rawGrid = value['grid'];
     final region = _optionalString(value['region'], '$fieldName.region');
     final tradition = _optionalString(
@@ -200,23 +143,23 @@ class MugguDesign {
         '$fieldName.searchTags must contain non-empty strings.',
       );
     }
-    if (rawStrokes is! List || rawStrokes.isEmpty) {
-      throw FormatException('$fieldName.strokes must contain vector paths.');
+    if (rawPaths is! List || rawPaths.isEmpty) {
+      throw FormatException('$fieldName.paths must contain vector paths.');
     }
 
-    final strokes = <DesignStroke>[];
-    final strokeIds = <String>{};
-    for (var index = 0; index < rawStrokes.length; index++) {
-      final stroke = DesignStroke.fromJson(
-        rawStrokes[index],
-        '$fieldName.strokes[$index]',
+    final paths = <DesignPath>[];
+    final pathIds = <String>{};
+    for (var index = 0; index < rawPaths.length; index++) {
+      final path = DesignPath.fromJson(
+        rawPaths[index],
+        '$fieldName.paths[$index]',
       );
-      if (!strokeIds.add(stroke.id)) {
-        throw FormatException('Duplicate stroke id: ${stroke.id}.');
+      if (!pathIds.add(path.id)) {
+        throw FormatException('Duplicate path id: ${path.id}.');
       }
-      strokes.add(stroke);
+      paths.add(path);
     }
-    final immutableStrokes = List<DesignStroke>.unmodifiable(strokes);
+    final immutablePaths = List<DesignPath>.unmodifiable(paths);
     final rawLessonSteps = value['lessonSteps'];
     if (rawLessonSteps is! List) {
       throw FormatException('$fieldName.lessonSteps must be a list.');
@@ -231,10 +174,10 @@ class MugguDesign {
       if (!lessonStepIds.add(step.id)) {
         throw FormatException('Duplicate lesson step id: ${step.id}.');
       }
-      for (final strokeId in step.strokeIds) {
-        if (!immutableStrokes.any((stroke) => stroke.id == strokeId)) {
+      for (final groupId in step.groupIds) {
+        if (!immutablePaths.any((path) => path.groupId == groupId)) {
           throw FormatException(
-            '$fieldName.lessonSteps[$index] references unknown stroke "$strokeId".',
+            '$fieldName.lessonSteps[$index] references unknown geometry group "$groupId".',
           );
         }
       }
@@ -326,7 +269,10 @@ class MugguDesign {
           : DotGrid.fromJson(rawGrid, '$fieldName.grid'),
       searchTags: List.unmodifiable(rawTags.cast<String>()),
       thumbnail: thumbnail,
-      strokes: immutableStrokes,
+      paths: immutablePaths,
+      recipe: value['recipe'] == null
+          ? null
+          : PatternRecipe.fromJson(value['recipe'], '$fieldName.recipe'),
       rightsReview: rightsReview,
       culturalReview: culturalReview,
       localizationReview: localizationReview,

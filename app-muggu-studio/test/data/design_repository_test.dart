@@ -4,7 +4,6 @@ import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:muggu_studio/data/models/content_review.dart';
-import 'package:muggu_studio/data/models/dot_grid.dart';
 import 'package:muggu_studio/data/models/muggu_design.dart';
 import 'package:muggu_studio/data/repositories/design_repository.dart';
 
@@ -12,11 +11,11 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test(
-    'bundled catalog has ten unassigned samples and decodable thumbnails',
+    'bundled catalog has twelve unassigned samples and decodable thumbnails',
     () async {
       final designs = await DesignRepository().loadCatalog();
 
-      expect(designs, hasLength(10));
+      expect(designs, hasLength(12));
       for (final design in designs) {
         expect(design.region, isNull);
         expect(design.tradition, isNull);
@@ -35,6 +34,21 @@ void main() {
         expect(frame.image.height, 320);
         codec.dispose();
       }
+      final radialDesign = designs.singleWhere(
+        (design) => design.id == 'generated_radial_001',
+      );
+      expect(radialDesign.recipe?.generatorId, 'radial_flower');
+      expect(
+        radialDesign.paths.first.commands.any(
+          (command) => command.type.name == 'cubicTo',
+        ),
+        isTrue,
+      );
+      final dotGridDesign = designs.singleWhere(
+        (design) => design.id == 'generated_dot_grid_001',
+      );
+      expect(dotGridDesign.grid?.dots, hasLength(25));
+      expect(dotGridDesign.recipe?.generatorId, 'dot_grid_diamonds');
     },
   );
 
@@ -44,7 +58,7 @@ void main() {
     final results = DesignRepository.query(
       designs: designs,
       searchQuery: 'TRIANGLE',
-      filters: const DesignFilters(
+      filters: DesignFilters(
         technique: 'geometric_lines',
         difficulty: DesignDifficulty.intermediate,
       ),
@@ -190,12 +204,12 @@ void main() {
 
     final matching = DesignRepository.query(
       designs: designs,
-      filters: const DesignFilters(
+      filters: DesignFilters(
         region: 'fixture-region',
         tradition: 'fixture-tradition',
         technique: 'geometric_lines',
         difficulty: DesignDifficulty.easy,
-        grid: DotGrid(rows: 5, columns: 5),
+        grid: designs.single.grid,
       ),
     );
     final excluded = DesignRepository.query(
@@ -208,115 +222,114 @@ void main() {
     expect(excluded, isEmpty);
   });
 
-  test(
-    'lesson steps are independent and reference existing vector strokes',
-    () {
-      final catalog = {
-        'schemaVersion': 2,
-        'designs': [
-          {
-            'id': 'fixture_design',
-            'localizedName': {
-              'en': 'Fixture',
-              'te': 'Fixture Telugu test',
-              'ta': 'Fixture Tamil test',
-            },
-            'localizedDescription': {
-              'en': 'Test vector.',
-              'te': 'Test vector Telugu',
-              'ta': 'Test vector Tamil',
-            },
-            'region': null,
-            'tradition': null,
-            'technique': 'geometric_lines',
-            'localizedTechnique': {
-              'en': 'Geometric lines',
-              'te': 'Geometric lines Telugu test',
-              'ta': 'Geometric lines Tamil test',
-            },
-            'difficulty': 'easy',
-            'grid': null,
-            'searchTags': ['fixture'],
-            'thumbnail': 'assets/designs/thumbnails/fixture.webp',
-            'strokes': [
-              {
-                'id': 'stroke_01',
-                'points': [
-                  [0, 0],
-                  [1, 1],
-                ],
-              },
-              {
-                'id': 'stroke_02',
-                'points': [
-                  [0, 1],
-                  [1, 0],
-                ],
-              },
-            ],
-            'rightsReview': {
-              'status': 'approved',
-              'reviewer': 'test',
-              'evidence': 'Test permission record.',
-            },
-            'culturalReview': {
-              'status': 'approved',
-              'reviewer': 'test',
-              'evidence': 'Test review record.',
-            },
-            'localizationReview': {
-              'status': 'approved',
-              'reviewer': 'test',
-              'evidence': 'Test localization review.',
-            },
-            'lessonReview': {
-              'status': 'approved',
-              'reviewer': 'test',
-              'evidence': 'Test lesson validation.',
-            },
-            'lessonSteps': [
-              {
-                'id': 'step_01',
-                'strokeIds': ['stroke_02'],
-                'instruction': {
-                  'en': 'Fixture instruction.',
-                  'te': 'Fixture instruction Telugu',
-                  'ta': 'Fixture instruction Tamil',
-                },
-              },
-            ],
+  test('migrated lesson steps reference reusable geometry groups', () {
+    final catalog = {
+      'schemaVersion': 2,
+      'designs': [
+        {
+          'id': 'fixture_design',
+          'localizedName': {
+            'en': 'Fixture',
+            'te': 'Fixture Telugu test',
+            'ta': 'Fixture Tamil test',
           },
-        ],
-      };
+          'localizedDescription': {
+            'en': 'Test vector.',
+            'te': 'Test vector Telugu',
+            'ta': 'Test vector Tamil',
+          },
+          'region': null,
+          'tradition': null,
+          'technique': 'geometric_lines',
+          'localizedTechnique': {
+            'en': 'Geometric lines',
+            'te': 'Geometric lines Telugu test',
+            'ta': 'Geometric lines Tamil test',
+          },
+          'difficulty': 'easy',
+          'grid': null,
+          'searchTags': ['fixture'],
+          'thumbnail': 'assets/designs/thumbnails/fixture.webp',
+          'strokes': [
+            {
+              'id': 'stroke_01',
+              'points': [
+                [0, 0],
+                [1, 1],
+              ],
+            },
+            {
+              'id': 'stroke_02',
+              'points': [
+                [0, 1],
+                [1, 0],
+              ],
+            },
+          ],
+          'rightsReview': {
+            'status': 'approved',
+            'reviewer': 'test',
+            'evidence': 'Test permission record.',
+          },
+          'culturalReview': {
+            'status': 'approved',
+            'reviewer': 'test',
+            'evidence': 'Test review record.',
+          },
+          'localizationReview': {
+            'status': 'approved',
+            'reviewer': 'test',
+            'evidence': 'Test localization review.',
+          },
+          'lessonReview': {
+            'status': 'approved',
+            'reviewer': 'test',
+            'evidence': 'Test lesson validation.',
+          },
+          'lessonSteps': [
+            {
+              'id': 'step_01',
+              'strokeIds': ['stroke_02'],
+              'instruction': {
+                'en': 'Fixture instruction.',
+                'te': 'Fixture instruction Telugu',
+                'ta': 'Fixture instruction Tamil',
+              },
+            },
+          ],
+        },
+      ],
+    };
 
-      final design = DesignRepository.parseCatalog(jsonEncode(catalog)).single;
-      expect(design.strokes, hasLength(2));
-      expect(design.lessonSteps, hasLength(1));
-      expect(design.lessonSteps.single.strokeIds, ['stroke_02']);
-      expect(design.hasReviewedLesson, isTrue);
+    final design = DesignRepository.parseCatalog(jsonEncode(catalog)).single;
+    expect(design.paths, hasLength(2));
+    expect(design.lessonSteps, hasLength(1));
+    expect(design.lessonSteps.single.groupIds, ['stroke_02']);
+    expect(design.paths.last.groupId, 'stroke_02');
+    expect(design.paths.last.commands.last.type.name, 'lineTo');
+    expect(design.hasReviewedLesson, isTrue);
 
-      final invalid = jsonDecode(jsonEncode(catalog)) as Map<String, dynamic>;
-      final designs = invalid['designs'] as List<dynamic>;
-      final rawDesign = designs.single as Map<String, dynamic>;
-      final steps = rawDesign['lessonSteps'] as List<dynamic>;
-      final step = steps.single as Map<String, dynamic>;
-      step['strokeIds'] = ['unknown_stroke'];
-      expect(
-        () => DesignRepository.parseCatalog(jsonEncode(invalid)),
-        throwsFormatException,
-      );
+    final invalid = jsonDecode(jsonEncode(catalog)) as Map<String, dynamic>;
+    final designs = invalid['designs'] as List<dynamic>;
+    final rawDesign = designs.single as Map<String, dynamic>;
+    final steps = rawDesign['lessonSteps'] as List<dynamic>;
+    final step = steps.single as Map<String, dynamic>;
+    step['strokeIds'] = ['unknown_stroke'];
+    expect(
+      () => DesignRepository.parseCatalog(jsonEncode(invalid)),
+      throwsFormatException,
+    );
 
-      final missingTranslation =
-          jsonDecode(jsonEncode(catalog)) as Map<String, dynamic>;
-      final localizedDesigns = missingTranslation['designs'] as List<dynamic>;
-      final localizedDesign = localizedDesigns.single as Map<String, dynamic>;
-      final localizedName =
-          localizedDesign['localizedName'] as Map<String, dynamic>;
-      localizedName.remove('ta');
-      expect(
-        () => DesignRepository.parseCatalog(jsonEncode(missingTranslation)),
-        throwsFormatException,
-      );
-    },
-  );
+    final missingTranslation =
+        jsonDecode(jsonEncode(catalog)) as Map<String, dynamic>;
+    final localizedDesigns = missingTranslation['designs'] as List<dynamic>;
+    final localizedDesign = localizedDesigns.single as Map<String, dynamic>;
+    final localizedName =
+        localizedDesign['localizedName'] as Map<String, dynamic>;
+    localizedName.remove('ta');
+    expect(
+      () => DesignRepository.parseCatalog(jsonEncode(missingTranslation)),
+      throwsFormatException,
+    );
+  });
 }

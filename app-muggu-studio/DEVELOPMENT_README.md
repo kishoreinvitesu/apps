@@ -390,3 +390,72 @@ Sprint 1 is ready for review. Sprint 2 has not been started.
   been supplied. Add it only after fluent-speaker review.
 - Touch tracing and creator-engine implementation remain deferred until the
   applicable content and product gates are satisfied.
+
+## 2026-11-21 — Versioned geometry and reusable generator foundation
+
+### Implemented
+
+- Added schema version 3 with normalized line, quadratic, cubic and arc path
+  commands, explicit geometry groups, optional dot coordinates and optional
+  versioned scalar-parameter recipes.
+- Kept the existing ten samples visually reusable: schema-v2 polylines
+  migrate to equivalent line-command paths and lesson stroke references
+  migrate to geometry-group references. They are not falsely marked as
+  parametric recipes.
+- Added two original, parameterized examples: a cubic radial flower and a
+  dot-grid diamond pattern. Rights, cultural, localization and lesson review
+  records remain pending.
+- Updated the shared preview and detail/practice flows to render paths,
+  explicit dots and lesson geometry groups.
+- Reworked the Python catalogue generator to emit schema v3 and deterministic
+  thumbnails. Added tests for normalized geometry, recipe parameters,
+  thumbnail output and curved-path flattening.
+- Added CI steps to test the Python generator and fail when generated
+  catalogue or thumbnail assets are stale.
+
+### Architecture and usability decision
+
+- Keep recipe generation, canonical path geometry, the shared Flutter
+  renderer, lesson/tracing selection and local persistence as separate
+  responsibilities. A saved recipe can be regenerated; its emitted paths
+  remain independently renderable.
+- Reuse fixed legacy geometry directly for preview and grouped learning or
+  tracing steps. Do not infer recipe parameters from arbitrary artwork.
+- The Python tool is build-time catalogue tooling, not the interactive Create
+  experience. The Create screen remains a placeholder; a later user-facing
+  flow should offer bounded family parameters, immediate preview, reset/undo
+  and local save.
+- No historical attribution, Telugu/Tamil translation or publication
+  approval is inferred by generation.
+
+### Validation
+
+- Python generator syntax check and focused tests — passed.
+- Generated catalog and thumbnail consistency check — passed.
+- `dart format --output=none --set-exit-if-changed lib test` — passed.
+- `flutter analyze` — passed with no issues.
+- `flutter test --reporter expanded` — passed; all 21 tests succeeded.
+- `flutter build apk --debug --target-platform android-x64` — passed.
+
+### Next-phase plan
+
+1. **Interactive Creator MVP:** expose the radial and dot-grid families from
+   Create with bounded controls, immediate shared-renderer preview, reset,
+   undo and clear. Keep these explicitly original geometric patterns.
+2. **Drawing and tracing:** add normalized pointer input, 5×5/7×7/9×9 dot
+   grids, the agreed symmetry modes, and reliable undo/redo. Reuse existing
+   fixed paths as guides; do not infer recipes from legacy artwork.
+3. **Local persistence:** save a recipe together with a geometry snapshot,
+   and keep user creations separate from the curated catalogue. Add a
+   versioned database migration and reopen-after-restart tests.
+4. **Usability and device QA:** test small screens, accessibility, offline
+   use and lower-end Android performance before calling the creator complete.
+5. **Content publication gate:** keep rights/provenance, cultural attribution,
+   fluent-speaker localization and lesson review separate. Do not publish
+   tradition labels or instructional content until their applicable reviews
+   have evidence and approval.
+
+Generic original-pattern creation can proceed without making cultural claims.
+Rights, cultural, Telugu/Tamil localization and lesson reviews remain pending
+for every generated catalogue example; the interactive Create screen has not
+been implemented yet.

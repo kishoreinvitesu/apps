@@ -3,10 +3,11 @@
 **Document purpose:** Source of truth for product scope, UX,
 architecture, content, implementation rules and release acceptance.
 
-**Status:** Sprint 1–3 foundations and prototypes are implemented; review-led
-stabilization and content-governance/lesson-model foundations are complete.
-Human content review and reviewed localization remain gates before the
-planned combined Sprint 4 Creator and Tracing Engine. See the Development
+**Status:** Sprint 1–3 foundations, review-led stabilization, and the
+versioned geometry/generator foundation are implemented. The Create screen
+is still a placeholder. Human content review and reviewed localization remain
+gates before publishing tradition-specific lessons or attribution; generic
+original-pattern creation may proceed with clear labeling. See the Development
 Log for verified implementation status.
 
 **Working product name:** Muggu Studio\
@@ -362,7 +363,7 @@ Suggested model:
 
 ``` json
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "designs": [
     {
       "id": "geometric_sample_001",
@@ -385,22 +386,41 @@ Suggested model:
         "ta": "<fluent-speaker-reviewed Tamil technique>"
       },
       "difficulty": "easy",
-      "grid": {
-        "rows": 5,
-        "columns": 5
-      },
+      "grid": null,
       "searchTags": ["geometric", "sample"],
       "thumbnail": "assets/designs/thumbnails/geometric_sample_001.webp",
-      "strokes": [
+      "paths": [
         {
-          "id": "stroke_01",
-          "points": [[0.50, 0.10], [0.65, 0.25], [0.50, 0.40]]
+          "id": "petal_path_01",
+          "groupId": "petal_01",
+          "commands": [
+            {"type": "moveTo", "x": 0.5, "y": 0.5},
+            {
+              "type": "cubicTo",
+              "control1X": 0.5,
+              "control1Y": 0.4,
+              "control2X": 0.6,
+              "control2Y": 0.2,
+              "x": 0.5,
+              "y": 0.14
+            },
+            {"type": "close"}
+          ]
         }
       ],
+      "recipe": {
+        "generatorId": "radial_flower",
+        "version": 1,
+        "parameters": {
+          "petalCount": 8,
+          "outerRadius": 0.36,
+          "petalWidth": 0.095
+        }
+      },
       "lessonSteps": [
         {
           "id": "step_01",
-          "strokeIds": ["stroke_01"],
+          "groupIds": ["petal_01"],
           "instruction": {
             "en": "<human-reviewed instruction>"
           }
@@ -434,11 +454,14 @@ Suggested model:
 This is an illustrative schema only. Coordinates, regional attribution,
 instructions and artwork must be verified before publication. Rights,
 cultural classification, localization and lesson accuracy are independent
-review gates. Lesson steps are explicit and reference vector strokes;
-strokes alone are not teaching steps. Schema version 2 enforces separate
-review records, requires English/Telugu/Tamil text before localization
-approval and validates lesson stroke references. Missing translations use
-a safe fallback rather than crashing.
+review gates. Schema version 3 stores normalized path commands, optional
+explicit dot coordinates, reusable geometry groups and optional versioned
+generation recipes. Existing schema-version-2 stroke paths migrate to
+equivalent line-command paths without claiming they are parametric recipes.
+Lesson steps reference geometry groups so the same paths can be used by
+preview, lesson, tracing and future creation flows. The parser accepts v2
+and v3; reviewed content and reviewed translations remain separate gates.
+Missing translations use a safe fallback rather than crashing.
 
 ### Content review
 
@@ -446,15 +469,28 @@ Rights/provenance, cultural classification and localized content are
 independent review gates. Each published design must have evidence for
 each applicable gate. Cultural review checks regional/traditional label,
 local name and spelling, dot layout, and technique. Lesson review checks
-that explicit step instructions and stroke references match the design.
+that explicit step instructions and geometry-group references match.
 Telugu and Tamil content must be reviewed by fluent speakers. A "reviewed"
 status in one gate must never imply approval in another.
 
 ------------------------------------------------------------------------
 
-## 6. Drawing and tutorial engine
+## 6. Geometry, drawing and tutorial engine
 
-Use Flutter CustomPainter/Canvas and normalized vector coordinates.
+Use Flutter CustomPainter/Canvas and normalized vector coordinates. Keep
+geometry independent of screen size and input device. A versioned recipe
+stores scalar parameters for reproducible pattern families; generated output
+is ordinary path geometry, so it remains renderable even if a future app
+version no longer includes that generator. Existing non-parametric designs
+remain reusable as fixed geometry and can be grouped into lesson or tracing
+steps without reverse-engineering them into recipes.
+
+The planned creation flow should be organized around a small set of reviewed
+pattern families: choose a family, adjust bounded parameters, see an immediate
+shared-renderer preview, reset or undo, then save locally. Keep recipe
+generation, path rendering and persistence as separate layers. Do not expose
+the catalogue's Python build tool as the in-app editor, and do not require a
+network service or account for local creation.
 
 ### Rendering
 
@@ -752,16 +788,17 @@ Goal: a user can open a design and follow a complete lesson.
 
 Acceptance: - Lesson matches the verified reference design. - Playback
 controls work. - Rendering preserves proportions. - Lesson works
-offline. - Tests cover stroke ordering and playback state.
+offline. - Tests cover lesson-step ordering and playback state.
 
 ### Sprint 4 --- Practice and tracing
 
 Goal: provide a basic offline drawing engine for both creation and guided
 practice. This scope combines the creator engine and tracing work shown in
-the Sprint 4 architecture diagram; stabilization and content governance
-must be completed first. Before implementation, also finish the reviewed
-lesson-step model and catalogue-localization groundwork so practice and
-future lessons do not treat vector strokes as teaching steps.
+the Sprint 4 architecture diagram; stabilization and content-governance
+foundations are complete. The geometry model and explicit lesson-step
+groundwork are available. Generic original-pattern creation may use this
+engine, while human rights, cultural review and fluent-speaker localization
+remain required before shipping tradition-specific attribution or lessons.
 
 -   CustomPainter drawing engine with normalized pointer-down/move/up input.
 -   Dot-grid overlays for 5×5, 7×7 and 9×9.

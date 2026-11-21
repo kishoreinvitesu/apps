@@ -1,18 +1,21 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../../../data/models/design_geometry.dart';
+import '../../../data/models/dot_grid.dart';
 import '../../../data/models/muggu_design.dart';
+import '../application/geometry_path_builder.dart';
 
 class VectorPreview extends StatelessWidget {
   const VectorPreview({
     required this.design,
-    required this.visibleStrokeCount,
-    this.visibleStrokeIds,
+    this.visibleGroupIds,
+    this.showAllPaths = true,
     super.key,
   });
 
   final MugguDesign design;
-  final int visibleStrokeCount;
-  final Set<String>? visibleStrokeIds;
+  final Set<String>? visibleGroupIds;
+  final bool showAllPaths;
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +31,10 @@ class VectorPreview extends StatelessWidget {
         ),
         child: CustomPaint(
           painter: _VectorPreviewPainter(
-            strokes: design.strokes,
-            visibleStrokeCount: visibleStrokeCount,
-            visibleStrokeIds: visibleStrokeIds,
+            paths: design.paths,
+            grid: design.grid,
+            visibleGroupIds: visibleGroupIds,
+            showAllPaths: showAllPaths,
             color: Theme.of(context).colorScheme.primary,
             guideColor: Theme.of(context).colorScheme.outlineVariant,
           ),
@@ -42,16 +46,18 @@ class VectorPreview extends StatelessWidget {
 
 class _VectorPreviewPainter extends CustomPainter {
   const _VectorPreviewPainter({
-    required this.strokes,
-    required this.visibleStrokeCount,
-    required this.visibleStrokeIds,
+    required this.paths,
+    required this.grid,
+    required this.visibleGroupIds,
+    required this.showAllPaths,
     required this.color,
     required this.guideColor,
   });
 
-  final List<DesignStroke> strokes;
-  final int visibleStrokeCount;
-  final Set<String>? visibleStrokeIds;
+  final List<DesignPath> paths;
+  final DotGrid? grid;
+  final Set<String>? visibleGroupIds;
+  final bool showAllPaths;
   final Color color;
   final Color guideColor;
 
@@ -69,14 +75,29 @@ class _VectorPreviewPainter extends CustomPainter {
         ..style = PaintingStyle.fill,
     );
 
-    for (var index = 0; index < strokes.length; index++) {
-      final stroke = strokes[index];
-      final path = _buildPath(stroke, size);
+    final dots = grid?.dots ?? const <DesignPoint>[];
+    final dotPaint = Paint()
+      ..color = color.withValues(alpha: 0.48)
+      ..style = PaintingStyle.fill;
+    for (final dot in dots) {
+      canvas.drawCircle(
+        Offset(dot.x * size.width, dot.y * size.height),
+        3,
+        dotPaint,
+      );
+    }
+
+    for (final designPath in paths) {
+      final path = buildDesignPath(designPath, size);
       canvas.drawPath(path, guidePaint);
-      final isVisible = visibleStrokeIds == null
-          ? index < visibleStrokeCount
-          : visibleStrokeIds!.contains(stroke.id);
+      final isVisible =
+          showAllPaths ||
+          (visibleGroupIds?.contains(designPath.groupId) ?? false);
       if (isVisible) {
+        final fillColor = designPath.fillColor;
+        if (fillColor != null) {
+          canvas.drawPath(path, Paint()..color = _parseColor(fillColor));
+        }
         canvas.drawPath(
           path,
           Paint()
@@ -90,27 +111,15 @@ class _VectorPreviewPainter extends CustomPainter {
     }
   }
 
-  Path _buildPath(DesignStroke stroke, Size size) {
-    final path = Path();
-    for (var index = 0; index < stroke.points.length; index++) {
-      final point = stroke.points[index];
-      final offset = Offset(point.x * size.width, point.y * size.height);
-      if (index == 0) {
-        path.moveTo(offset.dx, offset.dy);
-      } else {
-        path.lineTo(offset.dx, offset.dy);
-      }
-    }
-    if (stroke.closed) {
-      path.close();
-    }
-    return path;
-  }
+  Color _parseColor(String value) =>
+      Color(int.parse(value.substring(1), radix: 16) | 0xFF000000);
 
   @override
   bool shouldRepaint(covariant _VectorPreviewPainter oldDelegate) =>
-      oldDelegate.visibleStrokeCount != visibleStrokeCount ||
-      oldDelegate.visibleStrokeIds != visibleStrokeIds ||
-      oldDelegate.strokes != strokes ||
-      oldDelegate.color != color;
+      oldDelegate.visibleGroupIds != visibleGroupIds ||
+      oldDelegate.showAllPaths != showAllPaths ||
+      oldDelegate.paths != paths ||
+      oldDelegate.grid != grid ||
+      oldDelegate.color != color ||
+      oldDelegate.guideColor != guideColor;
 }

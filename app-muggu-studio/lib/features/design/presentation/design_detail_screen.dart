@@ -33,12 +33,12 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
     super.dispose();
   }
 
-  void _ensurePlayback(int strokeCount) {
-    if (_playback != null && _playback!.state.strokeCount == strokeCount) {
+  void _ensurePlayback(int stepCount) {
+    if (_playback != null && _playback!.state.stepCount == stepCount) {
       return;
     }
     _playback?.dispose();
-    _playback = LessonPlaybackController(strokeCount: strokeCount);
+    _playback = LessonPlaybackController(stepCount: stepCount);
     _state = _playback!.state;
     _playback!.addListener(_onPlaybackChanged);
   }
@@ -78,10 +78,10 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
     final design = matches.first;
     final hasReviewedLesson = design.hasReviewedLesson;
     _ensurePlayback(hasReviewedLesson ? design.lessonSteps.length : 0);
-    final visibleStrokeIds = hasReviewedLesson
+    final visibleGroupIds = hasReviewedLesson
         ? design.lessonSteps
-              .take(_state.displayedStrokeCount)
-              .expand((step) => step.strokeIds)
+              .take(_state.displayedStepCount)
+              .expand((step) => step.groupIds)
               .toSet()
         : null;
 
@@ -97,15 +97,15 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
         const SizedBox(height: 16),
         VectorPreview(
           design: design,
-          visibleStrokeCount: hasReviewedLesson ? 0 : design.strokes.length,
-          visibleStrokeIds: visibleStrokeIds,
+          visibleGroupIds: visibleGroupIds,
+          showAllPaths: !hasReviewedLesson,
         ),
         if (hasReviewedLesson) ...[
           const SizedBox(height: 12),
           Text(
             _state.isComplete
                 ? l10n.lessonComplete
-                : '${l10n.step} ${_state.step + 1} ${l10n.ofLabel} ${_state.strokeCount}',
+                : '${l10n.step} ${_state.step + 1} ${l10n.ofLabel} ${_state.stepCount}',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 6),

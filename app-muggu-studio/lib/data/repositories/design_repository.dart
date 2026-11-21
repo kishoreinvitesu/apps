@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../models/design_geometry.dart';
 import '../models/dot_grid.dart';
 import '../models/muggu_design.dart';
 
 const catalogAssetPath = 'assets/designs/catalog.json';
-const catalogSchemaVersion = 2;
+const catalogSchemaVersion = 3;
+const supportedCatalogSchemaVersions = {2, catalogSchemaVersion};
 
 enum DesignSort { recommended, name, difficulty }
 
@@ -69,24 +71,128 @@ class DesignRepository {
       throw FormatException('Invalid catalogue JSON: ${error.message}');
     }
     if (decoded is! Map<String, dynamic> ||
-        decoded['schemaVersion'] != catalogSchemaVersion ||
+        decoded['schemaVersion'] is! int ||
+        !supportedCatalogSchemaVersions.contains(decoded['schemaVersion']) ||
         decoded['designs'] is! List) {
       throw const FormatException(
         'Catalogue must have a supported schemaVersion and a designs list.',
       );
     }
 
+    final schemaVersion = decoded['schemaVersion'] as int;
     final rawDesigns = decoded['designs'] as List;
     final designs = <MugguDesign>[];
     final ids = <String>{};
     for (var index = 0; index < rawDesigns.length; index++) {
-      final design = MugguDesign.fromJson(rawDesigns[index], 'designs[$index]');
+      final rawDesign = rawDesigns[index];
+      final normalizedDesign = schemaVersion == 2
+          ? _migrateV2Design(rawDesign, 'designs[$index]')
+          : rawDesign;
+      final design = MugguDesign.fromJson(normalizedDesign, 'designs[$index]');
       if (!ids.add(design.id)) {
         throw FormatException('Duplicate design id: ${design.id}.');
       }
       designs.add(design);
     }
     return List.unmodifiable(designs);
+  }
+
+  static Object? _migrateV2Design(Object? value, String fieldName) {
+    if (value is! Map<String, dynamic>) {
+      return value;
+    }
+    final rawStrokes = value['strokes'];
+    if (rawStrokes is! List) {
+      throw FormatException('$fieldName.strokes must be a list in schema 2.');
+    }
+    final migratedPaths = <Map<String, Object?>>[];
+    for (var index = 0; index < rawStrokes.length; index++) {
+      final stroke = rawStrokes[index];
+      if (stroke is! Map<String, dynamic> ||
+          stroke['id'] is! String ||
+          stroke['points'] is! List) {
+        throw FormatException('$fieldName.strokes[$index] is invalid.');
+      }
+      final strokeId = stroke['id'] as String;
+      final points = stroke['points'] as List;
+      final commands = <Map<String, Object?>>[];
+      for (var pointIndex = 0; pointIndex < points.length; pointIndex++) {
+        final point = DesignPoint.fromJson(
+          points[pointIndex],
+          '$fieldName.strokes[$index].points[$pointIndex]',
+        );
+        commands.add({
+          'type': pointIndex == 0 ? 'moveTo' : 'lineTo',
+          'x': point.x,
+          'y': point.y,
+        });
+      }
+      if (stroke['closed'] == true) {
+        commands.add({'type': 'close'});
+      }
+      migratedPaths.add({
+        'id': strokeId,
+        'groupId': strokeId,
+        'commands': commands,
+      });
+    }
+
+    final migratedSteps = <Map<String, Object?>>[];
+    final rawSteps = value['lessonSteps'];
+    if (rawSteps is! List) {
+      throw FormatException('$fieldName.lessonSteps must be a list.');
+    }
+    for (var index = 0; index < rawSteps.length; index++) {
+      final step = rawSteps[index];
+      if (step is! Map<String, dynamic> || step['strokeIds'] is! List) {
+        throw FormatException('$fieldName.lessonSteps[$index] is invalid.');
+      }
+      migratedSteps.add(
+        {...step, 'groupIds': step['strokeIds']}..remove('strokeIds'),
+      );
+    }
+
+    final migratedGrid = _migrateV2Grid(value['grid'], fieldName);
+    return {
+      ...value,
+      'paths': migratedPaths,
+      'lessonSteps': migratedSteps,
+      'grid': migratedGrid,
+      'recipe': null,
+    }..remove('strokes');
+  }
+
+  static Object? _migrateV2Grid(Object? value, String fieldName) {
+    if (value == null) {
+      return null;
+    }
+    if (value is! Map<String, dynamic> ||
+        value['rows'] is! int ||
+        value['columns'] is! int) {
+      throw FormatException('$fieldName.grid is invalid in schema 2.');
+    }
+    final rows = value['rows'] as int;
+    final columns = value['columns'] as int;
+    if (rows < 1 || columns < 1) {
+      throw FormatException('$fieldName.grid dimensions must be positive.');
+    }
+    final margin = 0.12;
+    final dots = <List<double>>[
+      for (var row = 0; row < rows; row++)
+        for (var column = 0; column < columns; column++)
+          [
+            columns == 1
+                ? 0.5
+                : margin + (1 - 2 * margin) * column / (columns - 1),
+            rows == 1 ? 0.5 : margin + (1 - 2 * margin) * row / (rows - 1),
+          ],
+    ];
+    return {
+      'layout': rows == columns ? 'square' : 'rectangular',
+      'rows': rows,
+      'columns': columns,
+      'dots': dots,
+    };
   }
 
   static List<MugguDesign> query({

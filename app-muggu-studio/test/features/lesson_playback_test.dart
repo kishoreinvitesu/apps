@@ -4,7 +4,7 @@ import 'package:muggu_studio/features/design/application/lesson_playback.dart';
 void main() {
   test('lesson playback follows stroke count and can restart', () {
     final playback = LessonPlaybackController(
-      strokeCount: 3,
+      stepCount: 3,
       stepDuration: const Duration(milliseconds: 10),
     );
 
@@ -25,7 +25,7 @@ void main() {
   });
 
   test('previous does not move below the first step', () {
-    final playback = LessonPlaybackController(strokeCount: 2);
+    final playback = LessonPlaybackController(stepCount: 2);
 
     playback.previous();
     expect(playback.state.step, 0);
@@ -37,7 +37,7 @@ void main() {
 
   test('play, pause, resume, and completion share one timer', () async {
     final playback = LessonPlaybackController(
-      strokeCount: 3,
+      stepCount: 3,
       stepDuration: const Duration(milliseconds: 40),
     );
     addTearDown(playback.dispose);
@@ -69,7 +69,7 @@ void main() {
     'previous cancels automatic playback and disposal cancels timers',
     () async {
       final playback = LessonPlaybackController(
-        strokeCount: 3,
+        stepCount: 3,
         stepDuration: const Duration(milliseconds: 20),
       );
 
