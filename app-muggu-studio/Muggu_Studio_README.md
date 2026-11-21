@@ -4,8 +4,10 @@
 architecture, content, implementation rules and release acceptance.
 
 **Status:** Sprint 1–3 foundations and prototypes are implemented; review-led
-stabilization is underway before the planned combined Sprint 4 Creator and
-Tracing Engine. See the Development Log for verified implementation status.
+stabilization and content-governance/lesson-model foundations are complete.
+Human content review and reviewed localization remain gates before the
+planned combined Sprint 4 Creator and Tracing Engine. See the Development
+Log for verified implementation status.
 
 **Working product name:** Muggu Studio\
 **Platform:** Android first\
@@ -360,65 +362,93 @@ Suggested model:
 
 ``` json
 {
-  "id": "muggu_001",
-  "localizedName": {
-    "en": "Simple Floral Muggu",
-    "te": "సులభమైన పూల ముగ్గు",
-    "ta": "எளிய மலர் கோலம்"
-  },
-  "localizedDescription": {
-    "en": "A beginner-friendly floral dot design."
-  },
-  "region": "andhra_pradesh",
-  "tradition": "muggu",
-  "technique": "dot_muggu",
-  "difficulty": "easy",
-  "grid": {
-    "rows": 5,
-    "columns": 5
-  },
-  "estimatedMinutes": 5,
-  "occasionTags": ["daily"],
-  "searchTags": ["muggu", "muggulu", "rangoli"],
-  "isPremium": false,
-  "thumbnail": "assets/designs/thumbnails/muggu_001.webp",
-  "strokes": [
+  "schemaVersion": 2,
+  "designs": [
     {
-      "id": "stroke_01",
-      "points": [[0.50, 0.10], [0.65, 0.25], [0.50, 0.40]],
-      "type": "curve"
-    }
-  ],
-  "steps": [
-    {
-      "step": 1,
-      "strokeIds": ["stroke_01"],
-      "instruction": {
-        "en": "Draw the first curved line."
+      "id": "geometric_sample_001",
+      "localizedName": {
+        "en": "<reviewed English name>",
+        "te": "<fluent-speaker-reviewed Telugu name>",
+        "ta": "<fluent-speaker-reviewed Tamil name>"
+      },
+      "localizedDescription": {
+        "en": "<reviewed English description>",
+        "te": "<fluent-speaker-reviewed Telugu description>",
+        "ta": "<fluent-speaker-reviewed Tamil description>"
+      },
+      "region": null,
+      "tradition": null,
+      "technique": "geometric_lines",
+      "localizedTechnique": {
+        "en": "<reviewed English technique>",
+        "te": "<fluent-speaker-reviewed Telugu technique>",
+        "ta": "<fluent-speaker-reviewed Tamil technique>"
+      },
+      "difficulty": "easy",
+      "grid": {
+        "rows": 5,
+        "columns": 5
+      },
+      "searchTags": ["geometric", "sample"],
+      "thumbnail": "assets/designs/thumbnails/geometric_sample_001.webp",
+      "strokes": [
+        {
+          "id": "stroke_01",
+          "points": [[0.50, 0.10], [0.65, 0.25], [0.50, 0.40]]
+        }
+      ],
+      "lessonSteps": [
+        {
+          "id": "step_01",
+          "strokeIds": ["stroke_01"],
+          "instruction": {
+            "en": "<human-reviewed instruction>"
+          }
+        }
+      ],
+      "rightsReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": "<permission or provenance record>"
+      },
+      "localizationReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "culturalReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
       }
     }
-  ],
-  "contentReview": {
-    "status": "pending",
-    "reviewer": "",
-    "sourceOrPermission": ""
-  }
+  ]
 }
 ```
 
 This is an illustrative schema only. Coordinates, regional attribution,
-instructions and artwork must be verified before publication. Add schema
-versioning and validation. Missing translations should use a safe
-fallback rather than crashing.
+instructions and artwork must be verified before publication. Rights,
+cultural classification, localization and lesson accuracy are independent
+review gates. Lesson steps are explicit and reference vector strokes;
+strokes alone are not teaching steps. Schema version 2 enforces separate
+review records, requires English/Telugu/Tamil text before localization
+approval and validates lesson stroke references. Missing translations use
+a safe fallback rather than crashing.
 
 ### Content review
 
-Each published design must be checked for: - Correct
-regional/traditional label. - Accurate local name and spelling. -
-Correct dot layout and stroke order. - Clear preview and thumbnail. -
-Beginner difficulty assessment. - Tutorial instructions that match the
-design. - Rights/permission record. - Human review of Telugu/Tamil
-wording where applicable.
+Rights/provenance, cultural classification and localized content are
+independent review gates. Each published design must have evidence for
+each applicable gate. Cultural review checks regional/traditional label,
+local name and spelling, dot layout, and technique. Lesson review checks
+that explicit step instructions and stroke references match the design.
+Telugu and Tamil content must be reviewed by fluent speakers. A "reviewed"
+status in one gate must never imply approval in another.
 
 ------------------------------------------------------------------------
 
@@ -1026,10 +1056,9 @@ the repository:
   Sprint 1                            Completed and verified on 13
                                       November 2026
 
-  Next step                           Complete review-led stabilization,
-                                      content governance and lesson-model
-                                      groundwork before Sprint 4 Creator
-                                      and Tracing Engine
+  Next step                           Complete human content review and
+                                      reviewed localization before Sprint 4
+                                      Creator and Tracing Engine
   -----------------------------------------------------------------------
 
 ------------------------------------------------------------------------

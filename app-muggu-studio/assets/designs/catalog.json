@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "designs": [
     {
       "id": "geometric_sample_001",
@@ -12,6 +12,9 @@
       "region": null,
       "tradition": null,
       "technique": "geometric_lines",
+      "localizedTechnique": {
+        "en": "Geometric lines"
+      },
       "difficulty": "easy",
       "grid": null,
       "searchTags": [
@@ -95,11 +98,27 @@
           "closed": false
         }
       ],
-      "contentReview": {
+      "localizationReview": {
         "status": "pending",
         "reviewer": "",
-        "sourceOrPermission": "Original app-generated geometric vector; no regional or traditional attribution assigned."
-      }
+        "evidence": ""
+      },
+      "rightsReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": "Original app-generated geometric vector; provenance and rights documentation pending."
+      },
+      "culturalReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonSteps": []
     },
     {
       "id": "geometric_sample_002",
@@ -112,6 +131,9 @@
       "region": null,
       "tradition": null,
       "technique": "geometric_lines",
+      "localizedTechnique": {
+        "en": "Geometric lines"
+      },
       "difficulty": "easy",
       "grid": null,
       "searchTags": [
@@ -419,11 +441,27 @@
           "closed": false
         }
       ],
-      "contentReview": {
+      "localizationReview": {
         "status": "pending",
         "reviewer": "",
-        "sourceOrPermission": "Original app-generated geometric vector; no regional or traditional attribution assigned."
-      }
+        "evidence": ""
+      },
+      "rightsReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": "Original app-generated geometric vector; provenance and rights documentation pending."
+      },
+      "culturalReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonSteps": []
     },
     {
       "id": "geometric_sample_003",
@@ -436,6 +474,9 @@
       "region": null,
       "tradition": null,
       "technique": "geometric_lines",
+      "localizedTechnique": {
+        "en": "Geometric lines"
+      },
       "difficulty": "easy",
       "grid": null,
       "searchTags": [
@@ -621,11 +662,27 @@
           "closed": false
         }
       ],
-      "contentReview": {
+      "localizationReview": {
         "status": "pending",
         "reviewer": "",
-        "sourceOrPermission": "Original app-generated geometric vector; no regional or traditional attribution assigned."
-      }
+        "evidence": ""
+      },
+      "rightsReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": "Original app-generated geometric vector; provenance and rights documentation pending."
+      },
+      "culturalReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonSteps": []
     },
     {
       "id": "geometric_sample_004",
@@ -638,6 +695,9 @@
       "region": null,
       "tradition": null,
       "technique": "geometric_lines",
+      "localizedTechnique": {
+        "en": "Geometric lines"
+      },
       "difficulty": "intermediate",
       "grid": null,
       "searchTags": [
@@ -1535,11 +1595,27 @@
           "closed": true
         }
       ],
-      "contentReview": {
+      "localizationReview": {
         "status": "pending",
         "reviewer": "",
-        "sourceOrPermission": "Original app-generated geometric vector; no regional or traditional attribution assigned."
-      }
+        "evidence": ""
+      },
+      "rightsReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": "Original app-generated geometric vector; provenance and rights documentation pending."
+      },
+      "culturalReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonSteps": []
     },
     {
       "id": "geometric_sample_005",
@@ -1552,6 +1628,9 @@
       "region": null,
       "tradition": null,
       "technique": "geometric_lines",
+      "localizedTechnique": {
+        "en": "Geometric lines"
+      },
       "difficulty": "intermediate",
       "grid": null,
       "searchTags": [
@@ -2269,11 +2348,27 @@
           "closed": false
         }
       ],
-      "contentReview": {
+      "localizationReview": {
         "status": "pending",
         "reviewer": "",
-        "sourceOrPermission": "Original app-generated geometric vector; no regional or traditional attribution assigned."
-      }
+        "evidence": ""
+      },
+      "rightsReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": "Original app-generated geometric vector; provenance and rights documentation pending."
+      },
+      "culturalReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonSteps": []
     },
     {
       "id": "geometric_sample_006",
@@ -2286,6 +2381,9 @@
       "region": null,
       "tradition": null,
       "technique": "geometric_lines",
+      "localizedTechnique": {
+        "en": "Geometric lines"
+      },
       "difficulty": "intermediate",
       "grid": null,
       "searchTags": [
@@ -2363,11 +2461,27 @@
           "closed": true
         }
       ],
-      "contentReview": {
+      "localizationReview": {
         "status": "pending",
         "reviewer": "",
-        "sourceOrPermission": "Original app-generated geometric vector; no regional or traditional attribution assigned."
-      }
+        "evidence": ""
+      },
+      "rightsReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": "Original app-generated geometric vector; provenance and rights documentation pending."
+      },
+      "culturalReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonSteps": []
     },
     {
       "id": "geometric_sample_007",
@@ -2380,6 +2494,9 @@
       "region": null,
       "tradition": null,
       "technique": "geometric_lines",
+      "localizedTechnique": {
+        "en": "Geometric lines"
+      },
       "difficulty": "advanced",
       "grid": null,
       "searchTags": [
@@ -2461,11 +2578,27 @@
           "closed": false
         }
       ],
-      "contentReview": {
+      "localizationReview": {
         "status": "pending",
         "reviewer": "",
-        "sourceOrPermission": "Original app-generated geometric vector; no regional or traditional attribution assigned."
-      }
+        "evidence": ""
+      },
+      "rightsReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": "Original app-generated geometric vector; provenance and rights documentation pending."
+      },
+      "culturalReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonSteps": []
     },
     {
       "id": "geometric_sample_008",
@@ -2478,6 +2611,9 @@
       "region": null,
       "tradition": null,
       "technique": "geometric_lines",
+      "localizedTechnique": {
+        "en": "Geometric lines"
+      },
       "difficulty": "advanced",
       "grid": null,
       "searchTags": [
@@ -2611,11 +2747,27 @@
           "closed": false
         }
       ],
-      "contentReview": {
+      "localizationReview": {
         "status": "pending",
         "reviewer": "",
-        "sourceOrPermission": "Original app-generated geometric vector; no regional or traditional attribution assigned."
-      }
+        "evidence": ""
+      },
+      "rightsReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": "Original app-generated geometric vector; provenance and rights documentation pending."
+      },
+      "culturalReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonSteps": []
     },
     {
       "id": "geometric_sample_009",
@@ -2628,6 +2780,9 @@
       "region": null,
       "tradition": null,
       "technique": "geometric_lines",
+      "localizedTechnique": {
+        "en": "Geometric lines"
+      },
       "difficulty": "advanced",
       "grid": null,
       "searchTags": [
@@ -3305,11 +3460,27 @@
           "closed": false
         }
       ],
-      "contentReview": {
+      "localizationReview": {
         "status": "pending",
         "reviewer": "",
-        "sourceOrPermission": "Original app-generated geometric vector; no regional or traditional attribution assigned."
-      }
+        "evidence": ""
+      },
+      "rightsReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": "Original app-generated geometric vector; provenance and rights documentation pending."
+      },
+      "culturalReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonSteps": []
     },
     {
       "id": "geometric_sample_010",
@@ -3322,6 +3493,9 @@
       "region": null,
       "tradition": null,
       "technique": "geometric_lines",
+      "localizedTechnique": {
+        "en": "Geometric lines"
+      },
       "difficulty": "advanced",
       "grid": null,
       "searchTags": [
@@ -3613,11 +3787,27 @@
           "closed": true
         }
       ],
-      "contentReview": {
+      "localizationReview": {
         "status": "pending",
         "reviewer": "",
-        "sourceOrPermission": "Original app-generated geometric vector; no regional or traditional attribution assigned."
-      }
+        "evidence": ""
+      },
+      "rightsReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": "Original app-generated geometric vector; provenance and rights documentation pending."
+      },
+      "culturalReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonSteps": []
     }
   ]
 }

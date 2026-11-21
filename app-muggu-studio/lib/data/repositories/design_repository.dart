@@ -7,6 +7,7 @@ import '../models/dot_grid.dart';
 import '../models/muggu_design.dart';
 
 const catalogAssetPath = 'assets/designs/catalog.json';
+const catalogSchemaVersion = 2;
 
 enum DesignSort { recommended, name, difficulty }
 
@@ -68,10 +69,10 @@ class DesignRepository {
       throw FormatException('Invalid catalogue JSON: ${error.message}');
     }
     if (decoded is! Map<String, dynamic> ||
-        decoded['schemaVersion'] != 1 ||
+        decoded['schemaVersion'] != catalogSchemaVersion ||
         decoded['designs'] is! List) {
       throw const FormatException(
-        'Catalogue must have schemaVersion 1 and a designs list.',
+        'Catalogue must have a supported schemaVersion and a designs list.',
       );
     }
 
@@ -108,6 +109,9 @@ class DesignRepository {
         [
           ...design.localizedName.values.values,
           ...design.localizedDescription.values.values,
+          ...design.localizedTechnique.values.values,
+          ...?design.localizedRegion?.values.values,
+          ...?design.localizedTradition?.values.values,
           ...design.searchTags,
         ].join(' '),
       );

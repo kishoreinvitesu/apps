@@ -6,11 +6,13 @@ class VectorPreview extends StatelessWidget {
   const VectorPreview({
     required this.design,
     required this.visibleStrokeCount,
+    this.visibleStrokeIds,
     super.key,
   });
 
   final MugguDesign design;
   final int visibleStrokeCount;
+  final Set<String>? visibleStrokeIds;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,7 @@ class VectorPreview extends StatelessWidget {
           painter: _VectorPreviewPainter(
             strokes: design.strokes,
             visibleStrokeCount: visibleStrokeCount,
+            visibleStrokeIds: visibleStrokeIds,
             color: Theme.of(context).colorScheme.primary,
             guideColor: Theme.of(context).colorScheme.outlineVariant,
           ),
@@ -41,12 +44,14 @@ class _VectorPreviewPainter extends CustomPainter {
   const _VectorPreviewPainter({
     required this.strokes,
     required this.visibleStrokeCount,
+    required this.visibleStrokeIds,
     required this.color,
     required this.guideColor,
   });
 
   final List<DesignStroke> strokes;
   final int visibleStrokeCount;
+  final Set<String>? visibleStrokeIds;
   final Color color;
   final Color guideColor;
 
@@ -68,7 +73,10 @@ class _VectorPreviewPainter extends CustomPainter {
       final stroke = strokes[index];
       final path = _buildPath(stroke, size);
       canvas.drawPath(path, guidePaint);
-      if (index < visibleStrokeCount) {
+      final isVisible = visibleStrokeIds == null
+          ? index < visibleStrokeCount
+          : visibleStrokeIds!.contains(stroke.id);
+      if (isVisible) {
         canvas.drawPath(
           path,
           Paint()
@@ -102,6 +110,7 @@ class _VectorPreviewPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _VectorPreviewPainter oldDelegate) =>
       oldDelegate.visibleStrokeCount != visibleStrokeCount ||
+      oldDelegate.visibleStrokeIds != visibleStrokeIds ||
       oldDelegate.strokes != strokes ||
       oldDelegate.color != color;
 }

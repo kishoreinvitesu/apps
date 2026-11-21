@@ -216,9 +216,25 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
   ) async {
     var filters = initialFilters;
     final l10n = AppLocalizations.of(context)!;
+    final languageCode = Localizations.localeOf(context).languageCode;
     final regions = _sortedValues(designs.map((design) => design.region));
     final traditions = _sortedValues(designs.map((design) => design.tradition));
     final techniques = _sortedValues(designs.map((design) => design.technique));
+    final regionLabels = {
+      for (final design in designs)
+        if (design.region != null)
+          design.region!: design.regionFor(languageCode) ?? design.region!,
+    };
+    final traditionLabels = {
+      for (final design in designs)
+        if (design.tradition != null)
+          design.tradition!:
+              design.traditionFor(languageCode) ?? design.tradition!,
+    };
+    final techniqueLabels = {
+      for (final design in designs)
+        design.technique: design.techniqueFor(languageCode),
+    };
     final difficulties = designs.map((design) => design.difficulty).toSet();
     final grids =
         designs
@@ -260,7 +276,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                       emptyMessage: l10n.noReviewedCategories,
                       values: regions,
                       selectedValue: filters.region,
-                      labelForValue: (value) => value,
+                      labelForValue: (value) => regionLabels[value] ?? value,
                       onSelected: (value) => update(
                         DesignFilters(
                           region: filters.region == value ? null : value,
@@ -276,7 +292,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                       emptyMessage: l10n.noReviewedCategories,
                       values: traditions,
                       selectedValue: filters.tradition,
-                      labelForValue: (value) => value,
+                      labelForValue: (value) => traditionLabels[value] ?? value,
                       onSelected: (value) => update(
                         DesignFilters(
                           region: filters.region,
@@ -294,7 +310,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                       selectedValue: filters.technique,
                       labelForValue: (value) => value == 'geometric_lines'
                           ? l10n.techniqueGeometricLines
-                          : value,
+                          : techniqueLabels[value] ?? value,
                       onSelected: (value) => update(
                         DesignFilters(
                           region: filters.region,

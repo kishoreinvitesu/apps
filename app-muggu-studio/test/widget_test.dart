@@ -65,6 +65,20 @@ void main() {
     await tester.tap(find.text('Learn this design'));
     await tester.pumpAndSettle();
     expect(find.text('Geometric Sample 01'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text(
+        'This is an original vector preview, not a culturally verified lesson.',
+      ),
+      200,
+    );
+    expect(
+      find.text(
+        'This is an original vector preview, not a culturally verified lesson.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Draw the next stroke'), findsNothing);
+    expect(find.text('Next'), findsNothing);
     await tester.scrollUntilVisible(find.text('Design details'), 250);
     await tester.pumpAndSettle();
     expect(find.text('Design details'), findsOneWidget);
@@ -81,6 +95,8 @@ void main() {
     await tester.tap(find.text('Learn this design'));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.text('Practise / Trace'), 250);
+    await tester.ensureVisible(find.text('Practise / Trace'));
+    await tester.pumpAndSettle();
 
     await tester.tap(find.text('Practise / Trace'));
     await tester.pumpAndSettle();
@@ -234,7 +250,7 @@ void main() {
 
 List<MugguDesign> _testCatalog() => DesignRepository.parseCatalog('''
   {
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "designs": [
       {
         "id": "geometric_sample_001",
@@ -245,6 +261,7 @@ List<MugguDesign> _testCatalog() => DesignRepository.parseCatalog('''
         "region": null,
         "tradition": null,
         "technique": "geometric_lines",
+        "localizedTechnique": {"en": "Geometric lines"},
         "difficulty": "easy",
         "grid": null,
         "searchTags": ["geometric", "sample"],
@@ -252,11 +269,27 @@ List<MugguDesign> _testCatalog() => DesignRepository.parseCatalog('''
         "strokes": [
           {"id": "stroke_01", "points": [[0.1, 0.1], [0.9, 0.9]]}
         ],
-        "contentReview": {
+        "rightsReview": {
           "status": "pending",
           "reviewer": "",
-          "sourceOrPermission": "Original widget-test fixture."
-        }
+          "evidence": "Original widget-test fixture."
+        },
+        "culturalReview": {
+          "status": "pending",
+          "reviewer": "",
+          "evidence": ""
+        },
+        "localizationReview": {
+          "status": "pending",
+          "reviewer": "",
+          "evidence": ""
+        },
+        "lessonReview": {
+          "status": "pending",
+          "reviewer": "",
+          "evidence": ""
+        },
+        "lessonSteps": []
       }
     ]
   }

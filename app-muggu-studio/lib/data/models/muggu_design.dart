@@ -1,3 +1,5 @@
+import 'content_review.dart';
+import 'design_lesson_step.dart';
 import 'dot_grid.dart';
 import 'localized_text.dart';
 
@@ -11,19 +13,6 @@ enum DesignDifficulty {
       'easy' => DesignDifficulty.easy,
       'intermediate' => DesignDifficulty.intermediate,
       'advanced' => DesignDifficulty.advanced,
-      _ => throw FormatException('$fieldName has an unsupported value.'),
-    };
-  }
-}
-
-enum ContentReviewStatus {
-  pending,
-  reviewed;
-
-  static ContentReviewStatus parse(Object? value, String fieldName) {
-    return switch (value) {
-      'pending' => ContentReviewStatus.pending,
-      'reviewed' => ContentReviewStatus.reviewed,
       _ => throw FormatException('$fieldName has an unsupported value.'),
     };
   }
@@ -96,6 +85,9 @@ class MugguDesign {
     required this.id,
     required this.localizedName,
     required this.localizedDescription,
+    required this.localizedTechnique,
+    required this.localizedRegion,
+    required this.localizedTradition,
     required this.region,
     required this.tradition,
     required this.technique,
@@ -104,14 +96,19 @@ class MugguDesign {
     required this.searchTags,
     required this.thumbnail,
     required this.strokes,
-    required this.contentReviewStatus,
-    required this.contentReviewer,
-    required this.sourceOrPermission,
+    required this.rightsReview,
+    required this.culturalReview,
+    required this.localizationReview,
+    required this.lessonReview,
+    required this.lessonSteps,
   });
 
   final String id;
   final LocalizedText localizedName;
   final LocalizedText localizedDescription;
+  final LocalizedText localizedTechnique;
+  final LocalizedText? localizedRegion;
+  final LocalizedText? localizedTradition;
   final String? region;
   final String? tradition;
   final String technique;
@@ -120,15 +117,44 @@ class MugguDesign {
   final List<String> searchTags;
   final String thumbnail;
   final List<DesignStroke> strokes;
-  final ContentReviewStatus contentReviewStatus;
-  final String contentReviewer;
-  final String sourceOrPermission;
+  final ReviewRecord rightsReview;
+  final ReviewRecord culturalReview;
+  final ReviewRecord localizationReview;
+  final ReviewRecord lessonReview;
+  final List<DesignLessonStep> lessonSteps;
+
+  bool get isPublicationReady =>
+      rightsReview.isApproved &&
+      culturalReview.isApproved &&
+      localizationReview.isApproved &&
+      _supportsInitialLanguages(localizedName) &&
+      _supportsInitialLanguages(localizedDescription) &&
+      _supportsInitialLanguages(localizedTechnique) &&
+      (localizedRegion == null ||
+          _supportsInitialLanguages(localizedRegion!)) &&
+      (localizedTradition == null ||
+          _supportsInitialLanguages(localizedTradition!));
+
+  bool get hasReviewedLesson =>
+      isPublicationReady &&
+      lessonReview.isApproved &&
+      lessonSteps.isNotEmpty &&
+      lessonSteps.every((step) => _supportsInitialLanguages(step.instruction));
 
   String nameFor(String languageCode) =>
       localizedName.forLanguage(languageCode);
 
   String descriptionFor(String languageCode) =>
       localizedDescription.forLanguage(languageCode);
+
+  String techniqueFor(String languageCode) =>
+      localizedTechnique.forLanguage(languageCode);
+
+  String? regionFor(String languageCode) =>
+      localizedRegion?.forLanguage(languageCode);
+
+  String? traditionFor(String languageCode) =>
+      localizedTradition?.forLanguage(languageCode);
 
   factory MugguDesign.fromJson(Object? value, String fieldName) {
     if (value is! Map<String, dynamic>) {
@@ -146,6 +172,8 @@ class MugguDesign {
       value['tradition'],
       '$fieldName.tradition',
     );
+    final localizedRegionValue = value['localizedRegion'];
+    final localizedTraditionValue = value['localizedTradition'];
     if (id is! String || !RegExp(r'^[a-z0-9_]+$').hasMatch(id)) {
       throw FormatException(
         '$fieldName.id must be a stable lowercase identifier.',
@@ -153,6 +181,12 @@ class MugguDesign {
     }
     if (technique is! String || technique.trim().isEmpty) {
       throw FormatException('$fieldName.technique must be a non-empty string.');
+    }
+    if ((region == null) != (localizedRegionValue == null) ||
+        (tradition == null) != (localizedTraditionValue == null)) {
+      throw FormatException(
+        '$fieldName localized region and tradition must match their identifiers.',
+      );
     }
     if (thumbnail is! String ||
         !thumbnail.startsWith('assets/designs/thumbnails/')) {
@@ -170,32 +204,116 @@ class MugguDesign {
       throw FormatException('$fieldName.strokes must contain vector paths.');
     }
 
-    final review = value['contentReview'];
-    if (review is! Map<String, dynamic>) {
-      throw FormatException('$fieldName.contentReview must be an object.');
+    final strokes = <DesignStroke>[];
+    final strokeIds = <String>{};
+    for (var index = 0; index < rawStrokes.length; index++) {
+      final stroke = DesignStroke.fromJson(
+        rawStrokes[index],
+        '$fieldName.strokes[$index]',
+      );
+      if (!strokeIds.add(stroke.id)) {
+        throw FormatException('Duplicate stroke id: ${stroke.id}.');
+      }
+      strokes.add(stroke);
     }
-    final status = ContentReviewStatus.parse(
-      review['status'],
-      '$fieldName.contentReview.status',
+    final immutableStrokes = List<DesignStroke>.unmodifiable(strokes);
+    final rawLessonSteps = value['lessonSteps'];
+    if (rawLessonSteps is! List) {
+      throw FormatException('$fieldName.lessonSteps must be a list.');
+    }
+    final lessonSteps = <DesignLessonStep>[];
+    final lessonStepIds = <String>{};
+    for (var index = 0; index < rawLessonSteps.length; index++) {
+      final step = DesignLessonStep.fromJson(
+        rawLessonSteps[index],
+        '$fieldName.lessonSteps[$index]',
+      );
+      if (!lessonStepIds.add(step.id)) {
+        throw FormatException('Duplicate lesson step id: ${step.id}.');
+      }
+      for (final strokeId in step.strokeIds) {
+        if (!immutableStrokes.any((stroke) => stroke.id == strokeId)) {
+          throw FormatException(
+            '$fieldName.lessonSteps[$index] references unknown stroke "$strokeId".',
+          );
+        }
+      }
+      lessonSteps.add(step);
+    }
+    final rightsReview = ReviewRecord.fromJson(
+      value['rightsReview'],
+      '$fieldName.rightsReview',
     );
-    final reviewer = review['reviewer'];
-    final sourceOrPermission = review['sourceOrPermission'];
-    if (reviewer is! String || sourceOrPermission is! String) {
+    final culturalReview = ReviewRecord.fromJson(
+      value['culturalReview'],
+      '$fieldName.culturalReview',
+    );
+    final localizationReview = ReviewRecord.fromJson(
+      value['localizationReview'],
+      '$fieldName.localizationReview',
+    );
+    final lessonReview = ReviewRecord.fromJson(
+      value['lessonReview'],
+      '$fieldName.lessonReview',
+    );
+    if (lessonReview.isApproved && lessonSteps.isEmpty) {
       throw FormatException(
-        '$fieldName.contentReview reviewer and sourceOrPermission must be strings.',
+        '$fieldName.lessonReview cannot be approved without lesson steps.',
+      );
+    }
+    if (lessonReview.isApproved &&
+        lessonSteps.any(
+          (step) => !_supportsInitialLanguages(step.instruction),
+        )) {
+      throw FormatException(
+        '$fieldName.lessonReview requires reviewed English, Telugu and Tamil instructions.',
+      );
+    }
+
+    final localizedName = LocalizedText.fromJson(
+      value['localizedName'],
+      '$fieldName.localizedName',
+    );
+    final localizedDescription = LocalizedText.fromJson(
+      value['localizedDescription'],
+      '$fieldName.localizedDescription',
+    );
+    final localizedTechnique = LocalizedText.fromJson(
+      value['localizedTechnique'],
+      '$fieldName.localizedTechnique',
+    );
+    final localizedRegion = localizedRegionValue == null
+        ? null
+        : LocalizedText.fromJson(
+            localizedRegionValue,
+            '$fieldName.localizedRegion',
+          );
+    final localizedTradition = localizedTraditionValue == null
+        ? null
+        : LocalizedText.fromJson(
+            localizedTraditionValue,
+            '$fieldName.localizedTradition',
+          );
+    if (localizationReview.isApproved &&
+        (!_supportsInitialLanguages(localizedName) ||
+            !_supportsInitialLanguages(localizedDescription) ||
+            !_supportsInitialLanguages(localizedTechnique) ||
+            (localizedRegion != null &&
+                !_supportsInitialLanguages(localizedRegion)) ||
+            (localizedTradition != null &&
+                !_supportsInitialLanguages(localizedTradition)))) {
+      throw FormatException(
+        '$fieldName.localizationReview requires reviewed English, Telugu and Tamil catalogue text.',
       );
     }
 
     return MugguDesign(
       id: id,
-      localizedName: LocalizedText.fromJson(
-        value['localizedName'],
-        '$fieldName.localizedName',
-      ),
-      localizedDescription: LocalizedText.fromJson(
-        value['localizedDescription'],
-        '$fieldName.localizedDescription',
-      ),
+      localizedName: localizedName,
+      localizedDescription: localizedDescription,
+      localizedTechnique: localizedTechnique,
+      localizedRegion: localizedRegion,
+      localizedTradition: localizedTradition,
       region: region,
       tradition: tradition,
       technique: technique,
@@ -208,16 +326,12 @@ class MugguDesign {
           : DotGrid.fromJson(rawGrid, '$fieldName.grid'),
       searchTags: List.unmodifiable(rawTags.cast<String>()),
       thumbnail: thumbnail,
-      strokes: List.unmodifiable([
-        for (var index = 0; index < rawStrokes.length; index++)
-          DesignStroke.fromJson(
-            rawStrokes[index],
-            '$fieldName.strokes[$index]',
-          ),
-      ]),
-      contentReviewStatus: status,
-      contentReviewer: reviewer,
-      sourceOrPermission: sourceOrPermission,
+      strokes: immutableStrokes,
+      rightsReview: rightsReview,
+      culturalReview: culturalReview,
+      localizationReview: localizationReview,
+      lessonReview: lessonReview,
+      lessonSteps: List.unmodifiable(lessonSteps),
     );
   }
 
@@ -230,4 +344,7 @@ class MugguDesign {
     }
     return value;
   }
+
+  static bool _supportsInitialLanguages(LocalizedText text) =>
+      const ['en', 'te', 'ta'].every(text.values.containsKey);
 }

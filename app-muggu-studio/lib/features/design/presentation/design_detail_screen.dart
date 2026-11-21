@@ -76,7 +76,14 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
       return Center(child: Text(l10n.exploreNoResultsTitle));
     }
     final design = matches.first;
-    _ensurePlayback(design.strokes.length);
+    final hasReviewedLesson = design.hasReviewedLesson;
+    _ensurePlayback(hasReviewedLesson ? design.lessonSteps.length : 0);
+    final visibleStrokeIds = hasReviewedLesson
+        ? design.lessonSteps
+              .take(_state.displayedStrokeCount)
+              .expand((step) => step.strokeIds)
+              .toSet()
+        : null;
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -90,36 +97,51 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
         const SizedBox(height: 16),
         VectorPreview(
           design: design,
-          visibleStrokeCount: _state.displayedStrokeCount,
+          visibleStrokeCount: hasReviewedLesson ? 0 : design.strokes.length,
+          visibleStrokeIds: visibleStrokeIds,
         ),
-        const SizedBox(height: 12),
-        Text(
-          _state.isComplete
-              ? l10n.lessonComplete
-              : '${l10n.step} ${_state.step + 1} ${l10n.ofLabel} ${_state.strokeCount}',
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        const SizedBox(height: 6),
-        Text(_state.isComplete ? l10n.lessonComplete : l10n.drawNextStroke),
-        const SizedBox(height: 12),
-        Card(
-          color: Theme.of(context).colorScheme.secondaryContainer,
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(Icons.info_outline_rounded),
-                const SizedBox(width: 10),
-                Expanded(child: Text(l10n.sampleLessonNotice)),
-              ],
+        if (hasReviewedLesson) ...[
+          const SizedBox(height: 12),
+          Text(
+            _state.isComplete
+                ? l10n.lessonComplete
+                : '${l10n.step} ${_state.step + 1} ${l10n.ofLabel} ${_state.strokeCount}',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: 6),
+          Text(
+            _state.isComplete
+                ? l10n.lessonComplete
+                : design.lessonSteps[_state.step].instruction.forLanguage(
+                    languageCode,
+                  ),
+          ),
+        ] else ...[
+          const SizedBox(height: 12),
+          Card(
+            color: Theme.of(context).colorScheme.secondaryContainer,
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.info_outline_rounded),
+                  const SizedBox(width: 10),
+                  Expanded(child: Text(l10n.sampleLessonNotice)),
+                ],
+              ),
             ),
           ),
-        ),
+        ],
         const SizedBox(height: 16),
         Text(l10n.designDetails, style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 8),
-        _DetailRow(title: l10n.technique, value: design.technique),
+        _DetailRow(
+          title: l10n.technique,
+          value: design.technique == 'geometric_lines'
+              ? l10n.techniqueGeometricLines
+              : design.techniqueFor(languageCode),
+        ),
         _DetailRow(
           title: l10n.difficulty,
           value: switch (design.difficulty) {
@@ -130,11 +152,11 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
         ),
         _DetailRow(
           title: l10n.region,
-          value: design.region ?? l10n.metadataUnassigned,
+          value: design.regionFor(languageCode) ?? l10n.metadataUnassigned,
         ),
         _DetailRow(
           title: l10n.tradition,
-          value: design.tradition ?? l10n.metadataUnassigned,
+          value: design.traditionFor(languageCode) ?? l10n.metadataUnassigned,
         ),
         const SizedBox(height: 16),
         FilledButton.icon(
@@ -145,40 +167,40 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
           icon: const Icon(Icons.gesture_rounded),
           label: Text(l10n.practiceDesign),
         ),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          alignment: WrapAlignment.center,
-          children: [
-            OutlinedButton.icon(
-              onPressed: _state.step == 0 ? null : _playback!.previous,
-              icon: const Icon(Icons.skip_previous_rounded),
-              label: Text(l10n.previous),
-            ),
-            FilledButton.icon(
-              onPressed: _playPause,
-              icon: Icon(
-                _state.isPlaying
-                    ? Icons.pause_rounded
-                    : Icons.play_arrow_rounded,
+        if (hasReviewedLesson) ...[
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            alignment: WrapAlignment.center,
+            children: [
+              OutlinedButton.icon(
+                onPressed: _state.step == 0 ? null : _playback!.previous,
+                icon: const Icon(Icons.skip_previous_rounded),
+                label: Text(l10n.previous),
               ),
-              label: Text(_state.isPlaying ? l10n.pause : l10n.play),
-            ),
-            OutlinedButton.icon(
-              onPressed: _state.isComplete ? null : _playback!.advance,
-              icon: const Icon(Icons.skip_next_rounded),
-              label: Text(l10n.next),
-            ),
-            TextButton.icon(
-              onPressed: () {
-                _playback!.restart();
-              },
-              icon: const Icon(Icons.replay_rounded),
-              label: Text(l10n.restart),
-            ),
-          ],
-        ),
+              FilledButton.icon(
+                onPressed: _playPause,
+                icon: Icon(
+                  _state.isPlaying
+                      ? Icons.pause_rounded
+                      : Icons.play_arrow_rounded,
+                ),
+                label: Text(_state.isPlaying ? l10n.pause : l10n.play),
+              ),
+              OutlinedButton.icon(
+                onPressed: _state.isComplete ? null : _playback!.advance,
+                icon: const Icon(Icons.skip_next_rounded),
+                label: Text(l10n.next),
+              ),
+              TextButton.icon(
+                onPressed: _playback!.restart,
+                icon: const Icon(Icons.replay_rounded),
+                label: Text(l10n.restart),
+              ),
+            ],
+          ),
+        ],
       ],
     );
   }

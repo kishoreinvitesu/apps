@@ -351,3 +351,42 @@ Sprint 1 is ready for review. Sprint 2 has not been started.
   lower-end-device checks remain necessary.
 - GitHub Actions has not yet run on the remote repository. Configure branch
   protection to require its validation job if CI must block merges.
+
+## 2026-11-21 — Content governance and lesson-model groundwork
+
+### Implemented
+
+- Upgraded the bundled catalogue to schema version 2. Rights/provenance,
+  cultural classification, localization and lesson reviews now have
+  independent records; approval requires a reviewer and evidence.
+- Added localized technique, region and tradition labels. Localization
+  approval requires English, Telugu and Tamil text for applicable catalogue
+  fields; no bundled sample is approved.
+- Added explicit localized lesson-step data separate from vector strokes.
+  Parsing rejects duplicate step/stroke IDs, unknown stroke references and
+  approved lessons with no steps.
+- Added publication and reviewed-lesson gates. A lesson is not treated as
+  teachable unless rights, cultural and lesson reviews are approved.
+- Design detail now shows a full vector preview and a clear notice for
+  unreviewed samples; playback controls and step instructions appear only
+  for explicitly reviewed lessons.
+- Kept all 10 generated geometric samples pending review, without regional
+  or traditional attribution and without invented lesson steps or
+  translations.
+- Updated the product schema and review-policy documentation.
+
+### Validation
+
+- `dart format lib test` — passed.
+- `flutter test --reporter expanded` — passed; all 18 tests succeeded.
+- `flutter analyze` — passed with no issues.
+- `flutter build apk --debug --target-platform android-x64` — passed.
+
+### Remaining content gates
+
+- Rights evidence and human cultural review are still pending for every
+  bundled sample; the schema does not approve any content automatically.
+- No reviewed Telugu/Tamil catalogue text or localized taxonomy data has
+  been supplied. Add it only after fluent-speaker review.
+- Touch tracing and creator-engine implementation remain deferred until the
+  applicable content and product gates are satisfied.
