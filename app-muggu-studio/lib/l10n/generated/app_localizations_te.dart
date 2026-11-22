@@ -363,4 +363,42 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get templatePattern => 'టెంప్లేట్ నమూనా';
+
+  @override
+  String get myCreations => 'నా సృష్టిలు';
+
+  @override
+  String get saveCreation => 'సృష్టిని సేవ్ చేయండి';
+
+  @override
+  String get creationTitle => 'సృష్టి శీర్షిక';
+
+  @override
+  String get creationTitleHint => 'ఉదా: నా ఉదయపు ముగ్గు';
+
+  @override
+  String get creationSaved => 'సృష్టి సేవ్ చేయబడింది';
+
+  @override
+  String get renameCreation => 'పేరు మార్చండి';
+
+  @override
+  String get deleteCreation => 'సృష్టిని తొలగించండి';
+
+  @override
+  String get deleteCreationConfirm =>
+      'మీరు ఖచ్చితంగా ఈ సృష్టిని తొలగించాలనుకుంటున్నారా? ఈ చర్యను రద్దు చేయడం సాధ్యం కాదు.';
+
+  @override
+  String get noCreationsYet => 'ఇంకా సృష్టిలు లేవు';
+
+  @override
+  String get noCreationsDescription =>
+      'మీరు రూపొందించి సేవ్ చేసిన డిజైన్లు ఇక్కడ కనిపిస్తాయి.';
+
+  @override
+  String get editCreation => 'సవరించు';
+
+  @override
+  String get save => 'సేవ్ చేయి';
 }

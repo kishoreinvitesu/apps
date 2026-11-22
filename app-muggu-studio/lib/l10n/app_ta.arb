@@ -112,5 +112,17 @@
   "clearCanvasConfirm": "உங்கள் வரைபடத்தை நிச்சயமாக அழிக்க விரும்புகிறீர்களா?",
   "cancel": "ரத்து செய்",
   "freehandCanvas": "சுயாதீன வரைபலகை",
-  "templatePattern": "வார்ப்புரு வடிவம்"
+  "templatePattern": "வார்ப்புரு வடிவம்",
+  "myCreations": "என் படைப்புகள்",
+  "saveCreation": "படைப்பைச் சேமிக்கவும்",
+  "creationTitle": "படைப்பின் தலைப்பு",
+  "creationTitleHint": "எ.கா. என் காலை கோலம்",
+  "creationSaved": "படைப்பு சேமிக்கப்பட்டது",
+  "renameCreation": "மறுபெயரிடு",
+  "deleteCreation": "படைப்பை நீக்கு",
+  "deleteCreationConfirm": "இந்தப் படைப்பை நிச்சயமாக நீக்க விரும்புகிறீர்களா? இந்த செயலை செயல்தவிர்க்க முடியாது.",
+  "noCreationsYet": "இன்னும் படைப்புகள் இல்லை",
+  "noCreationsDescription": "நீங்கள் உருவாக்கி சேமிக்கும் வடிவங்கள் இங்கே தோன்றும்.",
+  "editCreation": "திருத்து",
+  "save": "சேமி"
 }

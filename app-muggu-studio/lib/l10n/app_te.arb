@@ -112,5 +112,17 @@
   "clearCanvasConfirm": "మీరు గీసిన చిత్రాన్ని తొలగించాలనుకుంటున్నారా?",
   "cancel": "రద్దు చేయి",
   "freehandCanvas": "ఫ్రీహ్యాండ్ కాన్వాస్",
-  "templatePattern": "టెంప్లేట్ నమూనా"
+  "templatePattern": "టెంప్లేట్ నమూనా",
+  "myCreations": "నా సృష్టిలు",
+  "saveCreation": "సృష్టిని సేవ్ చేయండి",
+  "creationTitle": "సృష్టి శీర్షిక",
+  "creationTitleHint": "ఉదా: నా ఉదయపు ముగ్గు",
+  "creationSaved": "సృష్టి సేవ్ చేయబడింది",
+  "renameCreation": "పేరు మార్చండి",
+  "deleteCreation": "సృష్టిని తొలగించండి",
+  "deleteCreationConfirm": "మీరు ఖచ్చితంగా ఈ సృష్టిని తొలగించాలనుకుంటున్నారా? ఈ చర్యను రద్దు చేయడం సాధ్యం కాదు.",
+  "noCreationsYet": "ఇంకా సృష్టిలు లేవు",
+  "noCreationsDescription": "మీరు రూపొందించి సేవ్ చేసిన డిజైన్లు ఇక్కడ కనిపిస్తాయి.",
+  "editCreation": "సవరించు",
+  "save": "సేవ్ చేయి"
 }

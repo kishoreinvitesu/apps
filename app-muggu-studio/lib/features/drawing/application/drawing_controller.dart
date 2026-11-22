@@ -124,6 +124,15 @@ class DrawingController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void loadStrokes(List<DrawnStroke> initialStrokes) {
+    _strokes.clear();
+    _strokes.addAll(initialStrokes);
+    _undoStack.clear();
+    _redoStack.clear();
+    _activePoints.clear();
+    notifyListeners();
+  }
+
   void undo() {
     if (!canUndo) return;
     _redoStack.add(List.of(_strokes));

@@ -100,6 +100,13 @@ class DotGrid {
     );
   }
 
+  Map<String, dynamic> toJson() => {
+    'layout': layout,
+    'rows': rows,
+    'columns': columns,
+    'dots': [for (final dot in dots) dot.toJson()],
+  };
+
   @override
   bool operator ==(Object other) =>
       other is DotGrid &&

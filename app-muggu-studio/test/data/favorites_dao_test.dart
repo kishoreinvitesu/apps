@@ -59,6 +59,6 @@ void main() {
     await Directory(databasePath).delete(recursive: true);
 
     final openedDatabase = await database.database;
-    expect(await openedDatabase.getVersion(), 1);
+    expect(await openedDatabase.getVersion(), 2);
   });
 }

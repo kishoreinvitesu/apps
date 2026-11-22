@@ -135,6 +135,22 @@ class PathCommand {
       sweepAngle: coordinates['sweepAngle'],
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'type': type.name,
+    if (x != null) 'x': x,
+    if (y != null) 'y': y,
+    if (controlX != null) 'controlX': controlX,
+    if (controlY != null) 'controlY': controlY,
+    if (control1X != null) 'control1X': control1X,
+    if (control1Y != null) 'control1Y': control1Y,
+    if (control2X != null) 'control2X': control2X,
+    if (control2Y != null) 'control2Y': control2Y,
+    if (radiusX != null) 'radiusX': radiusX,
+    if (radiusY != null) 'radiusY': radiusY,
+    if (startAngle != null) 'startAngle': startAngle,
+    if (sweepAngle != null) 'sweepAngle': sweepAngle,
+  };
 }
 
 class DesignPath {
@@ -232,6 +248,13 @@ class DesignPath {
       fillColor: fillColor as String?,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'groupId': groupId,
+    'commands': [for (final c in commands) c.toJson()],
+    if (fillColor != null) 'fillColor': fillColor,
+  };
 }
 
 class PatternRecipe {
@@ -283,4 +306,10 @@ class PatternRecipe {
       parameters: Map.unmodifiable(rawParameters),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'generatorId': generatorId,
+    'version': version,
+    'parameters': parameters,
+  };
 }

@@ -363,4 +363,42 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get templatePattern => 'வார்ப்புரு வடிவம்';
+
+  @override
+  String get myCreations => 'என் படைப்புகள்';
+
+  @override
+  String get saveCreation => 'படைப்பைச் சேமிக்கவும்';
+
+  @override
+  String get creationTitle => 'படைப்பின் தலைப்பு';
+
+  @override
+  String get creationTitleHint => 'எ.கா. என் காலை கோலம்';
+
+  @override
+  String get creationSaved => 'படைப்பு சேமிக்கப்பட்டது';
+
+  @override
+  String get renameCreation => 'மறுபெயரிடு';
+
+  @override
+  String get deleteCreation => 'படைப்பை நீக்கு';
+
+  @override
+  String get deleteCreationConfirm =>
+      'இந்தப் படைப்பை நிச்சயமாக நீக்க விரும்புகிறீர்களா? இந்த செயலை செயல்தவிர்க்க முடியாது.';
+
+  @override
+  String get noCreationsYet => 'இன்னும் படைப்புகள் இல்லை';
+
+  @override
+  String get noCreationsDescription =>
+      'நீங்கள் உருவாக்கி சேமிக்கும் வடிவங்கள் இங்கே தோன்றும்.';
+
+  @override
+  String get editCreation => 'திருத்து';
+
+  @override
+  String get save => 'சேமி';
 }

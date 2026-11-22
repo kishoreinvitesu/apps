@@ -29,6 +29,34 @@ class DrawnStroke {
   final double strokeWidth;
   final SymmetryMode symmetryMode;
 
+  Map<String, dynamic> toJson() => {
+    'points': [for (final p in points) p.toJson()],
+    'color': color.toARGB32(),
+    'strokeWidth': strokeWidth,
+    'symmetryMode': symmetryMode.name,
+  };
+
+  factory DrawnStroke.fromJson(Map<String, dynamic> json) {
+    final rawPoints = json['points'] as List;
+    final points = [
+      for (var i = 0; i < rawPoints.length; i++)
+        DesignPoint.fromJson(rawPoints[i], 'points[$i]'),
+    ];
+    final colorVal = json['color'] as int;
+    final strokeWidth = (json['strokeWidth'] as num).toDouble();
+    final modeName = json['symmetryMode'] as String? ?? 'none';
+    final symmetryMode = SymmetryMode.values.firstWhere(
+      (m) => m.name == modeName,
+      orElse: () => SymmetryMode.none,
+    );
+    return DrawnStroke(
+      points: points,
+      color: Color(colorVal),
+      strokeWidth: strokeWidth,
+      symmetryMode: symmetryMode,
+    );
+  }
+
   DrawnStroke copyWith({
     List<DesignPoint>? points,
     Color? color,

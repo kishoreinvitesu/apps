@@ -362,4 +362,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get templatePattern => 'Template pattern';
+
+  @override
+  String get myCreations => 'My Creations';
+
+  @override
+  String get saveCreation => 'Save creation';
+
+  @override
+  String get creationTitle => 'Creation title';
+
+  @override
+  String get creationTitleHint => 'e.g. My Morning Muggu';
+
+  @override
+  String get creationSaved => 'Creation saved';
+
+  @override
+  String get renameCreation => 'Rename';
+
+  @override
+  String get deleteCreation => 'Delete creation';
+
+  @override
+  String get deleteCreationConfirm =>
+      'Are you sure you want to delete this creation? This action cannot be undone.';
+
+  @override
+  String get noCreationsYet => 'No creations yet';
+
+  @override
+  String get noCreationsDescription =>
+      'Designs you create and save will appear here.';
+
+  @override
+  String get editCreation => 'Edit';
+
+  @override
+  String get save => 'Save';
 }

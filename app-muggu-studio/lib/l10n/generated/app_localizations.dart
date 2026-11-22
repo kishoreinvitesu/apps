@@ -777,6 +777,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Template pattern'**
   String get templatePattern;
+
+  /// No description provided for @myCreations.
+  ///
+  /// In en, this message translates to:
+  /// **'My Creations'**
+  String get myCreations;
+
+  /// No description provided for @saveCreation.
+  ///
+  /// In en, this message translates to:
+  /// **'Save creation'**
+  String get saveCreation;
+
+  /// No description provided for @creationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Creation title'**
+  String get creationTitle;
+
+  /// No description provided for @creationTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. My Morning Muggu'**
+  String get creationTitleHint;
+
+  /// No description provided for @creationSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Creation saved'**
+  String get creationSaved;
+
+  /// No description provided for @renameCreation.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename'**
+  String get renameCreation;
+
+  /// No description provided for @deleteCreation.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete creation'**
+  String get deleteCreation;
+
+  /// No description provided for @deleteCreationConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this creation? This action cannot be undone.'**
+  String get deleteCreationConfirm;
+
+  /// No description provided for @noCreationsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No creations yet'**
+  String get noCreationsYet;
+
+  /// No description provided for @noCreationsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Designs you create and save will appear here.'**
+  String get noCreationsDescription;
+
+  /// No description provided for @editCreation.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get editCreation;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
 }
 
 class _AppLocalizationsDelegate

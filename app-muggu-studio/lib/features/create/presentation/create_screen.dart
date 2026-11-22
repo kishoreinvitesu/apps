@@ -1,19 +1,24 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../data/local/creations_dao.dart';
 import '../../../data/models/design_geometry.dart';
 import '../../../data/models/dot_grid.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../../creations/domain/user_creation.dart';
 import '../../design/presentation/vector_preview.dart';
 import '../../drawing/application/drawing_controller.dart';
 import '../../drawing/presentation/drawing_canvas.dart';
 import '../../drawing/presentation/drawing_toolbar.dart';
 import '../application/pattern_generator_registry.dart';
 
-class CreateScreen extends StatefulWidget {
-  const CreateScreen({super.key});
+class CreateScreen extends ConsumerStatefulWidget {
+  const CreateScreen({this.initialCreation, super.key});
+
+  final UserCreation? initialCreation;
 
   @override
-  State<CreateScreen> createState() => _CreateScreenState();
+  ConsumerState<CreateScreen> createState() => _CreateScreenState();
 }
 
 class _CreatorState {
@@ -83,7 +88,7 @@ class _CreatorState {
   );
 }
 
-class _CreateScreenState extends State<CreateScreen>
+class _CreateScreenState extends ConsumerState<CreateScreen>
     with SingleTickerProviderStateMixin {
   static const _registry = PatternGeneratorRegistry();
 
@@ -100,6 +105,37 @@ class _CreateScreenState extends State<CreateScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _drawingController = DrawingController();
+
+    if (widget.initialCreation != null) {
+      final initial = widget.initialCreation!;
+      if (initial.type == CreationType.freehand && initial.strokes != null) {
+        _tabController.index = 1;
+        _drawingController.loadStrokes(initial.strokes!);
+      } else if (initial.type == CreationType.template &&
+          initial.recipe != null) {
+        final p = initial.recipe!.parameters;
+        if (initial.recipe!.generatorId ==
+            PatternGeneratorRegistry.radialFlowerId) {
+          _state = _CreatorState(
+            generatorId: PatternGeneratorRegistry.radialFlowerId,
+            petalCount: (p['petalCount'] as num?)?.toInt() ?? 8,
+            outerRadius: (p['outerRadius'] as num?)?.toDouble() ?? 0.36,
+            petalWidth: (p['petalWidth'] as num?)?.toDouble() ?? 0.095,
+            gridSize: 5,
+            gridLayout: 'square',
+          );
+        } else {
+          _state = _CreatorState(
+            generatorId: PatternGeneratorRegistry.dotGridDiamondsId,
+            petalCount: 8,
+            outerRadius: 0.36,
+            petalWidth: 0.095,
+            gridSize: (p['rows'] as num?)?.toInt() ?? 5,
+            gridLayout: (p['layout'] as String?) ?? 'square',
+          );
+        }
+      }
+    }
   }
 
   @override
@@ -192,6 +228,156 @@ class _CreateScreenState extends State<CreateScreen>
     });
   }
 
+  Future<void> _showSaveTemplateDialog(
+    BuildContext context,
+    AppLocalizations? l10n,
+    GeneratedPattern pattern,
+  ) async {
+    final defaultTitle =
+        _state.generatorId == PatternGeneratorRegistry.radialFlowerId
+            ? (l10n?.radialFlower ?? 'Radial flower')
+            : (l10n?.dotGridDiamonds ?? 'Dot-grid diamonds');
+    final titleController = TextEditingController(text: defaultTitle);
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n?.saveCreation ?? 'Save creation'),
+        content: TextField(
+          key: const ValueKey('creation-title-input'),
+          controller: titleController,
+          decoration: InputDecoration(
+            labelText: l10n?.creationTitle ?? 'Creation title',
+            hintText: l10n?.creationTitleHint ?? 'e.g. My Morning Muggu',
+          ),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(l10n?.cancel ?? 'Cancel'),
+          ),
+          FilledButton(
+            key: const ValueKey('creation-save-confirm'),
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(l10n?.save ?? 'Save'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      final title = titleController.text.trim();
+      final finalTitle =
+          title.isEmpty ? (l10n?.myCreations ?? 'My Creation') : title;
+      final now = DateTime.now().toUtc();
+      final creation = UserCreation(
+        id:
+            widget.initialCreation?.id ??
+            'creation_${now.microsecondsSinceEpoch}',
+        title: finalTitle,
+        createdAt: widget.initialCreation?.createdAt ?? now,
+        updatedAt: now,
+        type: CreationType.template,
+        recipe: PatternRecipe(
+          generatorId: _state.generatorId,
+          version: PatternGeneratorRegistry.recipeVersion,
+          parameters:
+              _state.generatorId == PatternGeneratorRegistry.radialFlowerId
+                  ? {
+                    'petalCount': _state.petalCount,
+                    'outerRadius': _state.outerRadius,
+                    'petalWidth': _state.petalWidth,
+                  }
+                  : {
+                    'rows': _state.gridSize,
+                    'columns': _state.gridSize,
+                    'layout': _state.gridLayout,
+                    'margin': 0.12,
+                  },
+        ),
+        paths: pattern.paths,
+        grid: pattern.grid,
+      );
+
+      await ref.read(creationsDaoProvider).saveCreation(creation);
+      ref.invalidate(creationsListProvider);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n?.creationSaved ?? 'Creation saved')),
+        );
+      }
+    }
+  }
+
+  Future<void> _showSaveFreehandDialog(
+    BuildContext context,
+    AppLocalizations? l10n,
+    DotGrid freehandGrid,
+  ) async {
+    if (_drawingController.strokes.isEmpty) return;
+
+    final titleController = TextEditingController(
+      text: l10n?.freehandCanvas ?? 'Freehand drawing',
+    );
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n?.saveCreation ?? 'Save creation'),
+        content: TextField(
+          key: const ValueKey('creation-title-input'),
+          controller: titleController,
+          decoration: InputDecoration(
+            labelText: l10n?.creationTitle ?? 'Creation title',
+            hintText: l10n?.creationTitleHint ?? 'e.g. My Morning Muggu',
+          ),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(l10n?.cancel ?? 'Cancel'),
+          ),
+          FilledButton(
+            key: const ValueKey('creation-save-confirm'),
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(l10n?.save ?? 'Save'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      final title = titleController.text.trim();
+      final finalTitle =
+          title.isEmpty ? (l10n?.myCreations ?? 'My Creation') : title;
+      final now = DateTime.now().toUtc();
+      final strokes = _drawingController.strokes;
+      final paths = UserCreation.strokesToDesignPaths(strokes);
+
+      final creation = UserCreation(
+        id:
+            widget.initialCreation?.id ??
+            'creation_${now.microsecondsSinceEpoch}',
+        title: finalTitle,
+        createdAt: widget.initialCreation?.createdAt ?? now,
+        updatedAt: now,
+        type: CreationType.freehand,
+        strokes: strokes,
+        paths: paths,
+        grid: freehandGrid,
+      );
+
+      await ref.read(creationsDaoProvider).saveCreation(creation);
+      ref.invalidate(creationsListProvider);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n?.creationSaved ?? 'Creation saved')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -204,8 +390,8 @@ class _CreateScreenState extends State<CreateScreen>
         TabBar(
           controller: _tabController,
           tabs: [
-            Tab(text: l10n?.templatePattern ?? 'Template'),
-            Tab(text: l10n?.freehandCanvas ?? 'Freehand'),
+            Tab(text: l10n?.templatePattern ?? 'Template pattern'),
+            Tab(text: l10n?.freehandCanvas ?? 'Freehand canvas'),
           ],
         ),
         Expanded(
@@ -238,6 +424,7 @@ class _CreateScreenState extends State<CreateScreen>
     final resetLabel = l10n?.reset ?? 'Reset';
     final undoLabel = l10n?.undo ?? 'Undo';
     final redoLabel = l10n?.redo ?? 'Redo';
+    final saveLabel = l10n?.save ?? 'Save';
     final previewNotice =
         l10n?.creatorPreviewNotice ??
         'This preview is generated from editable pattern parameters. '
@@ -293,7 +480,7 @@ class _CreateScreenState extends State<CreateScreen>
         else
           _buildGridControls(theme, l10n),
         const SizedBox(height: 16),
-        // History and Reset Action Bar
+        // History and Save Action Bar
         Wrap(
           spacing: 8,
           runSpacing: 8,
@@ -318,11 +505,23 @@ class _CreateScreenState extends State<CreateScreen>
                 ),
               ],
             ),
-            OutlinedButton.icon(
-              key: const ValueKey('creator-reset'),
-              onPressed: _reset,
-              icon: const Icon(Icons.restart_alt_rounded),
-              label: Text(resetLabel),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                OutlinedButton.icon(
+                  key: const ValueKey('creator-reset'),
+                  onPressed: _reset,
+                  icon: const Icon(Icons.restart_alt_rounded),
+                  label: Text(resetLabel),
+                ),
+                const SizedBox(width: 8),
+                FilledButton.icon(
+                  key: const ValueKey('creator-save'),
+                  onPressed: () => _showSaveTemplateDialog(context, l10n, pattern),
+                  icon: const Icon(Icons.bookmark_add_rounded),
+                  label: Text(saveLabel),
+                ),
+              ],
             ),
           ],
         ),
@@ -341,7 +540,6 @@ class _CreateScreenState extends State<CreateScreen>
   // ── Freehand tab ──────────────────────────────────────────────────────────
 
   Widget _buildFreehandTab(AppLocalizations? l10n) {
-    // Build a DotGrid matching the current template grid settings
     final freehandGrid = DotGrid.rectangular(
       rows: _state.gridSize,
       columns: _state.gridSize,
@@ -359,7 +557,10 @@ class _CreateScreenState extends State<CreateScreen>
             ),
           ),
         ),
-        DrawingToolbar(controller: _drawingController),
+        DrawingToolbar(
+          controller: _drawingController,
+          onSave: () => _showSaveFreehandDialog(context, l10n, freehandGrid),
+        ),
       ],
     );
   }

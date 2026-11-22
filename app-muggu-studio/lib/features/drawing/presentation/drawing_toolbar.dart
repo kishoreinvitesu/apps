@@ -12,23 +12,32 @@ import '../domain/drawn_stroke.dart';
 /// - Symmetry chip row (None / Vertical / Horizontal / 4-Way)
 /// - Action row: Undo, Redo, Clear
 class DrawingToolbar extends StatelessWidget {
-  const DrawingToolbar({required this.controller, super.key});
+  const DrawingToolbar({
+    required this.controller,
+    this.onSave,
+    super.key,
+  });
 
   final DrawingController controller;
+  final VoidCallback? onSave;
 
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
       listenable: controller,
-      builder: (context, _) => _ToolbarContent(controller: controller),
+      builder: (context, _) => _ToolbarContent(
+        controller: controller,
+        onSave: onSave,
+      ),
     );
   }
 }
 
 class _ToolbarContent extends StatelessWidget {
-  const _ToolbarContent({required this.controller});
+  const _ToolbarContent({required this.controller, this.onSave});
 
   final DrawingController controller;
+  final VoidCallback? onSave;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +78,12 @@ class _ToolbarContent extends StatelessWidget {
           const SizedBox(height: 10),
 
           // Actions
-          _ActionRow(controller: controller, l10n: l10n, context: context),
+          _ActionRow(
+            controller: controller,
+            l10n: l10n,
+            context: context,
+            onSave: onSave,
+          ),
         ],
       ),
     );
@@ -313,11 +327,13 @@ class _ActionRow extends StatelessWidget {
     required this.controller,
     required this.l10n,
     required this.context,
+    this.onSave,
   });
 
   final DrawingController controller;
   final AppLocalizations l10n;
   final BuildContext context;
+  final VoidCallback? onSave;
 
   Future<void> _confirmClear() async {
     final confirmed = await showDialog<bool>(
@@ -361,6 +377,15 @@ class _ActionRow extends StatelessWidget {
           icon: const Icon(Icons.delete_outline_rounded),
           onPressed: controller.strokes.isEmpty ? null : _confirmClear,
         ),
+        if (onSave != null) ...[
+          const SizedBox(width: 8),
+          IconButton.filled(
+            key: const ValueKey('drawing-save'),
+            tooltip: l10n.saveCreation,
+            icon: const Icon(Icons.bookmark_add_rounded),
+            onPressed: controller.strokes.isEmpty ? null : onSave,
+          ),
+        ],
       ],
     );
   }

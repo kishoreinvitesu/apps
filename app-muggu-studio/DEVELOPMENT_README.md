@@ -848,3 +848,42 @@ generated catalogue examples until their evidence and approval are recorded.
 6. **Validation Suite Plan**:
    - `creations_dao_test.dart`: CRUD operations, migration v1 to v2, restart persistence with `sqflite_common_ffi`.
    - `creations_screen_test.dart`: Widget tests verifying saving from creator, rendering in Saved tab, rename, and delete dialog.
+
+## 2026-11-22 — Phase 3: Local Persistence & Saved Creations Completed
+
+### Implemented
+- **Domain entity & geometry conversion (`lib/features/creations/domain/user_creation.dart`)**:
+  - `UserCreation` domain model storing unique ID, title, UTC timestamps, `CreationType` (`template` or `freehand`), `PatternRecipe`, `DrawnStroke` lists, and snapshot `DesignPath` list.
+  - Implemented `strokesToDesignPaths` static utility converting drawn freehand point paths into valid `DesignPath` vector geometry.
+  - Added clean `toJson()` and `fromJson()` serialization across `PathCommand`, `DesignPath`, `PatternRecipe`, `DotGrid`, and `DrawnStroke`.
+- **Database Schema v2 & DAO (`lib/data/local/`)**:
+  - Upgraded SQLite database in `app_database.dart` from version 1 to 2 with versioned `onUpgrade` migration creating `creations` table and `idx_creations_updated_at` index.
+  - Created `CreationsDao` (`lib/data/local/creations_dao.dart`) implementing `CreationsStore` (listing, loading by ID, saving/replacing, updating title, deleting) with Riverpod providers.
+- **Creator Save Integration (`lib/features/create/presentation/create_screen.dart`)**:
+  - Converted `CreateScreen` to `ConsumerStatefulWidget` supporting initialization from an existing `UserCreation`.
+  - Added Save button in Template tab action bar (`ValueKey('creator-save')`) and Freehand toolbar (`ValueKey('drawing-save')`).
+  - Added save dialog with pre-populated title, input validation, snapshot generation, database persistence, and SnackBar feedback.
+- **SavedScreen Redesign (`lib/features/saved/presentation/saved_screen.dart`)**:
+  - Replaced placeholder card with Material 3 `SegmentedButton` switching between **Favourite designs** and **My Creations**.
+  - Implemented `_CreationsView` displaying saved creations in a responsive grid of `_CreationCard`s with live `VectorPreview` snapshots, title, type badge, and menu actions (Rename, Delete).
+  - Added Rename dialog with title editing and Delete dialog with destructive confirmation.
+- **Trilingual Localization (`lib/l10n/`)**:
+  - Added 12 new strings across English, Telugu, and Tamil ARBs for creations management (`myCreations`, `saveCreation`, `creationTitle`, `creationTitleHint`, `creationSaved`, `renameCreation`, `deleteCreation`, `deleteCreationConfirm`, `noCreationsYet`, `noCreationsDescription`, `editCreation`, `save`).
+- **Validation Suite Expansion**:
+  - `test/data/creations_dao_test.dart`: 4 comprehensive unit tests verifying CRUD operations, persistence across restarts, freehand stroke conversion, and SQLite migration from v1 to v2 preserving existing favorites.
+  - `test/features/creations_ui_test.dart`: 5 widget tests verifying segmented tab switching, empty state, grid rendering, rename dialog, delete confirmation dialog, and creator save dialog.
+  - Updated `test/data/favorites_dao_test.dart` to expect version 2 database.
+
+### Validation
+- `dart format lib test` — passed.
+- `flutter gen-l10n` — passed.
+- `flutter analyze` — passed with 0 issues.
+- `flutter test` — passed; all 70 tests across all 9 test suites succeeded.
+- `python -m unittest discover -s tools` — passed; all 6 generator tests succeeded.
+- Android APK build & emulator deployment:
+  - `flutter build apk --debug --target-platform android-x64` — built successfully in 129.9s.
+  - `adb install -r build\app\outputs\flutter-apk\app-debug.apk` — installed successfully on `emulator-5554`.
+  - App launched and confirmed running (PID 21629) with zero crash logs in `logcat`.
+
+### Next
+- Proceed with **Phase 4: Export and offline reliability** (clean PNG export at target resolution, Android system sharesheet integration, and network-disabled offline validation).
