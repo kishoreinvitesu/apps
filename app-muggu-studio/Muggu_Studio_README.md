@@ -801,9 +801,11 @@ engine, while human rights, cultural review and fluent-speaker localization
 remain required before shipping tradition-specific attribution or lessons.
 
 -   CustomPainter drawing engine with normalized pointer-down/move/up input.
--   Dot-grid overlays for 5×5, 7×7 and 9×9.
--   Symmetry: none, vertical, horizontal and four-way.
--   Command history with undo and redo.
+-   Layered canvas architecture: Background, Dot Grid, Ghost Tracing Guide, Committed Strokes, and Live Active Stroke.
+-   Dot-grid overlays for 5×5, 7×7 and 9×9 with explicit layout modes.
+-   Symmetry engine: none, vertical, horizontal and four-way reflection around center (0.5, 0.5) with center-crossing deduplication.
+-   Command history with bounded undo and redo stacks.
+-   Traditional pen tools: Rice White, Maroon, Gold, Green, Charcoal with fine, medium, and bold widths.
 -   Practice/tracing mode with a faint design guide and touch drawing.
 -   Clear and restart; forgiving, non-scoring guidance.
 -   Small-screen and lower-end device performance checks.

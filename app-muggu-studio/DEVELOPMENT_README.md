@@ -512,21 +512,46 @@ recorded. Do not treat an unavailable emulator as a passing runtime check.
 
 ### Phase 2 — Build the drawing and tracing engine
 
-1. Implement a drawing surface using normalized coordinates and the existing
-   shared renderer. Keep the background/grid, guide, generated geometry and
-   user strokes as separate render layers.
-2. Support pointer down/move/up, smooth strokes, canvas resize and aspect-ratio
-   changes without shifting saved geometry.
-3. Add freehand pen settings: colour and stroke width, with a small reviewed
-   default palette and clear selected-state feedback.
-4. Add symmetry modes: none, vertical, horizontal and four-way. Verify
-   behaviour on centre lines/points and prevent duplicate or unexpected
-   strokes.
-5. Add bounded undo/redo history and clear with undo or confirmation.
-6. Reuse existing fixed catalogue geometry as optional tracing guides. Do not
-   infer recipe parameters from legacy artwork.
-7. Test coordinate conversion, smoothing, symmetry, centre crossings,
-   history, resize behaviour and trace-guide visibility.
+This phase implements a shared, offline-first touch drawing and tracing engine
+used by both Freehand Creation (`CreateScreen`) and Tracing / Practice (`PracticeScreen`).
+
+#### 1. Architecture and Component Breakdown
+- **Domain Models (`lib/features/drawing/domain/`):**
+  - `DrawnStroke`: immutable stroke holding `List<DesignPoint> points`, `Color color`, `double strokeWidth`, and `SymmetryMode symmetryMode`.
+  - `SymmetryMode`: enum with `none`, `vertical`, `horizontal`, and `fourWay`.
+  - `SymmetryTransform`: pure mathematical transformation engine:
+    - *Vertical:* `(1.0 - x, y)`
+    - *Horizontal:* `(x, 1.0 - y)`
+    - *Four-way (Quadrant):* `(x, y)`, `(1.0 - x, y)`, `(x, 1.0 - y)`, and `(1.0 - x, 1.0 - y)`.
+    - *Center-line guard:* avoids duplicate points/lines when strokes touch or cross `x = 0.5` or `y = 0.5`.
+- **Application State (`lib/features/drawing/application/`):**
+  - `DrawingController`: manages `List<DrawnStroke> strokes`, live `DrawnStroke? activeStroke`, `undoStack`, `redoStack`, `activeColor`, `activeStrokeWidth`, and `activeSymmetryMode`.
+  - Bounded undo/redo history stack (max 50 operations) with stroke-level rollbacks.
+- **Presentation Layer (`lib/features/drawing/presentation/`):**
+  - `DrawingCanvas`: interactive widget wrapping `GestureDetector` / `Listener` + `CustomPaint`.
+    - *Layer 0 (Background):* Warm Cream background with rounded border.
+    - *Layer 1 (Dot Grid):* Rendered from `DotGrid` (5×5, 7×7, 9×9 or custom layout).
+    - *Layer 2 (Ghost Guide):* Faint outline (`alpha: 0.28`) from `List<DesignPath>` when tracing a catalog design.
+    - *Layer 3 (Completed Strokes):* All committed user strokes with anti-aliasing and `StrokeCap.round`.
+    - *Layer 4 (Live Active Stroke):* Current pointer drag with immediate real-time symmetry reflection.
+  - `DrawingToolbar`:
+    - Palette selector: Rice Flour White (`#FFFFFF`), Deep Maroon (`#862B37`), Turmeric Gold (`#D8A13B`), Leaf Green (`#55775D`), Charcoal/Dark Brown (`#3C342E`).
+    - Stroke width selector: Fine (`2.0 dp`), Medium (`4.0 dp`), Bold (`6.5 dp`).
+    - Symmetry mode selector: None, Vertical, Horizontal, 4-Way.
+    - Action bar: Undo, Redo, Clear with confirmation dialog.
+- **Consumer Integrations:**
+  - `PracticeScreen`: Upgraded from static placeholder to interactive tracing studio, passing `design.paths` as the ghost guide.
+  - `CreateScreen`: Adds a Freehand Canvas tab alongside the parametric Template generator.
+
+#### 2. Touch Gesture Handling & Normalization
+- Pointer down: captures local position, converts to normalized `[0.0, 1.0]` coordinates clamped to canvas dimensions.
+- Pointer move: applies distance threshold (`distanceSquared > 0.000025` normalized) for smooth stroke decimation without memory bloat.
+- Pointer up: commits completed stroke + symmetry variants to undo history and clears active stroke.
+
+#### 3. Test & Verification Plan
+- Unit tests for `SymmetryTransform` covering single points, lines, center-axis crossings (`x=0.5`, `y=0.5`), and multi-quadrant reflections.
+- Controller unit tests covering stroke addition, undo, redo, clear, and history stack bounds.
+- Widget tests for `DrawingCanvas` verifying pointer events, guide visibility, toolbar interactions, and localization.
 
 **Done when:** drawing and tracing work offline, remain aligned with the grid,
 and undo/redo/clear behave consistently in automated tests and on device.
@@ -703,3 +728,13 @@ generated catalogue examples until their evidence and approval are recorded.
 
 ### Next
 - Proceed with **Phase 2: Build the drawing and tracing engine** (interactive touch canvas, multi-axis symmetry, pen styling, and practice/trace mode overlay).
+
+## 2026-11-22 — Phase 2: Drawing & Tracing Engine Architecture Plan Approved
+
+### Technical Design Baseline Documented
+- Established `lib/features/drawing/` as a modular subsystem serving both Freehand Creation and Tracing / Practice.
+- Defined `DrawnStroke` domain model and `SymmetryMode` (none, vertical, horizontal, four-way) with center-line crossing deduplication math.
+- Specified the 5-layer rendering stack for `DrawingCanvas`: Background, Dot Grid, Ghost Tracing Guide, Committed Strokes, and Live Active Stroke.
+- Specified pen tools: traditional palette (Rice White, Maroon, Gold, Green, Charcoal) and 3 stroke widths (2dp, 4dp, 6.5dp).
+- Established `PracticeScreen` upgrade plan: loads catalogue vector paths as a ghost guide with non-punitive tracing.
+- Created test plan covering symmetry mathematics, controller state management, coordinate normalization, and widget interactions.
