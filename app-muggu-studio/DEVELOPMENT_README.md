@@ -471,6 +471,10 @@ as traditional, instructional or publication-ready.
 - The 31 Flutter tests, Flutter analysis, five Python generator tests,
   catalogue-artwork check and Android debug build passed before the latest
   push. GitHub Actions was still running when last checked; verify that run.
+- The built debug APK declares target SDK 36 and contains native `.so`
+  libraries. Android Gradle Plugin is 9.3.1. No release AAB has been built or
+  verified for 16 KB page-size compatibility; do not infer release readiness
+  from the toolchain version or debug APK.
 - ADB did not detect the emulator at 08:10 on 2026-11-22. At 08:23 it was
   online as `emulator-5554`; the current debug APK installed successfully and
   `com.example.muggu_studio/.MainActivity` launched. A follow-up check found
@@ -647,6 +651,15 @@ automated validation.
 
 - Choose and verify a permanent Android application ID before the first public
   release; the current `com.example.muggu_studio` ID is a setup placeholder.
+- **16 KB memory-page gate:** build the production AAB; require
+  `bundletool dump config` to report `PAGE_ALIGNMENT_16K`; inspect all shipped
+  64-bit native libraries for 16 KB ELF `LOAD` alignment and verify generated
+  APK zip alignment. Install the bundle-derived app on a 16 KB emulator,
+  confirm `adb shell getconf PAGE_SIZE` returns `16384`, and smoke-test startup,
+  navigation, drawing/rendering, persistence and native plugin paths. Record
+  the AAB and results. The current debug APK targets API 36 and contains
+  native libraries, but no AAB has passed this check. See the official
+  [Android 16 KB page-size guidance](https://developer.android.com/guide/practices/page-sizes).
 - Complete privacy policy, Play Store disclosures, target API review, signing,
   versioning, store text and artwork, internal/closed testing and staged
   rollout preparation.

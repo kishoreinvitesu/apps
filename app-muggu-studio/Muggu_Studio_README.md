@@ -888,6 +888,9 @@ features.
 -   Reasonable app size and compressed assets.
 -   Test small, mid-range and lower-memory Android phones.
 -   Test supported Android versions, font scaling and display densities.
+-   For 64-bit releases targeting API 35 or higher, verify 16 KB memory-page
+    compatibility for the actual Android App Bundle and test it on a 16 KB
+    Android emulator. See the release checklist below.
 
 ### Release quality
 
@@ -938,6 +941,36 @@ The app ID is currently `com.example.muggu_studio` according to the
 development log. Choose the permanent publisher namespace before release
 and update Android configuration consistently. Do not change the
 application ID casually after publication.
+
+### 16 KB memory-page compatibility
+
+Google Play requires apps targeting Android 15 (API 35) or higher to support
+16 KB memory pages on 64-bit devices. Starting February 1, 2027, updates that
+do not meet this requirement cannot be released. Muggu Studio's current debug
+APK targets API 36 and contains native shared libraries, so this is an
+applicable release gate, not an optional optimization.
+
+Before each production release:
+
+- Build the signed release AAB and inspect its bundle configuration with
+  `bundletool dump config --bundle=<app.aab>`; require
+  `PAGE_ALIGNMENT_16K`.
+- Inspect every native `.so` shipped for 64-bit ABIs, including transitive
+  Flutter/plugin libraries. Verify ELF `LOAD` segment alignment is at least
+  `2**14` (16 KB) and resolve any alignment warnings. Also verify APK zip
+  alignment on APKs generated from the bundle.
+- Install and launch the bundle-derived app on a 16 KB Android emulator.
+  Confirm `adb shell getconf PAGE_SIZE` reports `16384`, then smoke-test
+  startup, navigation, drawing/rendering, persistence and any native plugin
+  paths used by the release.
+- Record the AAB/version, tooling, alignment results, emulator image and test
+  result. Repeat after changing Flutter, the Android Gradle Plugin, NDK or any
+  native dependency.
+
+The current Android Gradle Plugin is 9.3.1, above Android's documented 8.5.1
+packaging baseline. This alone does not establish compatibility of the
+release bundle or its prebuilt native dependencies. The release AAB has not
+yet been built or verified for 16 KB compatibility.
 
 ------------------------------------------------------------------------
 
