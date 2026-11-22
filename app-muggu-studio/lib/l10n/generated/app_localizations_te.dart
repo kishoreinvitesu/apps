@@ -317,4 +317,50 @@ class AppLocalizationsTe extends AppLocalizations {
   @override
   String get dotGridSizeHelper =>
       'సాంప్రదాయ ముగ్గులు మరియు కోలాలు సాధారణంగా 5×5, 7×7 లేదా 9×9 చుక్కల గ్రిడ్‌లను ఉపయోగిస్తాయి.';
+
+  @override
+  String get penColor => 'పెన్ రంగు';
+
+  @override
+  String get strokeWidth => 'గీత వెడల్పు';
+
+  @override
+  String get thin => 'సన్నని';
+
+  @override
+  String get medium => 'మధ్యస్థం';
+
+  @override
+  String get bold => 'లావుగా';
+
+  @override
+  String get symmetry => 'సమరూపత (సిమెట్రీ)';
+
+  @override
+  String get symmetryNone => 'ఏదీ లేదు';
+
+  @override
+  String get symmetryVertical => 'నిలువు';
+
+  @override
+  String get symmetryHorizontal => 'అడ్డంగా';
+
+  @override
+  String get symmetryFourWay => '4-వైపులా';
+
+  @override
+  String get clearCanvas => 'కాన్వాస్ క్లియర్ చేయి';
+
+  @override
+  String get clearCanvasConfirm =>
+      'మీరు గీసిన చిత్రాన్ని తొలగించాలనుకుంటున్నారా?';
+
+  @override
+  String get cancel => 'రద్దు చేయి';
+
+  @override
+  String get freehandCanvas => 'ఫ్రీహ్యాండ్ కాన్వాస్';
+
+  @override
+  String get templatePattern => 'టెంప్లేట్ నమూనా';
 }

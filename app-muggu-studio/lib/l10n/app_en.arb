@@ -97,5 +97,20 @@
   "redo": "Redo",
   "reset": "Reset",
   "creatorPreviewNotice": "This preview is generated from editable pattern parameters. Saving and export are planned for a later update.",
-  "dotGridSizeHelper": "Traditional Muggu and Kolam patterns typically use 5×5, 7×7 or 9×9 dot grids."
+  "dotGridSizeHelper": "Traditional Muggu and Kolam patterns typically use 5×5, 7×7 or 9×9 dot grids.",
+  "penColor": "Pen colour",
+  "strokeWidth": "Stroke width",
+  "thin": "Thin",
+  "medium": "Medium",
+  "bold": "Bold",
+  "symmetry": "Symmetry",
+  "symmetryNone": "None",
+  "symmetryVertical": "Vertical",
+  "symmetryHorizontal": "Horizontal",
+  "symmetryFourWay": "4-Way",
+  "clearCanvas": "Clear canvas",
+  "clearCanvasConfirm": "Are you sure you want to clear your drawing?",
+  "cancel": "Cancel",
+  "freehandCanvas": "Freehand canvas",
+  "templatePattern": "Template pattern"
 }

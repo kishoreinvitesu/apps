@@ -317,4 +317,50 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get dotGridSizeHelper =>
       'பாரம்பரிய கோலங்கள் பொதுவாக 5×5, 7×7 அல்லது 9×9 புள்ளிக் கட்டங்களைப் பயன்படுத்துகின்றன.';
+
+  @override
+  String get penColor => 'பேனா நிறம்';
+
+  @override
+  String get strokeWidth => 'கோடு தடிமன்';
+
+  @override
+  String get thin => 'மெல்லிய';
+
+  @override
+  String get medium => 'நடுத்தரம்';
+
+  @override
+  String get bold => 'தடித்த';
+
+  @override
+  String get symmetry => 'சமச்சீர்';
+
+  @override
+  String get symmetryNone => 'இல்லை';
+
+  @override
+  String get symmetryVertical => 'செங்குத்து';
+
+  @override
+  String get symmetryHorizontal => 'கிடைமட்டம்';
+
+  @override
+  String get symmetryFourWay => '4-திசைகள்';
+
+  @override
+  String get clearCanvas => 'திரையை அழி';
+
+  @override
+  String get clearCanvasConfirm =>
+      'உங்கள் வரைபடத்தை நிச்சயமாக அழிக்க விரும்புகிறீர்களா?';
+
+  @override
+  String get cancel => 'ரத்து செய்';
+
+  @override
+  String get freehandCanvas => 'சுயாதீன வரைபலகை';
+
+  @override
+  String get templatePattern => 'வார்ப்புரு வடிவம்';
 }

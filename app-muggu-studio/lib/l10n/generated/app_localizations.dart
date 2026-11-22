@@ -687,6 +687,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Traditional Muggu and Kolam patterns typically use 5×5, 7×7 or 9×9 dot grids.'**
   String get dotGridSizeHelper;
+
+  /// No description provided for @penColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Pen colour'**
+  String get penColor;
+
+  /// No description provided for @strokeWidth.
+  ///
+  /// In en, this message translates to:
+  /// **'Stroke width'**
+  String get strokeWidth;
+
+  /// No description provided for @thin.
+  ///
+  /// In en, this message translates to:
+  /// **'Thin'**
+  String get thin;
+
+  /// No description provided for @medium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get medium;
+
+  /// No description provided for @bold.
+  ///
+  /// In en, this message translates to:
+  /// **'Bold'**
+  String get bold;
+
+  /// No description provided for @symmetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Symmetry'**
+  String get symmetry;
+
+  /// No description provided for @symmetryNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get symmetryNone;
+
+  /// No description provided for @symmetryVertical.
+  ///
+  /// In en, this message translates to:
+  /// **'Vertical'**
+  String get symmetryVertical;
+
+  /// No description provided for @symmetryHorizontal.
+  ///
+  /// In en, this message translates to:
+  /// **'Horizontal'**
+  String get symmetryHorizontal;
+
+  /// No description provided for @symmetryFourWay.
+  ///
+  /// In en, this message translates to:
+  /// **'4-Way'**
+  String get symmetryFourWay;
+
+  /// No description provided for @clearCanvas.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear canvas'**
+  String get clearCanvas;
+
+  /// No description provided for @clearCanvasConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to clear your drawing?'**
+  String get clearCanvasConfirm;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @freehandCanvas.
+  ///
+  /// In en, this message translates to:
+  /// **'Freehand canvas'**
+  String get freehandCanvas;
+
+  /// No description provided for @templatePattern.
+  ///
+  /// In en, this message translates to:
+  /// **'Template pattern'**
+  String get templatePattern;
 }
 
 class _AppLocalizationsDelegate

@@ -316,4 +316,50 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get dotGridSizeHelper =>
       'Traditional Muggu and Kolam patterns typically use 5×5, 7×7 or 9×9 dot grids.';
+
+  @override
+  String get penColor => 'Pen colour';
+
+  @override
+  String get strokeWidth => 'Stroke width';
+
+  @override
+  String get thin => 'Thin';
+
+  @override
+  String get medium => 'Medium';
+
+  @override
+  String get bold => 'Bold';
+
+  @override
+  String get symmetry => 'Symmetry';
+
+  @override
+  String get symmetryNone => 'None';
+
+  @override
+  String get symmetryVertical => 'Vertical';
+
+  @override
+  String get symmetryHorizontal => 'Horizontal';
+
+  @override
+  String get symmetryFourWay => '4-Way';
+
+  @override
+  String get clearCanvas => 'Clear canvas';
+
+  @override
+  String get clearCanvasConfirm =>
+      'Are you sure you want to clear your drawing?';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get freehandCanvas => 'Freehand canvas';
+
+  @override
+  String get templatePattern => 'Template pattern';
 }
