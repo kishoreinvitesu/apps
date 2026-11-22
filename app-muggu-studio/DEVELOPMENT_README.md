@@ -494,25 +494,21 @@ as traditional, instructional or publication-ready.
 connected Android target, and the verified baseline/device configuration is
 recorded. Do not treat an unavailable emulator as a passing runtime check.
 
-### Phase 1 — Finish the template Creator flow
+### Phase 1 — Finish the template Creator flow [COMPLETED]
 
-1. Expose useful bounded radial controls (at least petal count, radius and
-   width) and ensure each displayed value is reflected by the generated recipe
-   and preview.
-2. Define supported dot-grid sizes explicitly, including the product-required
-   5×5, 7×7 and 9×9 options. Keep layout choices valid for each size and
-   explain any other supported sizes.
-3. Add a clear action and predictable edit history for parameter changes.
-   Define reset, undo and redo semantics before implementing them; avoid a
-   control that appears to work but has no meaningful state change.
-4. Add accessible labels/value announcements, touch-sized controls and
-   scrolling behaviour that works on small screens and with larger text.
-5. Add focused widget and generator tests for bounds, reset/history behaviour,
-   family switching and invalid recipes.
+1. Expose useful bounded radial controls (petal count: 3–24, outer radius: 0.15–0.42,
+   and petal width: 0.03–0.14) with live vector preview reflections.
+2. Define supported dot-grid sizes explicitly with dedicated quick chips for
+   standard traditional sizes (5×5, 7×7, 9×9) as well as 3×3, 11×11, 13×13, 15×15,
+   plus accessible odd-size slider and explanatory helper text.
+3. Added predictable edit history (Undo, Redo, Reset) with immutable state snapshots
+   and drag-start/end tracking.
+4. Added accessible semantic labels, touch-friendly touch targets, small-screen
+   scroll behavior, and English, Telugu, and Tamil UI strings in ARB files.
+5. Added focused widget tests in `test/features/create_screen_test.dart` covering bounds,
+   undo/redo/reset, pattern family switching, and trilingual localizations.
 
-**Done when:** users can adjust both pattern families, see immediate preview
-updates, undo/reset changes predictably and use the screen with larger text.
-No save action should be shown until persistence exists.
+**Status:** Completed and verified. All 36 Flutter tests and 6 Python tooling tests pass.
 
 ### Phase 2 — Build the drawing and tracing engine
 
@@ -688,3 +684,22 @@ criteria pass; building successfully alone is not feature completion.
 Generic original-pattern creation may proceed without cultural claims. Rights,
 cultural, Telugu/Tamil localization and lesson reviews remain pending for the
 generated catalogue examples until their evidence and approval are recorded.
+
+## 2026-11-22 — Phase 1: Template Creator Polish Completed
+
+### Implemented
+- Expanded radial flower controls: added bounded controls for Petals (3–24), Outer Radius (0.15–0.42), and Petal Width (0.03–0.14) with real-time vector preview updates.
+- Refined dot-grid controls: added explicit quick-choice chips for traditional sizes (5×5, 7×7, 9×9) and other supported odd sizes (3×3 to 15×15), plus contextual cultural helper guidance.
+- Implemented parameter edit history: added an immutable `_CreatorState` with Undo, Redo, and Reset operations, capturing drag-start and drag-end states to avoid slider flooding.
+- Added trilingual UI localization for all Creator controls across English, Telugu, and Tamil in `lib/l10n/` ARB files.
+- Added 5 new automated tests in `test/features/create_screen_test.dart` verifying all controls, parameter boundaries, undo/redo/reset predictability, and Telugu/Tamil translations.
+
+### Validation
+- `dart format lib test` — passed.
+- `flutter gen-l10n` — passed.
+- `flutter analyze` — passed with 0 issues.
+- `flutter test` — passed; all 36 tests across all test suites succeeded.
+- `python -m unittest discover -s tools` — passed; all 6 generator tests succeeded.
+
+### Next
+- Proceed with **Phase 2: Build the drawing and tracing engine** (interactive touch canvas, multi-axis symmetry, pen styling, and practice/trace mode overlay).

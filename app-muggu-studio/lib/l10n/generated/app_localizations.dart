@@ -579,6 +579,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back'**
   String get back;
+
+  /// No description provided for @createPatternTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a pattern'**
+  String get createPatternTitle;
+
+  /// No description provided for @createPatternSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a starting pattern and adjust it with a live vector preview.'**
+  String get createPatternSubtitle;
+
+  /// No description provided for @patternType.
+  ///
+  /// In en, this message translates to:
+  /// **'Pattern type'**
+  String get patternType;
+
+  /// No description provided for @radialFlower.
+  ///
+  /// In en, this message translates to:
+  /// **'Radial flower'**
+  String get radialFlower;
+
+  /// No description provided for @dotGridDiamonds.
+  ///
+  /// In en, this message translates to:
+  /// **'Dot-grid diamonds'**
+  String get dotGridDiamonds;
+
+  /// No description provided for @petals.
+  ///
+  /// In en, this message translates to:
+  /// **'Petals'**
+  String get petals;
+
+  /// No description provided for @radius.
+  ///
+  /// In en, this message translates to:
+  /// **'Radius'**
+  String get radius;
+
+  /// No description provided for @petalWidth.
+  ///
+  /// In en, this message translates to:
+  /// **'Petal width'**
+  String get petalWidth;
+
+  /// No description provided for @gridSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Grid size'**
+  String get gridSize;
+
+  /// No description provided for @dotLayout.
+  ///
+  /// In en, this message translates to:
+  /// **'Dot layout'**
+  String get dotLayout;
+
+  /// No description provided for @layoutSquare.
+  ///
+  /// In en, this message translates to:
+  /// **'Square'**
+  String get layoutSquare;
+
+  /// No description provided for @layoutStaggered.
+  ///
+  /// In en, this message translates to:
+  /// **'Staggered'**
+  String get layoutStaggered;
+
+  /// No description provided for @layoutDiamond.
+  ///
+  /// In en, this message translates to:
+  /// **'Diamond'**
+  String get layoutDiamond;
+
+  /// No description provided for @undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// No description provided for @redo.
+  ///
+  /// In en, this message translates to:
+  /// **'Redo'**
+  String get redo;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @creatorPreviewNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'This preview is generated from editable pattern parameters. Saving and export are planned for a later update.'**
+  String get creatorPreviewNotice;
+
+  /// No description provided for @dotGridSizeHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Traditional Muggu and Kolam patterns typically use 5×5, 7×7 or 9×9 dot grids.'**
+  String get dotGridSizeHelper;
 }
 
 class _AppLocalizationsDelegate

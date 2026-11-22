@@ -148,8 +148,11 @@ void main() {
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.text('Dot layout'), 300);
     expect(find.text('Grid size: 5 × 5'), findsOneWidget);
-    await tester.ensureVisible(find.text('Staggered'));
-    await tester.tap(find.byKey(const ValueKey('grid-layout-staggered')));
+    final staggeredChip = find.byKey(const ValueKey('grid-layout-staggered'));
+    await tester.scrollUntilVisible(staggeredChip, 200);
+    await tester.drag(find.byType(ListView), const Offset(0, -100));
+    await tester.pumpAndSettle();
+    await tester.tap(staggeredChip);
     await tester.pumpAndSettle();
     expect(find.text('Dot layout'), findsOneWidget);
     final resetButton = find.byKey(const ValueKey('creator-reset'));

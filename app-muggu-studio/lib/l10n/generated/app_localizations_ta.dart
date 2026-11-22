@@ -260,4 +260,61 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get back => 'பின்னால்';
+
+  @override
+  String get createPatternTitle => 'வடிவமைப்பை உருவாக்கவும்';
+
+  @override
+  String get createPatternSubtitle =>
+      'ஒரு தொடக்க வடிவமைப்பைத் தேர்ந்தெடுத்து, நேரடி திசையன் முன்னோட்டத்துடன் மாற்றியமைக்கவும்.';
+
+  @override
+  String get patternType => 'வடிவமைப்பு வகை';
+
+  @override
+  String get radialFlower => 'வட்ட மலர்';
+
+  @override
+  String get dotGridDiamonds => 'புள்ளிக் கட்ட வைரங்கள்';
+
+  @override
+  String get petals => 'இதழ்கள்';
+
+  @override
+  String get radius => 'ஆரம்';
+
+  @override
+  String get petalWidth => 'இதழ் அகலம்';
+
+  @override
+  String get gridSize => 'கட்ட அளவு';
+
+  @override
+  String get dotLayout => 'புள்ளி அமைப்பு';
+
+  @override
+  String get layoutSquare => 'சதுரம்';
+
+  @override
+  String get layoutStaggered => 'ஊடுபின்னல்';
+
+  @override
+  String get layoutDiamond => 'வைரம்';
+
+  @override
+  String get undo => 'செயல்தவிர்';
+
+  @override
+  String get redo => 'மீண்டும் செய்';
+
+  @override
+  String get reset => 'மீட்டமை';
+
+  @override
+  String get creatorPreviewNotice =>
+      'இந்த முன்னோட்டம் மாற்றக்கூடிய அளவுருக்களிலிருந்து உருவாக்கப்பட்டது. சேமிப்பதும் பகிர்வதும் அடுத்த புதுப்பிப்பில் திட்டமிடப்பட்டுள்ளது.';
+
+  @override
+  String get dotGridSizeHelper =>
+      'பாரம்பரிய கோலங்கள் பொதுவாக 5×5, 7×7 அல்லது 9×9 புள்ளிக் கட்டங்களைப் பயன்படுத்துகின்றன.';
 }

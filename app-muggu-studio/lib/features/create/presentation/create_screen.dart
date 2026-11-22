@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../../data/models/design_geometry.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../design/presentation/vector_preview.dart';
 import '../application/pattern_generator_registry.dart';
 
@@ -11,63 +12,193 @@ class CreateScreen extends StatefulWidget {
   State<CreateScreen> createState() => _CreateScreenState();
 }
 
+class _CreatorState {
+  const _CreatorState({
+    required this.generatorId,
+    required this.petalCount,
+    required this.outerRadius,
+    required this.petalWidth,
+    required this.gridSize,
+    required this.gridLayout,
+  });
+
+  static const initial = _CreatorState(
+    generatorId: PatternGeneratorRegistry.radialFlowerId,
+    petalCount: 8,
+    outerRadius: 0.36,
+    petalWidth: 0.095,
+    gridSize: 5,
+    gridLayout: 'square',
+  );
+
+  final String generatorId;
+  final int petalCount;
+  final double outerRadius;
+  final double petalWidth;
+  final int gridSize;
+  final String gridLayout;
+
+  _CreatorState copyWith({
+    String? generatorId,
+    int? petalCount,
+    double? outerRadius,
+    double? petalWidth,
+    int? gridSize,
+    String? gridLayout,
+  }) {
+    return _CreatorState(
+      generatorId: generatorId ?? this.generatorId,
+      petalCount: petalCount ?? this.petalCount,
+      outerRadius: outerRadius ?? this.outerRadius,
+      petalWidth: petalWidth ?? this.petalWidth,
+      gridSize: gridSize ?? this.gridSize,
+      gridLayout: gridLayout ?? this.gridLayout,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is _CreatorState &&
+          runtimeType == other.runtimeType &&
+          generatorId == other.generatorId &&
+          petalCount == other.petalCount &&
+          (outerRadius - other.outerRadius).abs() < 0.0001 &&
+          (petalWidth - other.petalWidth).abs() < 0.0001 &&
+          gridSize == other.gridSize &&
+          gridLayout == other.gridLayout;
+
+  @override
+  int get hashCode => Object.hash(
+    generatorId,
+    petalCount,
+    outerRadius.toStringAsFixed(3),
+    petalWidth.toStringAsFixed(3),
+    gridSize,
+    gridLayout,
+  );
+}
+
 class _CreateScreenState extends State<CreateScreen> {
   static const _registry = PatternGeneratorRegistry();
-  static const _layouts = {
-    'square': 'Square',
-    'staggered': 'Staggered',
-    'diamond': 'Diamond',
-  };
 
-  String _generatorId = PatternGeneratorRegistry.radialFlowerId;
-  String _gridLayout = 'square';
-  int _petalCount = 8;
-  int _gridSize = 5;
+  _CreatorState _state = _CreatorState.initial;
+  final List<_CreatorState> _undoStack = [];
+  final List<_CreatorState> _redoStack = [];
+  _CreatorState? _dragStartState;
 
   GeneratedPattern _generatePattern() {
-    if (_generatorId == PatternGeneratorRegistry.radialFlowerId) {
+    if (_state.generatorId == PatternGeneratorRegistry.radialFlowerId) {
       return _registry.generate(
         PatternRecipe(
-          generatorId: _generatorId,
+          generatorId: _state.generatorId,
           version: PatternGeneratorRegistry.recipeVersion,
           parameters: {
-            'petalCount': _petalCount,
-            'outerRadius': 0.36,
-            'petalWidth': 0.095,
+            'petalCount': _state.petalCount,
+            'outerRadius': _state.outerRadius,
+            'petalWidth': _state.petalWidth,
           },
         ),
       );
     }
     return _registry.generate(
       PatternRecipe(
-        generatorId: _generatorId,
+        generatorId: _state.generatorId,
         version: PatternGeneratorRegistry.recipeVersion,
         parameters: {
-          'rows': _gridSize,
-          'columns': _gridSize,
-          'layout': _gridLayout,
+          'rows': _state.gridSize,
+          'columns': _state.gridSize,
+          'layout': _state.gridLayout,
           'margin': 0.12,
         },
       ),
     );
   }
 
+  void _applyState(_CreatorState next) {
+    if (next == _state) return;
+    setState(() {
+      _undoStack.add(_state);
+      _redoStack.clear();
+      _state = next;
+    });
+  }
+
+  void _onSliderChangeStart() {
+    _dragStartState = _state;
+  }
+
+  void _onSliderChanged(_CreatorState interim) {
+    setState(() {
+      _state = interim;
+    });
+  }
+
+  void _onSliderChangeEnd() {
+    if (_dragStartState != null && _dragStartState != _state) {
+      setState(() {
+        _undoStack.add(_dragStartState!);
+        _redoStack.clear();
+        _dragStartState = null;
+      });
+    }
+  }
+
+  void _undo() {
+    if (_undoStack.isEmpty) return;
+    setState(() {
+      _redoStack.add(_state);
+      _state = _undoStack.removeLast();
+    });
+  }
+
+  void _redo() {
+    if (_redoStack.isEmpty) return;
+    setState(() {
+      _undoStack.add(_state);
+      _state = _redoStack.removeLast();
+    });
+  }
+
+  void _reset() {
+    setState(() {
+      if (_state != _CreatorState.initial) {
+        _undoStack.add(_state);
+        _redoStack.clear();
+      }
+      _state = _CreatorState.initial;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final pattern = _generatePattern();
+
+    final title = l10n?.createPatternTitle ?? 'Create a pattern';
+    final subtitle =
+        l10n?.createPatternSubtitle ??
+        'Choose a starting pattern and adjust it with a live vector preview.';
+    final patternTypeLabel = l10n?.patternType ?? 'Pattern type';
+    final radialFlowerLabel = l10n?.radialFlower ?? 'Radial flower';
+    final dotGridDiamondsLabel = l10n?.dotGridDiamonds ?? 'Dot-grid diamonds';
+    final resetLabel = l10n?.reset ?? 'Reset';
+    final undoLabel = l10n?.undo ?? 'Undo';
+    final redoLabel = l10n?.redo ?? 'Redo';
+    final previewNotice =
+        l10n?.creatorPreviewNotice ??
+        'This preview is generated from editable pattern parameters. '
+            'Saving and export are planned for a later update.';
 
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Text('Create a pattern', style: theme.textTheme.headlineSmall),
+        Text(title, style: theme.textTheme.headlineSmall),
         const SizedBox(height: 4),
-        Text(
-          'Choose a starting pattern and adjust it with a live vector preview.',
-          style: theme.textTheme.bodyMedium,
-        ),
+        Text(subtitle, style: theme.textTheme.bodyMedium),
         const SizedBox(height: 20),
-        Text('Pattern type', style: theme.textTheme.titleMedium),
+        Text(patternTypeLabel, style: theme.textTheme.titleMedium),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
@@ -75,19 +206,25 @@ class _CreateScreenState extends State<CreateScreen> {
           children: [
             ChoiceChip(
               key: const ValueKey('generator-radial_flower'),
-              label: const Text('Radial flower'),
-              selected: _generatorId == PatternGeneratorRegistry.radialFlowerId,
-              onSelected: (_) => setState(
-                () => _generatorId = PatternGeneratorRegistry.radialFlowerId,
+              label: Text(radialFlowerLabel),
+              selected:
+                  _state.generatorId == PatternGeneratorRegistry.radialFlowerId,
+              onSelected: (_) => _applyState(
+                _state.copyWith(
+                  generatorId: PatternGeneratorRegistry.radialFlowerId,
+                ),
               ),
             ),
             ChoiceChip(
               key: const ValueKey('generator-dot_grid_diamonds'),
-              label: const Text('Dot-grid diamonds'),
+              label: Text(dotGridDiamondsLabel),
               selected:
-                  _generatorId == PatternGeneratorRegistry.dotGridDiamondsId,
-              onSelected: (_) => setState(
-                () => _generatorId = PatternGeneratorRegistry.dotGridDiamondsId,
+                  _state.generatorId ==
+                  PatternGeneratorRegistry.dotGridDiamondsId,
+              onSelected: (_) => _applyState(
+                _state.copyWith(
+                  generatorId: PatternGeneratorRegistry.dotGridDiamondsId,
+                ),
               ),
             ),
           ],
@@ -98,98 +235,224 @@ class _CreateScreenState extends State<CreateScreen> {
           paths: pattern.paths,
           grid: pattern.grid,
         ),
-        const SizedBox(height: 20),
-        if (_generatorId == PatternGeneratorRegistry.radialFlowerId)
-          _buildPetalControl(theme)
+        const SizedBox(height: 16),
+        if (_state.generatorId == PatternGeneratorRegistry.radialFlowerId)
+          _buildRadialControls(theme, l10n)
         else
-          _buildGridControls(theme),
-        const SizedBox(height: 12),
-        OutlinedButton.icon(
-          key: const ValueKey('creator-reset'),
-          onPressed: _reset,
-          icon: const Icon(Icons.restart_alt_rounded),
-          label: const Text('Reset'),
+          _buildGridControls(theme, l10n),
+        const SizedBox(height: 16),
+        // History and Reset Action Bar
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                OutlinedButton.icon(
+                  key: const ValueKey('creator-undo'),
+                  onPressed: _undoStack.isNotEmpty ? _undo : null,
+                  icon: const Icon(Icons.undo_rounded),
+                  label: Text(undoLabel),
+                ),
+                const SizedBox(width: 8),
+                OutlinedButton.icon(
+                  key: const ValueKey('creator-redo'),
+                  onPressed: _redoStack.isNotEmpty ? _redo : null,
+                  icon: const Icon(Icons.redo_rounded),
+                  label: Text(redoLabel),
+                ),
+              ],
+            ),
+            OutlinedButton.icon(
+              key: const ValueKey('creator-reset'),
+              onPressed: _reset,
+              icon: const Icon(Icons.restart_alt_rounded),
+              label: Text(resetLabel),
+            ),
+          ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
         Card(
           color: theme.colorScheme.secondaryContainer,
-          child: const Padding(
-            padding: EdgeInsets.all(12),
-            child: Text(
-              'This preview is generated from editable pattern parameters. '
-              'Saving and export are planned for a later update.',
-            ),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Text(previewNotice),
           ),
         ),
       ],
     );
   }
 
-  void _reset() {
-    setState(() {
-      _generatorId = PatternGeneratorRegistry.radialFlowerId;
-      _gridLayout = 'square';
-      _petalCount = 8;
-      _gridSize = 5;
-    });
+  Widget _buildRadialControls(ThemeData theme, AppLocalizations? l10n) {
+    final petalsLabel = l10n?.petals ?? 'Petals';
+    final radiusLabel = l10n?.radius ?? 'Radius';
+    final petalWidthLabel = l10n?.petalWidth ?? 'Petal width';
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '$petalsLabel: ${_state.petalCount}',
+              style: theme.textTheme.titleMedium,
+            ),
+            Slider(
+              key: const ValueKey('slider-petal-count'),
+              min: 3,
+              max: 24,
+              divisions: 21,
+              value: _state.petalCount.toDouble(),
+              label: '${_state.petalCount}',
+              semanticFormatterCallback: (val) =>
+                  '$petalsLabel: ${val.round()}',
+              onChangeStart: (_) => _onSliderChangeStart(),
+              onChanged: (value) =>
+                  _onSliderChanged(_state.copyWith(petalCount: value.round())),
+              onChangeEnd: (_) => _onSliderChangeEnd(),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              '$radiusLabel: ${(_state.outerRadius * 100).round()}%',
+              style: theme.textTheme.titleMedium,
+            ),
+            Slider(
+              key: const ValueKey('slider-radius'),
+              min: 0.15,
+              max: 0.42,
+              divisions: 27,
+              value: _state.outerRadius,
+              label: '${(_state.outerRadius * 100).round()}%',
+              semanticFormatterCallback: (val) =>
+                  '$radiusLabel: ${(val * 100).round()}%',
+              onChangeStart: (_) => _onSliderChangeStart(),
+              onChanged: (value) => _onSliderChanged(
+                _state.copyWith(
+                  outerRadius: double.parse(value.toStringAsFixed(3)),
+                ),
+              ),
+              onChangeEnd: (_) => _onSliderChangeEnd(),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              '$petalWidthLabel: ${(_state.petalWidth * 100).toStringAsFixed(1)}%',
+              style: theme.textTheme.titleMedium,
+            ),
+            Slider(
+              key: const ValueKey('slider-petal-width'),
+              min: 0.03,
+              max: 0.14,
+              divisions: 22,
+              value: _state.petalWidth,
+              label: '${(_state.petalWidth * 100).toStringAsFixed(1)}%',
+              semanticFormatterCallback: (val) =>
+                  '$petalWidthLabel: ${(val * 100).toStringAsFixed(1)}%',
+              onChangeStart: (_) => _onSliderChangeStart(),
+              onChanged: (value) => _onSliderChanged(
+                _state.copyWith(
+                  petalWidth: double.parse(value.toStringAsFixed(3)),
+                ),
+              ),
+              onChangeEnd: (_) => _onSliderChangeEnd(),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
-  Widget _buildPetalControl(ThemeData theme) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Petals: $_petalCount', style: theme.textTheme.titleMedium),
-          Slider(
-            min: 3,
-            max: 24,
-            divisions: 21,
-            value: _petalCount.toDouble(),
-            label: '$_petalCount',
-            onChanged: (value) => setState(() => _petalCount = value.round()),
-          ),
-        ],
-      ),
-    ),
-  );
+  Widget _buildGridControls(ThemeData theme, AppLocalizations? l10n) {
+    final gridSizeLabel = l10n?.gridSize ?? 'Grid size';
+    final dotLayoutLabel = l10n?.dotLayout ?? 'Dot layout';
+    final layoutSquare = l10n?.layoutSquare ?? 'Square';
+    final layoutStaggered = l10n?.layoutStaggered ?? 'Staggered';
+    final layoutDiamond = l10n?.layoutDiamond ?? 'Diamond';
+    final helperText =
+        l10n?.dotGridSizeHelper ??
+        'Traditional Muggu and Kolam patterns typically use 5×5, 7×7 or 9×9 dot grids.';
 
-  Widget _buildGridControls(ThemeData theme) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Grid size: $_gridSize × $_gridSize',
-            style: theme.textTheme.titleMedium,
-          ),
-          Slider(
-            min: 3,
-            max: 15,
-            divisions: 6,
-            value: _gridSize.toDouble(),
-            label: '$_gridSize',
-            onChanged: (value) => setState(() => _gridSize = value.round()),
-          ),
-          const SizedBox(height: 8),
-          Text('Dot layout', style: theme.textTheme.titleSmall),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final entry in _layouts.entries)
-                ChoiceChip(
-                  key: ValueKey('grid-layout-${entry.key}'),
-                  label: Text(entry.value),
-                  selected: _gridLayout == entry.key,
-                  onSelected: (_) => setState(() => _gridLayout = entry.key),
-                ),
-            ],
-          ),
-        ],
+    final layoutNames = {
+      'square': layoutSquare,
+      'staggered': layoutStaggered,
+      'diamond': layoutDiamond,
+    };
+
+    const standardSizes = [3, 5, 7, 9, 11, 13, 15];
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '$gridSizeLabel: ${_state.gridSize} × ${_state.gridSize}',
+              style: theme.textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final size in standardSizes)
+                  ChoiceChip(
+                    key: ValueKey('grid-size-$size'),
+                    label: Text(
+                      size == 5 || size == 7 || size == 9
+                          ? '$size × $size ★'
+                          : '$size × $size',
+                    ),
+                    selected: _state.gridSize == size,
+                    onSelected: (_) =>
+                        _applyState(_state.copyWith(gridSize: size)),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Slider(
+              key: const ValueKey('slider-grid-size'),
+              min: 3,
+              max: 15,
+              divisions: 6,
+              value: _state.gridSize.toDouble(),
+              label: '${_state.gridSize}',
+              semanticFormatterCallback: (val) =>
+                  '$gridSizeLabel: ${val.round()} × ${val.round()}',
+              onChangeStart: (_) => _onSliderChangeStart(),
+              onChanged: (value) =>
+                  _onSliderChanged(_state.copyWith(gridSize: value.round())),
+              onChangeEnd: (_) => _onSliderChangeEnd(),
+            ),
+            Text(
+              helperText,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(dotLayoutLabel, style: theme.textTheme.titleSmall),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final entry in layoutNames.entries)
+                  ChoiceChip(
+                    key: ValueKey('grid-layout-${entry.key}'),
+                    label: Text(entry.value),
+                    selected: _state.gridLayout == entry.key,
+                    onSelected: (_) =>
+                        _applyState(_state.copyWith(gridLayout: entry.key)),
+                  ),
+              ],
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }

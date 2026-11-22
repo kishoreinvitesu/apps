@@ -260,4 +260,61 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get back => 'వెనక్కి';
+
+  @override
+  String get createPatternTitle => 'నమూనాను సృష్టించండి';
+
+  @override
+  String get createPatternSubtitle =>
+      'ప్రారంభ నమూనాను ఎంచుకోండి మరియు లైవ్ వెక్టర్ ప్రివ్యూతో సర్దుబాటు చేయండి.';
+
+  @override
+  String get patternType => 'నమూనా రకం';
+
+  @override
+  String get radialFlower => 'వృత్తాకార పువ్వు';
+
+  @override
+  String get dotGridDiamonds => 'చుక్కల గ్రిడ్ డైమండ్స్';
+
+  @override
+  String get petals => 'రేకులు';
+
+  @override
+  String get radius => 'వ్యాసార్థం';
+
+  @override
+  String get petalWidth => 'రేకు వెడల్పు';
+
+  @override
+  String get gridSize => 'గ్రిడ్ పరిమాణం';
+
+  @override
+  String get dotLayout => 'చుక్కల అమరిక';
+
+  @override
+  String get layoutSquare => 'చతురస్రం';
+
+  @override
+  String get layoutStaggered => 'జిగ్ జాగ్ (స్టాగర్డ్)';
+
+  @override
+  String get layoutDiamond => 'డైమండ్';
+
+  @override
+  String get undo => 'రద్దు చేయి (అన్‌డూ)';
+
+  @override
+  String get redo => 'మళ్లీ చేయి (రీడూ)';
+
+  @override
+  String get reset => 'రీసెట్';
+
+  @override
+  String get creatorPreviewNotice =>
+      'ఈ ప్రివ్యూ సవరించదగిన పారామితుల నుండి రూపొందించబడింది. సేవ్ చేయడం, ఎగుమతి చేయడం తదుపరి నవీకరణలో ప్రణాళిక చేయబడ్డాయి.';
+
+  @override
+  String get dotGridSizeHelper =>
+      'సాంప్రదాయ ముగ్గులు మరియు కోలాలు సాధారణంగా 5×5, 7×7 లేదా 9×9 చుక్కల గ్రిడ్‌లను ఉపయోగిస్తాయి.';
 }

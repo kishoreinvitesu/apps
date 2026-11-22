@@ -259,4 +259,61 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get back => 'Back';
+
+  @override
+  String get createPatternTitle => 'Create a pattern';
+
+  @override
+  String get createPatternSubtitle =>
+      'Choose a starting pattern and adjust it with a live vector preview.';
+
+  @override
+  String get patternType => 'Pattern type';
+
+  @override
+  String get radialFlower => 'Radial flower';
+
+  @override
+  String get dotGridDiamonds => 'Dot-grid diamonds';
+
+  @override
+  String get petals => 'Petals';
+
+  @override
+  String get radius => 'Radius';
+
+  @override
+  String get petalWidth => 'Petal width';
+
+  @override
+  String get gridSize => 'Grid size';
+
+  @override
+  String get dotLayout => 'Dot layout';
+
+  @override
+  String get layoutSquare => 'Square';
+
+  @override
+  String get layoutStaggered => 'Staggered';
+
+  @override
+  String get layoutDiamond => 'Diamond';
+
+  @override
+  String get undo => 'Undo';
+
+  @override
+  String get redo => 'Redo';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
+  String get creatorPreviewNotice =>
+      'This preview is generated from editable pattern parameters. Saving and export are planned for a later update.';
+
+  @override
+  String get dotGridSizeHelper =>
+      'Traditional Muggu and Kolam patterns typically use 5×5, 7×7 or 9×9 dot grids.';
 }
