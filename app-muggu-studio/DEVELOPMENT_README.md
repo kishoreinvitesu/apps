@@ -738,3 +738,47 @@ generated catalogue examples until their evidence and approval are recorded.
 - Specified pen tools: traditional palette (Rice White, Maroon, Gold, Green, Charcoal) and 3 stroke widths (2dp, 4dp, 6.5dp).
 - Established `PracticeScreen` upgrade plan: loads catalogue vector paths as a ghost guide with non-punitive tracing.
 - Created test plan covering symmetry mathematics, controller state management, coordinate normalization, and widget interactions.
+
+## 2026-11-22 — Phase 2: Drawing & Tracing Engine Completed
+
+### Implemented
+- **Drawing domain models & symmetry math** (`lib/features/drawing/domain/`):
+  - `DrawnStroke` immutable value model with unmodifiable points list, `Color`, `strokeWidth`, and `SymmetryMode`.
+  - `SymmetryTransform` applying real-time multi-axis mirroring (None, Vertical, Horizontal, 4-Way) with center-axis deduplication (`epsilon = 0.0005`) and `[0.0, 1.0]` boundary clamping.
+- **Drawing state controller** (`lib/features/drawing/application/drawing_controller.dart`):
+  - Stroke lifecycle management (`startStroke`, `addPoint` with distance decimation, `endStroke`).
+  - Bounded undo/redo history stack (max 50 depth), clear with undo support.
+  - Cultural palette presets (`DrawingPalette` with Rice Flour White, Deep Maroon, Turmeric Gold, Leaf Green, Charcoal Brown) and stroke widths (Fine 2.0dp, Medium 4.0dp, Bold 6.5dp).
+- **Interactive drawing canvas** (`lib/features/drawing/presentation/drawing_canvas.dart`):
+  - 5-layer rendering stack using `CustomPainter` (Background + border, Dot grid underlay, Ghost tracing guide, Committed strokes, Live active stroke + real-time mirror preview).
+  - Normalised coordinate mapping using `RenderBox.globalToLocal` with boundary clamping.
+  - Pointer event capture via `Listener` to avoid gesture arena conflicts.
+- **Drawing toolbar** (`lib/features/drawing/presentation/drawing_toolbar.dart`):
+  - 5-swatch palette row with selection ring, 3 line thickness selectors, 4 symmetry choice chips.
+  - Action buttons: Undo, Redo, and Clear with confirmation dialog.
+- **Practice / Trace mode upgrade** (`lib/features/design/presentation/practice_screen.dart`):
+  - Upgraded from static preview placeholder to interactive `DrawingCanvas` in tracing mode (`tracingMode: true`) with faint ghost guide paths and cultural disclaimer info card.
+- **Freehand Canvas tab in CreateScreen** (`lib/features/create/presentation/create_screen.dart`):
+  - Added `TabBar` and `TabBarView` supporting both **Template pattern** and **Freehand canvas** modes with integrated dot-grid and toolbar.
+- **Localization**:
+  - Added 13 new trilingual translation keys in English, Telugu, and Tamil ARBs for pen colors, stroke widths, symmetry modes, canvas clearing, and tab titles.
+- **Automated test suite expansion**:
+  - `test/features/symmetry_transform_test.dart`: 7 unit tests.
+  - `test/features/drawing_controller_test.dart`: 6 unit tests.
+  - `test/features/drawing_canvas_test.dart`: 5 widget tests.
+  - `test/features/drawing_toolbar_test.dart`: 8 widget tests.
+  - Updated `test/widget_test.dart` to cover the new tab structure and Practice screen tracing canvas.
+
+### Validation
+- `dart format lib test` — passed.
+- `flutter gen-l10n` — passed.
+- `flutter analyze` — passed with 0 issues.
+- `flutter test` — passed; all 61 tests across all test suites succeeded.
+- `python -m unittest discover -s tools` — passed; all 6 generator tests succeeded.
+- Android APK build & emulator deployment:
+  - `flutter build apk --debug --target-platform android-x64` — built successfully.
+  - `adb install -r build\app\outputs\flutter-apk\app-debug.apk` — installed successfully on `emulator-5554`.
+  - App launched and confirmed running (PID 20275) with zero crash logs in `logcat`.
+
+### Next
+- Proceed with **Phase 3: Local persistence & saved creations** (SQLite schema for user-created designs, saving/loading parametric recipes and drawn strokes, offline management in Saved tab).

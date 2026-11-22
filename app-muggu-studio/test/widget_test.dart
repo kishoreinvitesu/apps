@@ -100,8 +100,14 @@ void main() {
 
     await tester.tap(find.text('Practise / Trace'));
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.text('Practice is coming soon'), 250);
-    expect(find.text('Practice is coming soon'), findsOneWidget);
+    // PracticeScreen now shows a live tracing canvas (Phase 2 upgrade).
+    // Verify the disclaimer info card text is visible.
+    expect(
+      find.text(
+        'This guide is ready for the tracing tools planned for a future update.',
+      ),
+      findsOneWidget,
+    );
     expect(
       tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
       0,
@@ -137,6 +143,9 @@ void main() {
 
     await tester.tap(find.text('Create').last);
     await tester.pumpAndSettle();
+    // CreateScreen now has Template pattern / Freehand canvas tabs.
+    expect(find.text('Template pattern'), findsOneWidget);
+    expect(find.text('Freehand canvas'), findsOneWidget);
     expect(find.text('Create a pattern'), findsOneWidget);
     expect(find.text('Radial flower'), findsOneWidget);
     expect(find.byKey(const ValueKey('pattern-preview')), findsOneWidget);
@@ -146,17 +155,34 @@ void main() {
     await tester.ensureVisible(dotGridChoice);
     await tester.tap(dotGridChoice);
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.text('Dot layout'), 300);
+    // Scroll the template tab ListView to find grid controls.
+    // scrollUntilVisible requires a Scrollable finder, not a ListView finder.
+    // The first Scrollable in the tab view is the template ListView's internal Scrollable.
+    final templateScrollable = find.descendant(
+      of: find.byType(ListView).first,
+      matching: find.byType(Scrollable),
+    );
+    await tester.scrollUntilVisible(
+      find.text('Dot layout'),
+      300,
+      scrollable: templateScrollable,
+    );
     expect(find.text('Grid size: 5 × 5'), findsOneWidget);
     final staggeredChip = find.byKey(const ValueKey('grid-layout-staggered'));
-    await tester.scrollUntilVisible(staggeredChip, 200);
-    await tester.drag(find.byType(ListView), const Offset(0, -100));
-    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      staggeredChip,
+      200,
+      scrollable: templateScrollable,
+    );
     await tester.tap(staggeredChip);
     await tester.pumpAndSettle();
     expect(find.text('Dot layout'), findsOneWidget);
     final resetButton = find.byKey(const ValueKey('creator-reset'));
-    await tester.scrollUntilVisible(resetButton, 300);
+    await tester.scrollUntilVisible(
+      resetButton,
+      300,
+      scrollable: templateScrollable,
+    );
     await tester.tap(resetButton);
     await tester.pumpAndSettle();
     expect(find.text('Petals: 8'), findsOneWidget);

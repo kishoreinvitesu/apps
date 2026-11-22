@@ -1,8 +1,12 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../../data/models/design_geometry.dart';
+import '../../../data/models/dot_grid.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../design/presentation/vector_preview.dart';
+import '../../drawing/application/drawing_controller.dart';
+import '../../drawing/presentation/drawing_canvas.dart';
+import '../../drawing/presentation/drawing_toolbar.dart';
 import '../application/pattern_generator_registry.dart';
 
 class CreateScreen extends StatefulWidget {
@@ -79,13 +83,31 @@ class _CreatorState {
   );
 }
 
-class _CreateScreenState extends State<CreateScreen> {
+class _CreateScreenState extends State<CreateScreen>
+    with SingleTickerProviderStateMixin {
   static const _registry = PatternGeneratorRegistry();
 
   _CreatorState _state = _CreatorState.initial;
   final List<_CreatorState> _undoStack = [];
   final List<_CreatorState> _redoStack = [];
   _CreatorState? _dragStartState;
+
+  late final TabController _tabController;
+  late final DrawingController _drawingController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _drawingController = DrawingController();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    _drawingController.dispose();
+    super.dispose();
+  }
 
   GeneratedPattern _generatePattern() {
     if (_state.generatorId == PatternGeneratorRegistry.radialFlowerId) {
@@ -176,6 +198,36 @@ class _CreateScreenState extends State<CreateScreen> {
     final l10n = AppLocalizations.of(context);
     final pattern = _generatePattern();
 
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        TabBar(
+          controller: _tabController,
+          tabs: [
+            Tab(text: l10n?.templatePattern ?? 'Template'),
+            Tab(text: l10n?.freehandCanvas ?? 'Freehand'),
+          ],
+        ),
+        Expanded(
+          child: TabBarView(
+            controller: _tabController,
+            children: [
+              _buildTemplateTab(theme, l10n, pattern),
+              _buildFreehandTab(l10n),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ── Template tab ─────────────────────────────────────────────────────────
+
+  Widget _buildTemplateTab(
+    ThemeData theme,
+    AppLocalizations? l10n,
+    GeneratedPattern pattern,
+  ) {
     final title = l10n?.createPatternTitle ?? 'Create a pattern';
     final subtitle =
         l10n?.createPatternSubtitle ??
@@ -286,6 +338,34 @@ class _CreateScreenState extends State<CreateScreen> {
     );
   }
 
+  // ── Freehand tab ──────────────────────────────────────────────────────────
+
+  Widget _buildFreehandTab(AppLocalizations? l10n) {
+    // Build a DotGrid matching the current template grid settings
+    final freehandGrid = DotGrid.rectangular(
+      rows: _state.gridSize,
+      columns: _state.gridSize,
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: DrawingCanvas(
+              controller: _drawingController,
+              grid: freehandGrid,
+            ),
+          ),
+        ),
+        DrawingToolbar(controller: _drawingController),
+      ],
+    );
+  }
+
+  // ── Radial controls ───────────────────────────────────────────────────────
+
   Widget _buildRadialControls(ThemeData theme, AppLocalizations? l10n) {
     final petalsLabel = l10n?.petals ?? 'Petals';
     final radiusLabel = l10n?.radius ?? 'Radius';
@@ -364,6 +444,8 @@ class _CreateScreenState extends State<CreateScreen> {
       ),
     );
   }
+
+  // ── Grid controls ─────────────────────────────────────────────────────────
 
   Widget _buildGridControls(ThemeData theme, AppLocalizations? l10n) {
     final gridSizeLabel = l10n?.gridSize ?? 'Grid size';
