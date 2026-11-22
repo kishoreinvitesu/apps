@@ -444,26 +444,234 @@ Sprint 1 is ready for review. Sprint 2 has not been started.
   installed and launched on `emulator-5554`.
 - `git diff --check` — passed.
 
-### Next-phase plan
+## Remaining work roadmap (updated 2026-11-22)
 
-1. **Creator editing and persistence:** add undo/redo, clear and local save to
-   the current preview-only generator. Keep saved creations separate from the
-   curated catalogue.
-2. **Drawing and tracing:** add normalized pointer input, 5×5/7×7/9×9 dot
-   grids, the agreed symmetry modes, and reliable undo/redo. Reuse existing
-   fixed paths as guides; do not infer recipes from legacy artwork.
-3. **Local persistence:** save a recipe together with a geometry snapshot,
-   and keep user creations separate from the curated catalogue. Add a
-   versioned database migration and reopen-after-restart tests.
-4. **Usability and device QA:** test small screens, accessibility, offline
-   use and lower-end Android performance before calling the creator complete.
-5. **Content publication gate:** keep rights/provenance, cultural attribution,
-   fluent-speaker localization and lesson review separate. Do not publish
-   tradition labels or instructional content until their applicable reviews
-   have evidence and approval.
+This is the working backlog for completing the Creator, growing the design
+library, improving app smoothness and keeping the implementation maintainable
+as content and features grow. Complete the phases in order unless a dependency
+or a user priority changes. Small content-authoring tasks can proceed alongside
+engineering, but content must pass its review gates before it is represented
+as traditional, instructional or publication-ready.
 
-Generic original-pattern creation can proceed without making cultural claims.
-Rights, cultural, Telugu/Tamil localization and lesson reviews remain pending
-for every generated catalogue example. Create now supports generated previews;
-drawing, undo/redo, save/export and approved Telugu/Tamil controls remain future
-work.
+### Current baseline
+
+- The latest pushed app change is `cf7fd48` (interactive Creator preview MVP).
+- Create can preview the radial-flower and dot-grid-diamond generators, adjust
+  petal count, grid size and grid layout, and reset. The preview uses the same
+  vector renderer as catalogue designs.
+- Create is not yet a drawing canvas: there is no freehand input, symmetry
+  editor, undo/redo history, local creation storage, rename/delete, PNG export
+  or sharing.
+- The catalogue contains 12 designs: 10 generic geometric samples and two
+  generated examples. This is not yet a reviewed regional/tradition library.
+  Their rights, cultural, localization and lesson review records remain
+  pending.
+- Creator controls currently use English temporarily. Approved Telugu and
+  Tamil translations have not been supplied.
+- The 31 Flutter tests, Flutter analysis, five Python generator tests,
+  catalogue-artwork check and Android debug build passed before the latest
+  push. GitHub Actions was still running when last checked; verify that run.
+- ADB did not detect the emulator at 08:10 on 2026-11-22. At 08:23 it was
+  online as `emulator-5554`; the current debug APK installed successfully and
+  `com.example.muggu_studio/.MainActivity` launched. A follow-up check found
+  the app process alive and the activity in the foreground.
+
+### Phase 0 — Re-establish the baseline
+
+1. Check the GitHub Actions run for `cf7fd48`; resolve any CI failure before
+   adding more work.
+2. **Done:** ADB detected `emulator-5554`; the debug APK installed, the app
+   process remained alive and MainActivity was resumed after launch. Still
+   visually check Home, Explore, Create and Saved on the emulator.
+3. Record the test/build commands and actual supported device/API configuration
+   used for subsequent comparisons.
+
+**Done when:** CI is green, the main screens are visually checked on a
+connected Android target, and the verified baseline/device configuration is
+recorded. Do not treat an unavailable emulator as a passing runtime check.
+
+### Phase 1 — Finish the template Creator flow
+
+1. Expose useful bounded radial controls (at least petal count, radius and
+   width) and ensure each displayed value is reflected by the generated recipe
+   and preview.
+2. Define supported dot-grid sizes explicitly, including the product-required
+   5×5, 7×7 and 9×9 options. Keep layout choices valid for each size and
+   explain any other supported sizes.
+3. Add a clear action and predictable edit history for parameter changes.
+   Define reset, undo and redo semantics before implementing them; avoid a
+   control that appears to work but has no meaningful state change.
+4. Add accessible labels/value announcements, touch-sized controls and
+   scrolling behaviour that works on small screens and with larger text.
+5. Add focused widget and generator tests for bounds, reset/history behaviour,
+   family switching and invalid recipes.
+
+**Done when:** users can adjust both pattern families, see immediate preview
+updates, undo/reset changes predictably and use the screen with larger text.
+No save action should be shown until persistence exists.
+
+### Phase 2 — Build the drawing and tracing engine
+
+1. Implement a drawing surface using normalized coordinates and the existing
+   shared renderer. Keep the background/grid, guide, generated geometry and
+   user strokes as separate render layers.
+2. Support pointer down/move/up, smooth strokes, canvas resize and aspect-ratio
+   changes without shifting saved geometry.
+3. Add freehand pen settings: colour and stroke width, with a small reviewed
+   default palette and clear selected-state feedback.
+4. Add symmetry modes: none, vertical, horizontal and four-way. Verify
+   behaviour on centre lines/points and prevent duplicate or unexpected
+   strokes.
+5. Add bounded undo/redo history and clear with undo or confirmation.
+6. Reuse existing fixed catalogue geometry as optional tracing guides. Do not
+   infer recipe parameters from legacy artwork.
+7. Test coordinate conversion, smoothing, symmetry, centre crossings,
+   history, resize behaviour and trace-guide visibility.
+
+**Done when:** drawing and tracing work offline, remain aligned with the grid,
+and undo/redo/clear behave consistently in automated tests and on device.
+
+### Phase 3 — Save and manage creations locally
+
+1. Define a creation record that stores a stable ID, user title, timestamps,
+   recipe when applicable, geometry snapshot, dot-grid configuration and
+   drawing style. The geometry snapshot must remain renderable if a generator
+   implementation later changes.
+2. Add a versioned SQLite migration and repository/DAO operations for create,
+   list, load, update/rename and delete. Keep creations separate from the
+   bundled curated catalogue and favourites.
+3. Add a My Creations section to Saved, with empty/loading/error states and
+   confirmation for destructive deletion.
+4. Support opening a saved item to view/edit it and preserving edits after
+   process death, restart and a database upgrade.
+5. Test round-trip serialization, migration, duplicate IDs, corrupt/unsupported
+   data handling and restart persistence.
+
+**Done when:** a user can save, reopen, edit, rename and delete a creation
+without network access, and existing favourites/catalogue data remains intact.
+
+### Phase 4 — Export and offline reliability
+
+1. Render a clean PNG at a documented useful resolution without editor controls
+   or guide overlays unless the user explicitly chooses them.
+2. Write exports using app-specific cache/storage APIs and open Android's
+   system share sheet. Do not request broad storage permissions.
+3. Test missing share targets, export failures, large canvases, cancellation
+   and cleanup of temporary files; present errors instead of silent success.
+4. Verify browsing, lessons, creation, saved creations and export prerequisites
+   with network access disabled.
+
+**Done when:** PNG output is visually correct, share handoff works on device,
+and core features do not require a network connection.
+
+### Phase 5 — Grow the design library and lessons
+
+1. Establish a repeatable content-authoring checklist: source/provenance,
+   rights evidence, reference artwork, geometry, thumbnail, metadata, review
+   status and any lesson steps.
+2. Keep generic original geometric exercises clearly identified as such.
+   For tradition-specific designs, record the actual local name, region and
+   tradition only when supported by evidence and reviewed by knowledgeable
+   people; do not use search synonyms as cultural classification.
+3. First content milestone: deliver 10 reviewed designs and five complete,
+   reference-checked tutorials. The current 10 generic samples plus two
+   generated patterns do not satisfy this milestone.
+4. Expand progressively toward the product target of 60 reviewed designs and
+   20 reviewed lessons. The proposed mix is 15 simple daily designs, 15
+   Pulli/Dot Kolam, 10 Sikku/Kambi Kolam, 10 floral/geometric Rangoli and 10
+   festival/occasion designs; adjust taxonomy only with content review.
+5. Add only approved English, Telugu and Tamil catalogue text. Keep review
+   status pending where fluent-speaker, cultural or rights review is missing.
+6. Improve Explore with meaningful newest/recommended/difficulty sorting,
+   reviewed region/tradition/technique/occasion filters, dot-grid metadata,
+   synonym search and useful empty states as the dataset grows.
+7. Validate every contribution with schema checks, unique IDs, geometry
+   bounds, thumbnail decoding, generated-asset consistency and lesson-group
+   references.
+
+**Done when:** each published entry has complete provenance/review evidence,
+correct metadata and artwork, and each published lesson has been checked
+against its intended reference design. Do not count unreviewed examples toward
+the reviewed-content target.
+
+### Phase 6 — Make the application feel smooth and accessible
+
+1. Profile current behaviour before optimizing: cold/warm launch, Home/Explore
+   scrolling with the full catalogue, detail rendering, Creator drag input,
+   memory and APK/assets size. Record device/API level and reproducible steps.
+2. Set performance budgets from those measurements and the agreed minimum
+   Android device; check them again after changes instead of guessing at
+   thresholds.
+3. Investigate measured bottlenecks: rebuild scope, CustomPainter repaint
+   work, path complexity, image decoding/caching, list construction and
+   database work. Optimize only where profiling identifies a cost.
+4. Check loading/empty/error/retry states, offline behaviour, app lifecycle,
+   keyboard/back navigation and recovery after process recreation.
+5. Review accessibility: semantics and tooltips, contrast, non-colour cues,
+   large text, screen-reader traversal, touch targets and Telugu/Tamil text
+   clipping.
+6. Test on a small screen, a representative mid-range device and the lowest
+   supported Android target. Add integration or golden tests for the highest
+   risk flows and keep the standard CI suite deterministic.
+
+**Done when:** agreed performance budgets pass on the target device set, no
+critical UX/accessibility defects remain, and the test suite covers the main
+offline user journeys.
+
+### Phase 7 — Keep the project scalable without premature infrastructure
+
+1. Preserve feature boundaries: UI, generator/domain logic, geometry renderer,
+   repositories and persistence should remain independently testable.
+2. Keep a versioned generator registry with explicit supported parameter
+   bounds and deterministic tests. Add a family only with examples, boundary
+   tests, and a geometry snapshot that survives generator removal or revision.
+3. Maintain explicit catalogue and database schema versions, migration tests,
+   backward-compatibility policy and actionable validation errors.
+4. Keep catalogue authoring/build tooling separate from runtime app code.
+   Extend the automated content checks rather than creating a manual-only
+   process.
+5. Keep user-created data separate from bundled catalogue data. Keep local
+   repositories replaceable behind the existing boundaries; do not add a
+   backend, accounts or sync until there is an approved product need.
+6. Add profiling and asset-size checks to CI only when they can run
+   repeatably. Keep CI as the required gate for formatting, analysis, tests,
+   Python tooling and generated catalogue consistency.
+7. Document migration, generator addition, design contribution and release
+   procedures so new contributors can follow the same workflow.
+
+**Done when:** new designs/generators and persistence changes can be added
+without editing unrelated features, breaking old saved geometry or bypassing
+automated validation.
+
+### Phase 8 — Release readiness (after core features)
+
+- Choose and verify a permanent Android application ID before the first public
+  release; the current `com.example.muggu_studio` ID is a setup placeholder.
+- Complete privacy policy, Play Store disclosures, target API review, signing,
+  versioning, store text and artwork, internal/closed testing and staged
+  rollout preparation.
+- Verify current Play Store requirements at release time.
+- Defer ads, Premium billing, notifications, cloud sync, AI generation and
+  community features until explicitly approved and the stable offline core is
+  complete.
+
+**Done when:** the signed release candidate passes the release checklist,
+privacy/store disclosures match actual behaviour, and rollback/monitoring
+responsibilities are understood.
+
+### Working order and completion rule
+
+The immediate next step is **Phase 0**, followed by **Phase 1**. The drawing
+engine precedes reliable saving; saving precedes creation management and
+export. Content review can proceed in parallel, but reviewed labels and lessons
+must not be claimed before approval. Performance work begins with a measured
+baseline. Scaling work should strengthen these real boundaries and migrations,
+not trigger a broad rewrite.
+
+For each phase, record the specific changes, tests/device checks, unresolved
+issues and next phase in this log. A phase is complete only when its acceptance
+criteria pass; building successfully alone is not feature completion.
+
+Generic original-pattern creation may proceed without cultural claims. Rights,
+cultural, Telugu/Tamil localization and lesson reviews remain pending for the
+generated catalogue examples until their evidence and approval are recorded.
