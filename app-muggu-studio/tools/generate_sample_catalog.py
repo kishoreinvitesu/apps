@@ -511,6 +511,24 @@ def _catalog_json(designs):
     ) + "\n"
 
 
+def _json_values_match(actual, expected):
+    """Compare generated JSON while tolerating platform libm float noise."""
+    if isinstance(actual, bool) or isinstance(expected, bool):
+        return type(actual) is type(expected) and actual == expected
+    if isinstance(actual, (int, float)) and isinstance(expected, (int, float)):
+        return math.isclose(actual, expected, rel_tol=0.0, abs_tol=1e-12)
+    if isinstance(actual, dict) and isinstance(expected, dict):
+        return actual.keys() == expected.keys() and all(
+            _json_values_match(actual[key], expected[key]) for key in actual
+        )
+    if isinstance(actual, list) and isinstance(expected, list):
+        return len(actual) == len(expected) and all(
+            _json_values_match(actual_item, expected_item)
+            for actual_item, expected_item in zip(actual, expected)
+        )
+    return type(actual) is type(expected) and actual == expected
+
+
 def _decoded_thumbnail(path):
     with Image.open(path) as image:
         image.load()
@@ -546,10 +564,16 @@ def main():
             expected_catalog = temporary_path / "catalog.json"
             expected_thumbnails = temporary_path / "thumbnails"
             write_catalog(expected_catalog, expected_thumbnails)
-            if (
-                not CATALOG_PATH.exists()
-                or CATALOG_PATH.read_bytes() != expected_catalog.read_bytes()
-            ):
+            catalog_matches = False
+            if CATALOG_PATH.exists():
+                try:
+                    catalog_matches = _json_values_match(
+                        json.loads(CATALOG_PATH.read_text(encoding="utf-8")),
+                        json.loads(expected_catalog.read_text(encoding="utf-8")),
+                    )
+                except (OSError, json.JSONDecodeError):
+                    catalog_matches = False
+            if not catalog_matches:
                 raise SystemExit(
                     "catalog.json differs from generated output; run "
                     "python tools/generate_sample_catalog.py."
@@ -592,3 +616,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
