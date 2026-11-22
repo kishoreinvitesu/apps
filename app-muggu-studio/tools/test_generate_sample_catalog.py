@@ -10,6 +10,27 @@ from tools import generate_sample_catalog as generator
 
 
 class GenerateSampleCatalogTests(unittest.TestCase):
+    def test_catalog_comparison_tolerates_only_cross_platform_float_noise(self):
+        generated = {"point": [0.3, {"radius": 0.125}]}
+        platform_variant = {
+            "point": [math.nextafter(0.3, math.inf), {"radius": 0.125}]
+        }
+
+        self.assertTrue(
+            generator._json_values_match(platform_variant, generated)
+        )
+        self.assertFalse(
+            generator._json_values_match(
+                {"point": [0.30000001, {"radius": 0.125}]}, generated
+            )
+        )
+        self.assertFalse(
+            generator._json_values_match(
+                {"point": [0.3, {"radius": 0.125}], "extra": True},
+                generated,
+            )
+        )
+
     def test_build_catalog_is_deterministic_and_normalized(self):
         catalog = generator.build_catalog(
             radial_petals=12,
@@ -124,3 +145,4 @@ class GenerateSampleCatalogTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
