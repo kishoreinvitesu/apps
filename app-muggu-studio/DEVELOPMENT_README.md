@@ -782,3 +782,69 @@ generated catalogue examples until their evidence and approval are recorded.
 
 ### Next
 - Proceed with **Phase 3: Local persistence & saved creations** (SQLite schema for user-created designs, saving/loading parametric recipes and drawn strokes, offline management in Saved tab).
+
+## 2026-11-22 — Phase 3: Local Persistence & Saved Creations Architecture Plan Approved
+
+### Technical Architecture Baseline
+1. **Domain Model (`lib/features/creations/domain/user_creation.dart`)**:
+   - `UserCreation` domain entity:
+     - `id`: Unique timestamp-prefixed UUID string (`creation_<timestamp>_<uuid>`).
+     - `title`: User-defined string name (trimmed, non-empty, default provided).
+     - `createdAt`: UTC creation timestamp.
+     - `updatedAt`: UTC last modification timestamp.
+     - `type`: `CreationType.template` or `CreationType.freehand`.
+     - `recipe`: Optional `PatternRecipe` for parametric patterns.
+     - `strokes`: Optional `List<DrawnStroke>` for freehand drawings.
+     - `paths`: `List<DesignPath>` geometry snapshot ensuring renderability even if generator algorithms or versions evolve.
+     - `grid`: Optional `DotGrid` configuration.
+   - Robust `toMap()` and `fromMap()` serialization preserving coordinate precision.
+
+2. **Database Versioning & Migration (`lib/data/local/app_database.dart`)**:
+   - Schema version bumped from `1` to `2`.
+   - `onCreate`: creates both `favorites` and `creations` tables.
+   - `onUpgrade`: versioned migration from v1 adding:
+     ```sql
+     CREATE TABLE creations (
+       id TEXT PRIMARY KEY NOT NULL,
+       title TEXT NOT NULL,
+       created_at INTEGER NOT NULL,
+       updated_at INTEGER NOT NULL,
+       type TEXT NOT NULL,
+       recipe_json TEXT,
+       strokes_json TEXT,
+       paths_json TEXT NOT NULL,
+       grid_json TEXT
+     );
+     CREATE INDEX idx_creations_updated_at ON creations(updated_at DESC);
+     ```
+
+3. **DAO & Repository (`lib/data/local/creations_dao.dart`)**:
+   - `CreationsStore` abstract interface:
+     - `Future<List<UserCreation>> listCreations()`
+     - `Future<UserCreation?> loadCreation(String id)`
+     - `Future<void> saveCreation(UserCreation creation)`
+     - `Future<void> updateTitle(String id, String newTitle)`
+     - `Future<void> deleteCreation(String id)`
+   - Full ACID transaction safety and duplicate ID handling.
+   - Riverpod providers: `creationsDaoProvider` and `creationsListProvider`.
+
+4. **Trilingual Localization (`lib/l10n/`)**:
+   - Added strings across `app_en.arb`, `app_te.arb`, and `app_ta.arb`:
+     - Section headers (`myCreations`, `favouriteDesigns`).
+     - Action labels (`saveCreation`, `creationTitle`, `creationTitleHint`, `creationSaved`, `renameCreation`, `deleteCreation`, `editCreation`).
+     - Safety & feedback (`deleteCreationConfirm`, `noCreationsYet`, `noCreationsDescription`).
+
+5. **Presentation Layer Integration**:
+   - **CreateScreen**:
+     - "Save Creation" action button on both Template and Freehand tabs.
+     - Pre-populated title input dialog with save validation.
+     - Serialization of current active state into `UserCreation` snapshot.
+     - Support reopening existing creations to resume editing.
+   - **SavedScreen**:
+     - Tabbed / segmented view toggling between **Favourite designs** and **My Creations**.
+     - Responsive grid of creation cards featuring `VectorPreview`, title, date badge, and menu actions (Edit, Rename, Delete).
+     - Destructive confirmation dialog before removing creations.
+
+6. **Validation Suite Plan**:
+   - `creations_dao_test.dart`: CRUD operations, migration v1 to v2, restart persistence with `sqflite_common_ffi`.
+   - `creations_screen_test.dart`: Widget tests verifying saving from creator, rendering in Saved tab, rename, and delete dialog.
