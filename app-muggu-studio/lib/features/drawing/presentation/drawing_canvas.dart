@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:flutter/gestures.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../core/theme/app_theme.dart';
@@ -13,9 +14,10 @@ import '../domain/symmetry_transform.dart';
 /// An interactive freehand drawing canvas with optional dot-grid underlay and
 /// ghost guide paths for tracing mode.
 ///
-/// Layout coordinates are normalised [0, 1]. Pointer events are converted using
-/// the [RenderBox] local coordinate system and clamped before forwarding to
-/// [DrawingController].
+/// Layout coordinates are normalised [0, 1]. Pointer events are filtered so
+/// that only intentional primary gestures (left-click on mouse, touch, stylus)
+/// initiate strokes within canvas boundaries, preventing unwanted drags across
+/// adjacent UI palettes or toolbar controls.
 class DrawingCanvas extends StatefulWidget {
   const DrawingCanvas({
     required this.controller,
@@ -36,6 +38,24 @@ class DrawingCanvas extends StatefulWidget {
 
 class _DrawingCanvasState extends State<DrawingCanvas> {
   Size? _canvasSize;
+  bool _isDrawing = false;
+
+  bool _isPrimaryPointer(PointerEvent event) {
+    if (event.kind == PointerDeviceKind.mouse ||
+        event.kind == PointerDeviceKind.trackpad) {
+      return (event.buttons & kPrimaryMouseButton) != 0;
+    }
+    return event.kind == PointerDeviceKind.touch ||
+        event.kind == PointerDeviceKind.stylus ||
+        event.kind == PointerDeviceKind.invertedStylus;
+  }
+
+  bool _isWithinBounds(Offset local, Size size) {
+    return local.dx >= 0 &&
+        local.dx <= size.width &&
+        local.dy >= 0 &&
+        local.dy <= size.height;
+  }
 
   DesignPoint _toNormalized(Offset local) {
     final size = _canvasSize ?? Size.zero;
@@ -45,25 +65,53 @@ class _DrawingCanvasState extends State<DrawingCanvas> {
   }
 
   void _onPointerDown(PointerDownEvent event) {
+    if (!_isPrimaryPointer(event)) return;
     final box = context.findRenderObject() as RenderBox?;
     if (box == null) return;
     final local = box.globalToLocal(event.position);
+    final size = _canvasSize ?? box.size;
+    if (!_isWithinBounds(local, size)) return;
+
+    _isDrawing = true;
     widget.controller.startStroke(_toNormalized(local));
   }
 
   void _onPointerMove(PointerMoveEvent event) {
+    if (!_isDrawing) return;
+    if ((event.kind == PointerDeviceKind.mouse ||
+            event.kind == PointerDeviceKind.trackpad) &&
+        (event.buttons & kPrimaryMouseButton) == 0) {
+      _isDrawing = false;
+      widget.controller.endStroke();
+      return;
+    }
     final box = context.findRenderObject() as RenderBox?;
     if (box == null) return;
     final local = box.globalToLocal(event.position);
+    final size = _canvasSize ?? box.size;
+
+    // Stop drawing if pointer leaves canvas bounds (e.g. into the palette)
+    if (!_isWithinBounds(local, size)) {
+      _isDrawing = false;
+      widget.controller.endStroke();
+      return;
+    }
+
     widget.controller.addPoint(_toNormalized(local));
   }
 
   void _onPointerUp(PointerUpEvent event) {
-    widget.controller.endStroke();
+    if (_isDrawing) {
+      _isDrawing = false;
+      widget.controller.endStroke();
+    }
   }
 
   void _onPointerCancel(PointerCancelEvent event) {
-    widget.controller.endStroke();
+    if (_isDrawing) {
+      _isDrawing = false;
+      widget.controller.endStroke();
+    }
   }
 
   @override
@@ -73,26 +121,34 @@ class _DrawingCanvasState extends State<DrawingCanvas> {
       onPointerMove: _onPointerMove,
       onPointerUp: _onPointerUp,
       onPointerCancel: _onPointerCancel,
+      onPointerSignal: (PointerSignalEvent event) {
+        // Absorb mouse scroll signals so wheel rotation does not trigger gestures
+      },
       child: LayoutBuilder(
         builder: (context, constraints) {
           _canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
-          return ListenableBuilder(
-            listenable: widget.controller,
-            builder: (context, _) {
-              return CustomPaint(
-                size: _canvasSize!,
-                painter: _DrawingCanvasPainter(
-                  strokes: widget.controller.strokes,
-                  activePoints: widget.controller.activePoints,
-                  symmetryMode: widget.controller.selectedSymmetry,
-                  activeColor: widget.controller.selectedColor,
-                  activeWidth: widget.controller.selectedStrokeWidth,
-                  grid: widget.grid,
-                  guideDesignPaths: widget.guideDesignPaths,
-                  tracingMode: widget.tracingMode,
-                ),
-              );
-            },
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(
+              _DrawingCanvasPainter._borderRadius,
+            ),
+            child: ListenableBuilder(
+              listenable: widget.controller,
+              builder: (context, _) {
+                return CustomPaint(
+                  size: _canvasSize!,
+                  painter: _DrawingCanvasPainter(
+                    strokes: widget.controller.strokes,
+                    activePoints: widget.controller.activePoints,
+                    symmetryMode: widget.controller.selectedSymmetry,
+                    activeColor: widget.controller.selectedColor,
+                    activeWidth: widget.controller.selectedStrokeWidth,
+                    grid: widget.grid,
+                    guideDesignPaths: widget.guideDesignPaths,
+                    tracingMode: widget.tracingMode,
+                  ),
+                );
+              },
+            ),
           );
         },
       ),
@@ -182,18 +238,33 @@ class _DrawingCanvasPainter extends CustomPainter {
 
     // --- Layer 3: Committed strokes ---
     for (final stroke in strokes) {
-      _paintStroke(canvas, size, stroke.points, stroke.color, stroke.strokeWidth);
+      _paintStroke(
+        canvas,
+        size,
+        stroke.points,
+        stroke.color,
+        stroke.strokeWidth,
+      );
     }
 
     // --- Layer 4: Active stroke + live symmetry preview ---
     if (activePoints.isNotEmpty) {
-      final mirrorSequences = SymmetryTransform.apply(activePoints, symmetryMode);
+      final mirrorSequences = SymmetryTransform.apply(
+        activePoints,
+        symmetryMode,
+      );
       for (var i = 0; i < mirrorSequences.length; i++) {
         final isMirror = i > 0;
         final mirrorColor = isMirror
             ? activeColor.withValues(alpha: 0.5)
             : activeColor;
-        _paintStroke(canvas, size, mirrorSequences[i], mirrorColor, activeWidth);
+        _paintStroke(
+          canvas,
+          size,
+          mirrorSequences[i],
+          mirrorColor,
+          activeWidth,
+        );
       }
     }
 

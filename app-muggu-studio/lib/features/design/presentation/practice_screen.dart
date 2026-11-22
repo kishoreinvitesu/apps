@@ -82,9 +82,9 @@ class _PracticeScreenState extends ConsumerState<PracticeScreen> {
                     child: Text(
                       l10n.practiceComingSoonDescription,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSecondaryContainer,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSecondaryContainer,
                       ),
                     ),
                   ),

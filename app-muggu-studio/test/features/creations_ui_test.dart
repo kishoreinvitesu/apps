@@ -130,11 +130,13 @@ void main() {
       addTearDown(tester.view.reset);
 
       final store = _MemoryCreationsStore();
+      await store.saveCreation(_testCreation(id: 'c1', title: 'Morning Lotus'));
       await store.saveCreation(
-        _testCreation(id: 'c1', title: 'Morning Lotus'),
-      );
-      await store.saveCreation(
-        _testCreation(id: 'c2', title: 'Sunset Rangoli', type: CreationType.freehand),
+        _testCreation(
+          id: 'c2',
+          title: 'Sunset Rangoli',
+          type: CreationType.freehand,
+        ),
       );
 
       await tester.pumpWidget(_wrap(const SavedScreen(), store: store));
@@ -158,9 +160,7 @@ void main() {
       addTearDown(tester.view.reset);
 
       final store = _MemoryCreationsStore();
-      await store.saveCreation(
-        _testCreation(id: 'c1', title: 'Original Name'),
-      );
+      await store.saveCreation(_testCreation(id: 'c1', title: 'Original Name'));
 
       await tester.pumpWidget(_wrap(const SavedScreen(), store: store));
       await tester.pumpAndSettle();
@@ -176,7 +176,10 @@ void main() {
       await tester.tap(find.text('Rename'));
       await tester.pumpAndSettle();
 
-      expect(find.byKey(const ValueKey('creation-rename-input')), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('creation-rename-input')),
+        findsOneWidget,
+      );
 
       // Enter new title
       await tester.enterText(
@@ -201,9 +204,7 @@ void main() {
       addTearDown(tester.view.reset);
 
       final store = _MemoryCreationsStore();
-      await store.saveCreation(
-        _testCreation(id: 'c1', title: 'To Be Deleted'),
-      );
+      await store.saveCreation(_testCreation(id: 'c1', title: 'To Be Deleted'));
 
       await tester.pumpWidget(_wrap(const SavedScreen(), store: store));
       await tester.pumpAndSettle();
@@ -258,7 +259,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Dialog opens
-      expect(find.byKey(const ValueKey('creation-title-input')), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('creation-title-input')),
+        findsOneWidget,
+      );
 
       await tester.enterText(
         find.byKey(const ValueKey('creation-title-input')),

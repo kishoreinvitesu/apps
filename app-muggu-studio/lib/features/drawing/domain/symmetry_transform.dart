@@ -18,7 +18,9 @@ abstract final class SymmetryTransform {
       case SymmetryMode.vertical:
         final original = List<DesignPoint>.unmodifiable(points);
         final mirrored = List<DesignPoint>.unmodifiable(
-          points.map((p) => DesignPoint(x: (1.0 - p.x).clamp(0.0, 1.0), y: p.y)),
+          points.map(
+            (p) => DesignPoint(x: (1.0 - p.x).clamp(0.0, 1.0), y: p.y),
+          ),
         );
         if (_areStrokesEquivalent(original, mirrored)) {
           return [original];
@@ -28,7 +30,9 @@ abstract final class SymmetryTransform {
       case SymmetryMode.horizontal:
         final original = List<DesignPoint>.unmodifiable(points);
         final mirrored = List<DesignPoint>.unmodifiable(
-          points.map((p) => DesignPoint(x: p.x, y: (1.0 - p.y).clamp(0.0, 1.0))),
+          points.map(
+            (p) => DesignPoint(x: p.x, y: (1.0 - p.y).clamp(0.0, 1.0)),
+          ),
         );
         if (_areStrokesEquivalent(original, mirrored)) {
           return [original];
@@ -38,10 +42,14 @@ abstract final class SymmetryTransform {
       case SymmetryMode.fourWay:
         final original = List<DesignPoint>.unmodifiable(points);
         final vertical = List<DesignPoint>.unmodifiable(
-          points.map((p) => DesignPoint(x: (1.0 - p.x).clamp(0.0, 1.0), y: p.y)),
+          points.map(
+            (p) => DesignPoint(x: (1.0 - p.x).clamp(0.0, 1.0), y: p.y),
+          ),
         );
         final horizontal = List<DesignPoint>.unmodifiable(
-          points.map((p) => DesignPoint(x: p.x, y: (1.0 - p.y).clamp(0.0, 1.0))),
+          points.map(
+            (p) => DesignPoint(x: p.x, y: (1.0 - p.y).clamp(0.0, 1.0)),
+          ),
         );
         final both = List<DesignPoint>.unmodifiable(
           points.map(

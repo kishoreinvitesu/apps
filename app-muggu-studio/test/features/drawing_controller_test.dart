@@ -33,15 +33,20 @@ void main() {
       expect(controller.canRedo, isFalse);
     });
 
-    test('four-way symmetry generates four mirrored strokes upon endStroke', () {
-      final controller = DrawingController(initialSymmetry: SymmetryMode.fourWay);
+    test(
+      'four-way symmetry generates four mirrored strokes upon endStroke',
+      () {
+        final controller = DrawingController(
+          initialSymmetry: SymmetryMode.fourWay,
+        );
 
-      controller.startStroke(const DesignPoint(x: 0.1, y: 0.2));
-      controller.addPoint(const DesignPoint(x: 0.3, y: 0.4));
-      controller.endStroke();
+        controller.startStroke(const DesignPoint(x: 0.1, y: 0.2));
+        controller.addPoint(const DesignPoint(x: 0.3, y: 0.4));
+        controller.endStroke();
 
-      expect(controller.strokes, hasLength(4));
-    });
+        expect(controller.strokes, hasLength(4));
+      },
+    );
 
     test('undo, redo, and clear cycle restores state predictably', () {
       final controller = DrawingController();

@@ -20,10 +20,7 @@ class CreationsDao implements CreationsStore {
   @override
   Future<List<UserCreation>> listCreations() async {
     final db = await _appDatabase.database;
-    final rows = await db.query(
-      'creations',
-      orderBy: 'updated_at DESC',
-    );
+    final rows = await db.query('creations', orderBy: 'updated_at DESC');
     return List.unmodifiable(rows.map((row) => UserCreation.fromMap(row)));
   }
 
@@ -67,11 +64,7 @@ class CreationsDao implements CreationsStore {
   @override
   Future<void> deleteCreation(String id) async {
     final db = await _appDatabase.database;
-    await db.delete(
-      'creations',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    await db.delete('creations', where: 'id = ?', whereArgs: [id]);
   }
 }
 

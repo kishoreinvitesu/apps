@@ -172,7 +172,10 @@ class _CreationsView extends ConsumerWidget {
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 8),
-                  Text(l10n.noCreationsDescription, textAlign: TextAlign.center),
+                  Text(
+                    l10n.noCreationsDescription,
+                    textAlign: TextAlign.center,
+                  ),
                   const SizedBox(height: 16),
                   FilledButton.icon(
                     onPressed: () => context.go('/create'),
@@ -194,10 +197,8 @@ class _CreationsView extends ConsumerWidget {
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
           ),
-          itemBuilder: (context, index) => _CreationCard(
-            creation: creations[index],
-            l10n: l10n,
-          ),
+          itemBuilder: (context, index) =>
+              _CreationCard(creation: creations[index], l10n: l10n),
         );
       },
     );
@@ -219,9 +220,7 @@ class _CreationCard extends ConsumerWidget {
         content: TextField(
           key: const ValueKey('creation-rename-input'),
           controller: controller,
-          decoration: InputDecoration(
-            labelText: l10n.creationTitle,
-          ),
+          decoration: InputDecoration(labelText: l10n.creationTitle),
           autofocus: true,
         ),
         actions: [
@@ -280,10 +279,9 @@ class _CreationCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final typeLabel =
-        creation.type == CreationType.freehand
-            ? l10n.freehandCanvas
-            : l10n.templatePattern;
+    final typeLabel = creation.type == CreationType.freehand
+        ? l10n.freehandCanvas
+        : l10n.templatePattern;
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -293,10 +291,7 @@ class _CreationCard extends ConsumerWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8),
-              child: VectorPreview(
-                paths: creation.paths,
-                grid: creation.grid,
-              ),
+              child: VectorPreview(paths: creation.paths, grid: creation.grid),
             ),
           ),
           Padding(

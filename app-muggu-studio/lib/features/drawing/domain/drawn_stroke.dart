@@ -92,7 +92,8 @@ class DrawnStroke {
 
   static bool _pointsEqual(List<DesignPoint> a, List<DesignPoint> b) {
     for (var i = 0; i < a.length; i++) {
-      if ((a[i].x - b[i].x).abs() > 0.0001 || (a[i].y - b[i].y).abs() > 0.0001) {
+      if ((a[i].x - b[i].x).abs() > 0.0001 ||
+          (a[i].y - b[i].y).abs() > 0.0001) {
         return false;
       }
     }

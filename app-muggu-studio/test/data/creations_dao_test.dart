@@ -112,7 +112,10 @@ void main() {
       );
       final dao1 = CreationsDao(db1);
 
-      final creation = createSampleCreation(id: 'restart_c', title: 'Persistent Muggu');
+      final creation = createSampleCreation(
+        id: 'restart_c',
+        title: 'Persistent Muggu',
+      );
       await dao1.saveCreation(creation);
       await db1.close();
 
@@ -133,34 +136,37 @@ void main() {
       expect(loaded.paths.length, 1);
     });
 
-    test('freehand strokes serialization and strokesToDesignPaths conversion', () {
-      final stroke = DrawnStroke(
-        points: const [
-          DesignPoint(x: 0.2, y: 0.2),
-          DesignPoint(x: 0.8, y: 0.8),
-        ],
-        color: DrawingPalette.turmericGold,
-        strokeWidth: 4.0,
-        symmetryMode: SymmetryMode.vertical,
-      );
+    test(
+      'freehand strokes serialization and strokesToDesignPaths conversion',
+      () {
+        final stroke = DrawnStroke(
+          points: const [
+            DesignPoint(x: 0.2, y: 0.2),
+            DesignPoint(x: 0.8, y: 0.8),
+          ],
+          color: DrawingPalette.turmericGold,
+          strokeWidth: 4.0,
+          symmetryMode: SymmetryMode.vertical,
+        );
 
-      final paths = UserCreation.strokesToDesignPaths([stroke]);
-      expect(paths.length, 1);
-      expect(paths.first.id, 'stroke_path_0');
-      expect(paths.first.groupId, 'user_strokes');
-      expect(paths.first.commands.length, 2);
-      expect(paths.first.commands[0].type, PathCommandType.moveTo);
-      expect(paths.first.commands[1].type, PathCommandType.lineTo);
+        final paths = UserCreation.strokesToDesignPaths([stroke]);
+        expect(paths.length, 1);
+        expect(paths.first.id, 'stroke_path_0');
+        expect(paths.first.groupId, 'user_strokes');
+        expect(paths.first.commands.length, 2);
+        expect(paths.first.commands[0].type, PathCommandType.moveTo);
+        expect(paths.first.commands[1].type, PathCommandType.lineTo);
 
-      // Single point tap also produces at least 2 commands
-      final dotStroke = DrawnStroke(
-        points: const [DesignPoint(x: 0.5, y: 0.5)],
-        color: DrawingPalette.riceFlourWhite,
-        strokeWidth: 2.0,
-      );
-      final dotPaths = UserCreation.strokesToDesignPaths([dotStroke]);
-      expect(dotPaths.first.commands.length, 2);
-    });
+        // Single point tap also produces at least 2 commands
+        final dotStroke = DrawnStroke(
+          points: const [DesignPoint(x: 0.5, y: 0.5)],
+          color: DrawingPalette.riceFlourWhite,
+          strokeWidth: 2.0,
+        );
+        final dotPaths = UserCreation.strokesToDesignPaths([dotStroke]);
+        expect(dotPaths.first.commands.length, 2);
+      },
+    );
 
     test('database migration from v1 to v2 preserves favorites and enables creations', () async {
       final directory = await Directory.systemTemp.createTemp(
@@ -209,7 +215,10 @@ void main() {
       final creationsDao = CreationsDao(appDb);
       expect(await creationsDao.listCreations(), isEmpty);
 
-      final creation = createSampleCreation(id: 'migrated_c', title: 'Post-Migration Creation');
+      final creation = createSampleCreation(
+        id: 'migrated_c',
+        title: 'Post-Migration Creation',
+      );
       await creationsDao.saveCreation(creation);
       expect(await creationsDao.listCreations(), hasLength(1));
 

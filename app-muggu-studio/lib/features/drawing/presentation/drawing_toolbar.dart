@@ -12,11 +12,7 @@ import '../domain/drawn_stroke.dart';
 /// - Symmetry chip row (None / Vertical / Horizontal / 4-Way)
 /// - Action row: Undo, Redo, Clear
 class DrawingToolbar extends StatelessWidget {
-  const DrawingToolbar({
-    required this.controller,
-    this.onSave,
-    super.key,
-  });
+  const DrawingToolbar({required this.controller, this.onSave, super.key});
 
   final DrawingController controller;
   final VoidCallback? onSave;
@@ -25,10 +21,8 @@ class DrawingToolbar extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListenableBuilder(
       listenable: controller,
-      builder: (context, _) => _ToolbarContent(
-        controller: controller,
-        onSave: onSave,
-      ),
+      builder: (context, _) =>
+          _ToolbarContent(controller: controller, onSave: onSave),
     );
   }
 }
@@ -49,10 +43,7 @@ class _ToolbarContent extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         border: Border(
-          top: BorderSide(
-            color: theme.colorScheme.outlineVariant,
-            width: 0.5,
-          ),
+          top: BorderSide(color: theme.colorScheme.outlineVariant, width: 0.5),
         ),
       ),
       child: Column(
@@ -165,9 +156,8 @@ class _ColorSwatch extends StatelessWidget {
           border: selected
               ? Border.all(color: ringColor, width: _borderWidth)
               : Border.all(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.outline.withValues(alpha: 0.4),
+                  color: Theme.of(context).colorScheme.outline
+                      .withValues(alpha: 0.4),
                   width: 1,
                 ),
           boxShadow: selected
@@ -272,8 +262,7 @@ class _WidthButton extends StatelessWidget {
               label,
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
                 color: selected ? colorScheme.primary : colorScheme.onSurface,
-                fontWeight:
-                    selected ? FontWeight.w700 : FontWeight.w500,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
               ),
             ),
           ],

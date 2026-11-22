@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -24,14 +25,14 @@ void main() {
       controller.dispose();
     });
 
-    testWidgets('renders without error with no grid or guide paths', (tester) async {
+    testWidgets('renders without error with no grid or guide paths', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(800, 800);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);
 
-      await tester.pumpWidget(
-        _wrap(DrawingCanvas(controller: controller)),
-      );
+      await tester.pumpWidget(_wrap(DrawingCanvas(controller: controller)));
       expect(find.byType(DrawingCanvas), findsOneWidget);
       expect(
         find.descendant(
@@ -97,7 +98,9 @@ void main() {
       expect(controller.strokes.length, 1);
     });
 
-    testWidgets('symmetry=vertical produces two strokes from one drag', (tester) async {
+    testWidgets('symmetry=vertical produces two strokes from one drag', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(800, 800);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);
@@ -125,7 +128,9 @@ void main() {
       expect(controller.strokes.length, 2);
     });
 
-    testWidgets('guide paths layer rendered when tracingMode=true', (tester) async {
+    testWidgets('guide paths layer rendered when tracingMode=true', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(800, 800);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);
@@ -136,5 +141,89 @@ void main() {
       );
       expect(find.byType(DrawingCanvas), findsOneWidget);
     });
+
+    testWidgets(
+      'rejects non-primary mouse button clicks (e.g. middle or secondary button)',
+      (tester) async {
+        tester.view.physicalSize = const Size(800, 800);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(tester.view.reset);
+
+        await tester.pumpWidget(
+          _wrap(
+            SizedBox(
+              width: 400,
+              height: 400,
+              child: DrawingCanvas(controller: controller),
+            ),
+          ),
+        );
+
+        // Simulate a right-click (secondary button) or middle button
+        final gesture = await tester.startGesture(
+          const Offset(100, 100),
+          kind: PointerDeviceKind.mouse,
+          buttons: kSecondaryMouseButton,
+        );
+        await tester.pump();
+        await gesture.moveBy(const Offset(30, 30));
+        await tester.pump();
+        await gesture.up();
+        await tester.pump();
+
+        // Should not have recorded any strokes
+        expect(controller.strokes, isEmpty);
+        expect(controller.activePoints, isEmpty);
+      },
+    );
+
+    testWidgets(
+      'terminates active stroke when pointer moves outside canvas bounds',
+      (tester) async {
+        tester.view.physicalSize = const Size(800, 800);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(tester.view.reset);
+
+        await tester.pumpWidget(
+          _wrap(
+            Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 200,
+                height: 200,
+                child: DrawingCanvas(controller: controller),
+              ),
+            ),
+          ),
+        );
+
+        final gesture = await tester.startGesture(const Offset(50, 50));
+        await tester.pump();
+        expect(controller.activePoints.length, 1);
+
+        // Move inside canvas
+        await gesture.moveTo(const Offset(100, 100));
+        await tester.pump();
+        expect(controller.activePoints.length, 2);
+
+        // Drag pointer down outside canvas bounds (simulating dragging onto palette below, e.g. y=250)
+        await gesture.moveTo(const Offset(100, 250));
+        await tester.pump();
+
+        // Stroke should be ended and committed, activePoints should be empty
+        expect(controller.activePoints, isEmpty);
+        expect(controller.strokes.length, 1);
+        expect(controller.strokes.first.points.length, 2);
+
+        // Further moves outside should not add points
+        await gesture.moveTo(const Offset(120, 260));
+        await tester.pump();
+        expect(controller.strokes.length, 1);
+        expect(controller.strokes.first.points.length, 2);
+
+        await gesture.up();
+        await tester.pump();
+      },
+    );
   });
 }

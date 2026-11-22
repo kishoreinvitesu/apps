@@ -68,10 +68,9 @@ class UserCreation {
     'updated_at': updatedAt.toUtc().microsecondsSinceEpoch,
     'type': type.name,
     'recipe_json': recipe != null ? jsonEncode(recipe!.toJson()) : null,
-    'strokes_json':
-        strokes != null
-            ? jsonEncode([for (final s in strokes!) s.toJson()])
-            : null,
+    'strokes_json': strokes != null
+        ? jsonEncode([for (final s in strokes!) s.toJson()])
+        : null,
     'paths_json': jsonEncode([for (final p in paths) p.toJson()]),
     'grid_json': grid != null ? jsonEncode(grid!.toJson()) : null,
   };

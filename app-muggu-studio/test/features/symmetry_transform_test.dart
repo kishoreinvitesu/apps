@@ -6,10 +6,7 @@ import 'package:muggu_studio/features/drawing/domain/symmetry_transform.dart';
 void main() {
   group('SymmetryTransform', () {
     test('none returns the original stroke unaltered', () {
-      const points = [
-        DesignPoint(x: 0.1, y: 0.2),
-        DesignPoint(x: 0.3, y: 0.4),
-      ];
+      const points = [DesignPoint(x: 0.1, y: 0.2), DesignPoint(x: 0.3, y: 0.4)];
 
       final result = SymmetryTransform.apply(points, SymmetryMode.none);
 
@@ -18,10 +15,7 @@ void main() {
     });
 
     test('vertical mirrors x coordinates across center axis x=0.5', () {
-      const points = [
-        DesignPoint(x: 0.2, y: 0.3),
-        DesignPoint(x: 0.4, y: 0.6),
-      ];
+      const points = [DesignPoint(x: 0.2, y: 0.3), DesignPoint(x: 0.4, y: 0.6)];
 
       final result = SymmetryTransform.apply(points, SymmetryMode.vertical);
 
@@ -36,22 +30,25 @@ void main() {
       expect(result[1][1].y, closeTo(0.6, 0.0001));
     });
 
-    test('vertical deduplicates strokes lying entirely on the vertical axis', () {
-      const centerPoints = [
-        DesignPoint(x: 0.5, y: 0.1),
-        DesignPoint(x: 0.5, y: 0.9),
-      ];
+    test(
+      'vertical deduplicates strokes lying entirely on the vertical axis',
+      () {
+        const centerPoints = [
+          DesignPoint(x: 0.5, y: 0.1),
+          DesignPoint(x: 0.5, y: 0.9),
+        ];
 
-      final result = SymmetryTransform.apply(centerPoints, SymmetryMode.vertical);
+        final result = SymmetryTransform.apply(
+          centerPoints,
+          SymmetryMode.vertical,
+        );
 
-      expect(result, hasLength(1));
-    });
+        expect(result, hasLength(1));
+      },
+    );
 
     test('horizontal mirrors y coordinates across center axis y=0.5', () {
-      const points = [
-        DesignPoint(x: 0.2, y: 0.3),
-        DesignPoint(x: 0.4, y: 0.1),
-      ];
+      const points = [DesignPoint(x: 0.2, y: 0.3), DesignPoint(x: 0.4, y: 0.1)];
 
       final result = SymmetryTransform.apply(points, SymmetryMode.horizontal);
 
@@ -63,16 +60,22 @@ void main() {
       expect(result[1][1].y, closeTo(0.9, 0.0001));
     });
 
-    test('horizontal deduplicates strokes lying entirely on the horizontal axis', () {
-      const centerPoints = [
-        DesignPoint(x: 0.1, y: 0.5),
-        DesignPoint(x: 0.9, y: 0.5),
-      ];
+    test(
+      'horizontal deduplicates strokes lying entirely on the horizontal axis',
+      () {
+        const centerPoints = [
+          DesignPoint(x: 0.1, y: 0.5),
+          DesignPoint(x: 0.9, y: 0.5),
+        ];
 
-      final result = SymmetryTransform.apply(centerPoints, SymmetryMode.horizontal);
+        final result = SymmetryTransform.apply(
+          centerPoints,
+          SymmetryMode.horizontal,
+        );
 
-      expect(result, hasLength(1));
-    });
+        expect(result, hasLength(1));
+      },
+    );
 
     test('fourWay returns four quadrant reflections for asymmetric input', () {
       const points = [

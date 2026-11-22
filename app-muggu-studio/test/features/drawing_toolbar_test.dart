@@ -39,7 +39,9 @@ void main() {
       expect(find.byType(DrawingToolbar), findsOneWidget);
     });
 
-    testWidgets('tapping a different colour updates controller', (tester) async {
+    testWidgets('tapping a different colour updates controller', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(800, 800);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);
@@ -49,9 +51,9 @@ void main() {
 
       // The colour swatch containers are GestureDetector widgets.
       // Tap the second swatch (riceFlourWhite at index 1).
-      final swatches = tester.widgetList<GestureDetector>(
-        find.byType(GestureDetector),
-      ).toList();
+      final swatches = tester
+          .widgetList<GestureDetector>(find.byType(GestureDetector))
+          .toList();
 
       // First 5 GestureDetectors are colour swatches in palette row
       expect(swatches.length, greaterThanOrEqualTo(5));
@@ -122,7 +124,9 @@ void main() {
       expect(clearBtn.onPressed, isNull);
     });
 
-    testWidgets('clear dialog appears on tap when strokes exist', (tester) async {
+    testWidgets('clear dialog appears on tap when strokes exist', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(800, 800);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);

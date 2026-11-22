@@ -235,8 +235,8 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
   ) async {
     final defaultTitle =
         _state.generatorId == PatternGeneratorRegistry.radialFlowerId
-            ? (l10n?.radialFlower ?? 'Radial flower')
-            : (l10n?.dotGridDiamonds ?? 'Dot-grid diamonds');
+        ? (l10n?.radialFlower ?? 'Radial flower')
+        : (l10n?.dotGridDiamonds ?? 'Dot-grid diamonds');
     final titleController = TextEditingController(text: defaultTitle);
 
     final confirmed = await showDialog<bool>(
@@ -268,8 +268,9 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
 
     if (confirmed == true && context.mounted) {
       final title = titleController.text.trim();
-      final finalTitle =
-          title.isEmpty ? (l10n?.myCreations ?? 'My Creation') : title;
+      final finalTitle = title.isEmpty
+          ? (l10n?.myCreations ?? 'My Creation')
+          : title;
       final now = DateTime.now().toUtc();
       final creation = UserCreation(
         id:
@@ -284,17 +285,17 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
           version: PatternGeneratorRegistry.recipeVersion,
           parameters:
               _state.generatorId == PatternGeneratorRegistry.radialFlowerId
-                  ? {
-                    'petalCount': _state.petalCount,
-                    'outerRadius': _state.outerRadius,
-                    'petalWidth': _state.petalWidth,
-                  }
-                  : {
-                    'rows': _state.gridSize,
-                    'columns': _state.gridSize,
-                    'layout': _state.gridLayout,
-                    'margin': 0.12,
-                  },
+              ? {
+                  'petalCount': _state.petalCount,
+                  'outerRadius': _state.outerRadius,
+                  'petalWidth': _state.petalWidth,
+                }
+              : {
+                  'rows': _state.gridSize,
+                  'columns': _state.gridSize,
+                  'layout': _state.gridLayout,
+                  'margin': 0.12,
+                },
         ),
         paths: pattern.paths,
         grid: pattern.grid,
@@ -349,8 +350,9 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
 
     if (confirmed == true && context.mounted) {
       final title = titleController.text.trim();
-      final finalTitle =
-          title.isEmpty ? (l10n?.myCreations ?? 'My Creation') : title;
+      final finalTitle = title.isEmpty
+          ? (l10n?.myCreations ?? 'My Creation')
+          : title;
       final now = DateTime.now().toUtc();
       final strokes = _drawingController.strokes;
       final paths = UserCreation.strokesToDesignPaths(strokes);
@@ -397,6 +399,7 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
         Expanded(
           child: TabBarView(
             controller: _tabController,
+            physics: const NeverScrollableScrollPhysics(),
             children: [
               _buildTemplateTab(theme, l10n, pattern),
               _buildFreehandTab(l10n),
@@ -517,7 +520,8 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
                 const SizedBox(width: 8),
                 FilledButton.icon(
                   key: const ValueKey('creator-save'),
-                  onPressed: () => _showSaveTemplateDialog(context, l10n, pattern),
+                  onPressed: () =>
+                      _showSaveTemplateDialog(context, l10n, pattern),
                   icon: const Icon(Icons.bookmark_add_rounded),
                   label: Text(saveLabel),
                 ),

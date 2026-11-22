@@ -199,5 +199,25 @@ void main() {
       expect(find.text('புள்ளிக் கட்ட வைரங்கள்'), findsOneWidget);
       expect(find.text('மீட்டமை'), findsOneWidget);
     });
+
+    testWidgets(
+      'TabBarView has NeverScrollableScrollPhysics to prevent drawing drag swipe conflicts',
+      (tester) async {
+        tester.view.physicalSize = const Size(800, 1800);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        await tester.pumpWidget(_createScreenTestApp());
+        await tester.pumpAndSettle();
+
+        final tabBarViewFinder = find.byType(TabBarView);
+        expect(tabBarViewFinder, findsOneWidget);
+        final tabBarView = tester.widget<TabBarView>(tabBarViewFinder);
+        expect(tabBarView.physics, isA<NeverScrollableScrollPhysics>());
+      },
+    );
   });
 }
