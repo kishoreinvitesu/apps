@@ -251,11 +251,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get practiceDesign => 'Practise / Trace';
 
   @override
-  String get practiceComingSoon => 'Practice is coming soon';
-
-  @override
-  String get practiceComingSoonDescription =>
-      'This guide is ready for the tracing tools planned for a future update.';
+  String get practiceGuideNotice =>
+      'Trace the faint guide with the canvas. This sample is not a culturally verified lesson.';
 
   @override
   String get back => 'Back';

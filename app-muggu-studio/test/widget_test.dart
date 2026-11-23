@@ -133,7 +133,7 @@ void main() {
     // Verify the disclaimer info card text is visible.
     expect(
       find.text(
-        'This guide is ready for the tracing tools planned for a future update.',
+        'Trace the faint guide with the canvas. This sample is not a culturally verified lesson.',
       ),
       findsOneWidget,
     );

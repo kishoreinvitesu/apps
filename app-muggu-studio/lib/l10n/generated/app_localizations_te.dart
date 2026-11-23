@@ -252,11 +252,8 @@ class AppLocalizationsTe extends AppLocalizations {
   String get practiceDesign => 'సాధన / ట్రేస్';
 
   @override
-  String get practiceComingSoon => 'సాధన త్వరలో అందుబాటులోకి వస్తుంది';
-
-  @override
-  String get practiceComingSoonDescription =>
-      'భవిష్యత్ నవీకరణలో రానున్న ట్రేసింగ్ సాధనాల కోసం ఈ మార్గదర్శిని సిద్ధంగా ఉంది.';
+  String get practiceGuideNotice =>
+      'క్యాన్వాస్‌పై మసక మార్గదర్శకాన్ని అనుసరించి గీయండి. ఈ నమూనా సాంస్కృతికంగా ధృవీకరించిన పాఠం కాదు.';
 
   @override
   String get back => 'వెనక్కి';

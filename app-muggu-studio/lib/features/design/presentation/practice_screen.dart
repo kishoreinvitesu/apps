@@ -80,7 +80,7 @@ class _PracticeScreenState extends ConsumerState<PracticeScreen> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      l10n.practiceComingSoonDescription,
+                      l10n.practiceGuideNotice,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context)
                             .colorScheme

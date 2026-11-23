@@ -456,8 +456,7 @@ as traditional, instructional or publication-ready.
 ### Current baseline
 
 - The Phase 6 emulator profile results and current work order are recorded
-  below. The latest application-source quality changes were pushed in
-  `5442054`.
+  below.
 - Create supports versioned template generators and a freehand canvas with
   symmetry, pen controls, undo/redo, and local save/reopen/rename/delete.
   Designs and creations can be exported and shared as PNGs.
@@ -468,7 +467,7 @@ as traditional, instructional or publication-ready.
 - The generator registry currently uses recipe version 1. Catalogue geometry
   uses schema version 3 and accepts schema 2 through its migration path. The
   local SQLite database is version 2, with a tested migration from version 1.
-- The full Flutter suite last passed 90 tests on 2026-11-23. The generator
+- The full Flutter suite last passed 101 tests on 2026-11-24. The generator
   registry suite now passes 8 tests, including a new determinism check, and
   `flutter analyze` reports no issues.
 - Phase 6 has three repeated profile-mode emulator traces for Explore, detail
@@ -1187,3 +1186,19 @@ generated catalogue examples until their evidence and approval are recorded.
   action before release.
 - Continue Phase 7 maintenance as features evolve. Physical-device
   performance/accessibility checks and Phase 8 release gates remain deferred.
+
+## 2026-11-24 — Corrected Practice guidance
+
+### Implemented
+- Replaced the outdated “Practice is coming soon” notice with a localized
+  tracing instruction and a clear note that the sample is not a culturally
+  verified lesson.
+
+### Validation
+- `flutter gen-l10n` — passed.
+- `flutter test test/widget_test.dart` — passed; all 4 widget tests.
+- `flutter test` — passed; all 101 tests.
+- `flutter analyze` — passed with no issues.
+- `dart format --output=none --set-exit-if-changed lib test` — passed; all
+  69 Dart files are formatted.
+- `git diff --check` — passed.

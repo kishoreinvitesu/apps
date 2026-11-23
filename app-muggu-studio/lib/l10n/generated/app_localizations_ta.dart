@@ -252,11 +252,8 @@ class AppLocalizationsTa extends AppLocalizations {
   String get practiceDesign => 'பயிற்சி / தடமறி';
 
   @override
-  String get practiceComingSoon => 'பயிற்சி விரைவில் கிடைக்கும்';
-
-  @override
-  String get practiceComingSoonDescription =>
-      'எதிர்காலப் புதுப்பிப்பில் வரவிருக்கும் தடமறிதல் கருவிகளுக்கு இந்த வழிகாட்டி தயாராக உள்ளது.';
+  String get practiceGuideNotice =>
+      'கேன்வாஸில் மங்கலான வழிகாட்டுதலைப் பின்தொடர்ந்து வரையுங்கள். இந்த மாதிரி பண்பாட்டுத் தளத்தில் சரிபார்க்கப்பட்ட பாடம் அல்ல.';
 
   @override
   String get back => 'பின்னால்';

@@ -562,17 +562,11 @@ abstract class AppLocalizations {
   /// **'Practise / Trace'**
   String get practiceDesign;
 
-  /// No description provided for @practiceComingSoon.
+  /// No description provided for @practiceGuideNotice.
   ///
   /// In en, this message translates to:
-  /// **'Practice is coming soon'**
-  String get practiceComingSoon;
-
-  /// No description provided for @practiceComingSoonDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'This guide is ready for the tracing tools planned for a future update.'**
-  String get practiceComingSoonDescription;
+  /// **'Trace the faint guide with the canvas. This sample is not a culturally verified lesson.'**
+  String get practiceGuideNotice;
 
   /// No description provided for @back.
   ///
