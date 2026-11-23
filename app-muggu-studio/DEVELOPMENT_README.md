@@ -1066,27 +1066,30 @@ generated catalogue examples until their evidence and approval are recorded.
 - Device: Android 17 / API 37 x86_64 emulator, 1080×2400 at 420 dpi, 60 Hz.
 - Build: Flutter profile mode using Impeller/OpenGLES. Captured Dart VM timeline
   `Frame` and `Rasterizer::DoDraw` slices after clearing the timeline for each
-  interaction.
-- Workloads: five vertical Explore-list swipes; opening the first design
-  detail; and four freehand-canvas strokes.
+  interaction. Each workload was repeated three times in a bounded window.
+- Workloads: three 350 ms vertical Explore-list swipes; opening the first
+  design detail and allowing 1.5 seconds to settle; and four 500 ms
+  freehand-canvas strokes.
 - The 60 Hz frame interval is 16.67 ms. Values below are paired timeline slice
-  durations, not release-device acceptance thresholds.
+  durations pooled across the three traces, not release-device acceptance
+  thresholds. The trace windows were 2.12–2.28 seconds for Explore,
+  1.60–1.63 seconds for detail, and 3.31–3.56 seconds for Creator.
 
 | Workload | UI `Frame` slices | UI p95 / max; over 16.67 ms | Raster slices | Raster p95 / max; over 16.67 ms |
 | --- | ---: | --- | ---: | --- |
-| Explore scroll | 127 | 15.77 / 23.72 ms; 5 | 127 | 38.40 / 129.08 ms; 97 (14 over 33.3 ms) |
-| Design detail | 20 | 19.66 / 28.91 ms; 2 | 20 | 28.34 / 35.38 ms; 12 (1 over 33.3 ms) |
-| Creator strokes | 76 | 16.99 / 34.39 ms; 5 | 76 | 32.87 / 46.97 ms; 41 (4 over 33.3 ms) |
+| Explore scroll | 232 | 13.97 / 27.55 ms; 8 | 232 | 32.98 / 61.39 ms; 135 (11 over 33.3 ms) |
+| Design detail | 64 | 13.03 / 21.38 ms; 2 | 64 | 34.21 / 86.80 ms; 32 (4 over 33.3 ms) |
+| Creator strokes | 229 | 21.19 / 28.05 ms; 26 | 233 | 39.99 / 63.12 ms; 161 (23 over 33.3 ms) |
 
 ### Interpretation and next
-- These are single exploratory captures on an emulator hosted by an Intel
-  Core i5-9300H Windows machine. Raster timings are especially sensitive to
-  emulator and host graphics overhead; they do not establish an app-side
-  bottleneck or a physical-device performance result.
-- Capture windows included idle time and tool-driven interactions, and the
-  design-detail sample is small. Do not compare these as statistically robust
-  scenario benchmarks or set budgets from them.
-- Repeat the captures with bounded, repeatable interaction windows on an
-  agreed mid-range or lowest-supported physical Android device. If raster
-  misses persist there, use a DevTools timeline to locate the expensive work
-  before choosing a narrowly targeted optimization.
+- In all nine traces, individual UI `BUILD`, `LAYOUT` and `PAINT` slices stayed
+  below 16.67 ms. The longest raster slices were nested under engine/GLES
+  submission events such as `SurfaceFrame::Submit` and `ReactorGLES::React`;
+  this does not isolate an app-owned rendering bottleneck.
+- These are still exploratory captures on an emulator hosted by an Intel
+  Core i5-9300H Windows machine. Per-trace p95 values varied, particularly for
+  detail rendering. Emulator and host graphics overhead prevent treating them
+  as physical-device results or setting budgets from them.
+- Next, repeat on an agreed mid-range or lowest-supported physical Android
+  device. If raster misses persist there, use a DevTools timeline to locate
+  app-owned expensive work before choosing a narrowly targeted optimization.
