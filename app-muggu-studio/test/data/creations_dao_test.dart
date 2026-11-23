@@ -142,6 +142,89 @@ void main() {
       },
     );
 
+    test(
+      'unsupported recipe versions preserve saved geometry snapshots',
+      () async {
+        final directory = await Directory.systemTemp.createTemp(
+          'muggu_unsupported_recipe_version_test_',
+        );
+        final databasePath =
+            '${directory.path}${Platform.pathSeparator}creations.db';
+        final database = AppDatabase(
+          factory: databaseFactoryFfi,
+          databasePath: databasePath,
+        );
+        addTearDown(() async {
+          await database.close();
+          await directory.delete(recursive: true);
+        });
+
+        final creation = createSampleCreation(id: 'unsupported_recipe_version')
+            .copyWith(
+              recipe: const PatternRecipe(
+                generatorId: PatternGeneratorRegistry.radialFlowerId,
+                version: PatternGeneratorRegistry.recipeVersion + 1,
+                parameters: {'petalCount': 8},
+              ),
+            );
+        final dao = CreationsDao(database);
+        await dao.saveCreation(creation);
+
+        final loaded = await dao.loadCreation(creation.id);
+        expect(loaded, isNotNull);
+        final restored = loaded!;
+        expect(
+          restored.recipe?.version,
+          PatternGeneratorRegistry.recipeVersion + 1,
+        );
+        expect(
+          () => const PatternGeneratorRegistry().generate(restored.recipe!),
+          throwsFormatException,
+        );
+        expect(
+          restored.paths.map((path) => path.toJson()).toList(),
+          equals(creation.paths.map((path) => path.toJson()).toList()),
+        );
+      },
+    );
+
+    test('malformed persisted recipe JSON reports its field', () async {
+      final directory = await Directory.systemTemp.createTemp(
+        'muggu_invalid_recipe_json_test_',
+      );
+      final databasePath =
+          '${directory.path}${Platform.pathSeparator}creations.db';
+      final database = AppDatabase(
+        factory: databaseFactoryFfi,
+        databasePath: databasePath,
+      );
+      addTearDown(() async {
+        await database.close();
+        await directory.delete(recursive: true);
+      });
+
+      final dao = CreationsDao(database);
+      final creation = createSampleCreation(id: 'invalid_recipe_json');
+      await dao.saveCreation(creation);
+      await (await database.database).update(
+        'creations',
+        {'recipe_json': '{invalid-json'},
+        where: 'id = ?',
+        whereArgs: [creation.id],
+      );
+
+      await expectLater(
+        dao.loadCreation(creation.id),
+        throwsA(
+          isA<FormatException>().having(
+            (error) => error.message,
+            'message',
+            contains('recipe_json is invalid'),
+          ),
+        ),
+      );
+    });
+
     test('unsupported persisted creation types are rejected', () async {
       final directory = await Directory.systemTemp.createTemp(
         'muggu_invalid_creation_type_test_',

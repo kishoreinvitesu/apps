@@ -91,8 +91,14 @@ class UserCreation {
 
     PatternRecipe? recipe;
     if (map['recipe_json'] != null) {
-      final recipeMap = jsonDecode(map['recipe_json'] as String);
-      recipe = PatternRecipe.fromJson(recipeMap, 'recipe');
+      final recipeJson = map['recipe_json'] as String;
+      Object? recipeValue;
+      try {
+        recipeValue = jsonDecode(recipeJson);
+      } on FormatException catch (error) {
+        throw FormatException('recipe_json is invalid: ${error.message}');
+      }
+      recipe = PatternRecipe.fromJson(recipeValue, 'recipe');
     }
 
     List<DrawnStroke>? strokes;

@@ -1146,6 +1146,9 @@ generated catalogue examples until their evidence and approval are recorded.
   dot-grid-loop recipe produces identical recipe, grid and path snapshots.
 - Added a persistence regression proving saved path geometry remains loadable
   when its recipe generator is unavailable in the current registry.
+- Unsupported recipe versions remain readable as metadata without replacing
+  their saved geometry snapshots; malformed recipe JSON now reports the field
+  that could not be decoded.
 - Unsupported persisted creation types now fail explicitly instead of being
   silently interpreted as templates.
 - Corrected formatting drift in nine Dart files that caused the GitHub
@@ -1159,9 +1162,9 @@ generated catalogue examples until their evidence and approval are recorded.
 ### Validation
 - `flutter test test/features/pattern_generator_registry_test.dart` — passed;
   all 8 registry tests.
-- `flutter test test/data/creations_dao_test.dart` — passed; all 6 DAO tests
-  after adding the invalid-type regression.
-- `flutter test` — passed; all 93 tests.
+- `flutter test test/data/creations_dao_test.dart` — passed; all 8 DAO tests,
+  including unsupported-version and malformed-recipe regressions.
+- `flutter test` — passed; all 95 tests.
 - `flutter analyze` — passed with no issues.
 - `dart format --output=none --set-exit-if-changed lib test` — passed; all
   67 Dart files are formatted.
