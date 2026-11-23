@@ -83,8 +83,17 @@ class GenerateSampleCatalogTests(unittest.TestCase):
             )
         )
         for design in catalog:
+            self.assertIsNotNone(design["grid"])
+            grid_dots = {
+                tuple(point)
+                for point in design["grid"]["dots"]
+            }
             for path in design["paths"]:
                 for command in path["commands"]:
+                    if command["type"] == "close":
+                        continue
+                    self.assertIn(command["type"], ("moveTo", "lineTo"))
+                    self.assertIn((command["x"], command["y"]), grid_dots)
                     for key in (
                         "x",
                         "y",

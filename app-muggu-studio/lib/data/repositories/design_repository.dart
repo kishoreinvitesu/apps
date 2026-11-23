@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math' as math;
 
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -89,12 +90,64 @@ class DesignRepository {
           ? _migrateV2Design(rawDesign, 'designs[$index]')
           : rawDesign;
       final design = MugguDesign.fromJson(normalizedDesign, 'designs[$index]');
+      if (schemaVersion == catalogSchemaVersion) {
+        _validateDotConnectivity(design, 'designs[$index]');
+      }
       if (!ids.add(design.id)) {
         throw FormatException('Duplicate design id: ${design.id}.');
       }
       designs.add(design);
     }
     return List.unmodifiable(designs);
+  }
+
+  static void _validateDotConnectivity(MugguDesign design, String fieldName) {
+    final grid = design.grid;
+    if (grid == null) {
+      throw FormatException('$fieldName.grid is required for dot designs.');
+    }
+
+    bool isGridDot(double x, double y) => grid.dots.any(
+      (dot) => (dot.x - x).abs() <= 1e-9 && (dot.y - y).abs() <= 1e-9,
+    );
+
+    for (var pathIndex = 0; pathIndex < design.paths.length; pathIndex++) {
+      final path = design.paths[pathIndex];
+      for (
+        var commandIndex = 0;
+        commandIndex < path.commands.length;
+        commandIndex++
+      ) {
+        final command = path.commands[commandIndex];
+        switch (command.type) {
+          case PathCommandType.moveTo ||
+              PathCommandType.lineTo ||
+              PathCommandType.quadraticTo ||
+              PathCommandType.cubicTo:
+            if (!isGridDot(command.x!, command.y!)) {
+              throw FormatException(
+                '$fieldName.paths[$pathIndex].commands[$commandIndex] '
+                'must end at a grid dot.',
+              );
+            }
+          case PathCommandType.arcTo:
+            final startAngle = command.startAngle!;
+            final endAngle = startAngle + command.sweepAngle!;
+            final startX = command.x! + command.radiusX! * math.cos(startAngle);
+            final startY = command.y! + command.radiusY! * math.sin(startAngle);
+            final endX = command.x! + command.radiusX! * math.cos(endAngle);
+            final endY = command.y! + command.radiusY! * math.sin(endAngle);
+            if (!isGridDot(startX, startY) || !isGridDot(endX, endY)) {
+              throw FormatException(
+                '$fieldName.paths[$pathIndex].commands[$commandIndex] '
+                'must connect grid dots.',
+              );
+            }
+          case PathCommandType.close:
+            break;
+        }
+      }
+    }
   }
 
   static Object? _migrateV2Design(Object? value, String fieldName) {

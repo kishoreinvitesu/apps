@@ -6,9 +6,11 @@ architecture, content, implementation rules and release acceptance.
 **Status:** The Creator now includes deterministic template generators and a
 freehand canvas, with local creation storage and export/share support. The
 bundled catalogue contains 60 design samples, including 40 original geometric
-artworks. None count toward the reviewed-content target until their rights,
-cultural, localization and lesson reviews are approved. See the Development
-Log for verified implementation status.
+artworks. All designs use visible dot grids and connect path endpoints to
+grid dots. The original patterns are not verified South Indian traditions;
+none count toward the reviewed-content target until rights, cultural,
+localization and lesson reviews are approved. See the Development Log for
+verified implementation status.
 
 **Working product name:** Muggu Studio\
 **Platform:** Android first\

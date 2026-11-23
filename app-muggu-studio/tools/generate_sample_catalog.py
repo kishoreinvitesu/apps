@@ -343,16 +343,16 @@ def build_catalog(radial_petals=8, grid_size=5, grid_layout="square"):
         "Interlocked Square Medallion",
     ]
     sample_descriptions = [
-        "An original square frame crossed by a centered diamond and axes.",
-        "An original eight-point star framed by a simple compass cross.",
-        "Three nested hexagons joined by evenly spaced spokes.",
-        "A balanced eight-petal flower around a small central ring.",
-        "Concentric rings connected by eight radial lines.",
-        "Two overlapping triangles surrounding a six-sided center.",
-        "A single-line square spiral moving toward its center.",
-        "Rotated square frames joined into a four-way lattice.",
-        "A twelve-point star with nested circular details.",
-        "Crossed square and diamond frames around a compact center.",
+        "A dot-guided square frame crossed by a centered diamond and axes.",
+        "A dot-guided eight-point star framed by a compass cross.",
+        "Three nested dot-guided hexagons joined by evenly spaced spokes.",
+        "A dot-guided eight-petal flower around a small central ring.",
+        "Concentric dot-guided rings connected by radial lines.",
+        "Overlapping dot-guided triangles surrounding a six-sided center.",
+        "A dot-guided square spiral moving toward its center.",
+        "Rotated dot-guided square frames joined into a four-way lattice.",
+        "A dot-guided twelve-point star with nested circular details.",
+        "Dot-guided square and diamond frames around a compact center.",
     ]
     tags = [
         "diamond", "star", "hexagon", "radial", "triangle",
@@ -384,8 +384,8 @@ def build_catalog(radial_petals=8, grid_size=5, grid_layout="square"):
     radial_id = "generated_radial_001"
     radial = _base_design(
         radial_id,
-        f"Original Radial Pattern {radial_petals}",
-        "An original geometric flower generated from reusable parameters.",
+        "Original Dot-grid Bloom",
+        "An original flower pattern drawn from guide-dot positions.",
         "easy",
         radial_flower(radial_petals),
         ["generated", "radial", "flower", "geometric"],
@@ -540,7 +540,10 @@ def build_catalog(radial_petals=8, grid_size=5, grid_layout="square"):
         design_item["grid"] = grid_obj
         designs.append(design_item)
 
-    return _original_geometric_designs() + designs
+    return [
+        _attach_dot_grid(design)
+        for design in _original_geometric_designs() + designs
+    ]
 
 
 def _original_design(design_id, name, description, difficulty, paths, family):
@@ -548,8 +551,9 @@ def _original_design(design_id, name, description, difficulty, paths, family):
         design_id,
         name,
         (
-            f"Original geometric artwork: {description} "
-            "This is an app-made sample, not a documented traditional design."
+            f"Original dot-grid artwork: {description} "
+            "Lines connect visible guide dots. This app-made sample is not a "
+            "documented traditional design."
         ),
         difficulty,
         paths,
@@ -824,6 +828,54 @@ def _original_geometric_designs():
         ))
 
     return designs
+
+
+def _attach_dot_grid(design):
+    if design["grid"] is not None:
+        return design
+
+    grid = dot_grid(13, 13, margin=0.05)
+    snapped_paths = []
+    for path in design["paths"]:
+        points = _flatten_path(path["commands"], curve_steps=32)
+        snapped_points = []
+        for x, y in points:
+            nearest_dot = min(
+                grid["dots"],
+                key=lambda dot: (dot[0] - x) ** 2 + (dot[1] - y) ** 2,
+            )
+            point = [nearest_dot[0], nearest_dot[1]]
+            if not snapped_points or snapped_points[-1] != point:
+                snapped_points.append(point)
+
+        closed = path["commands"][-1]["type"] == "close"
+        if (
+            closed
+            and len(snapped_points) > 1
+            and snapped_points[-1] == snapped_points[0]
+        ):
+            snapped_points.pop()
+        if len(snapped_points) < 2:
+            raise ValueError(
+                f"{design['id']}.{path['id']} collapsed when snapped to dots."
+            )
+        snapped_paths.append(
+            _polyline_path(
+                path["id"],
+                path["groupId"],
+                snapped_points,
+                closed,
+            )
+        )
+
+    design["grid"] = grid
+    design["paths"] = snapped_paths
+    design["recipe"] = None
+    description = design["localizedDescription"]["en"]
+    design["localizedDescription"]["en"] = (
+        f"{description} Lines connect visible guide dots."
+    )
+    return design
 
 
 def dot_grid_chikka_star(grid):

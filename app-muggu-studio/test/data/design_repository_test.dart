@@ -17,6 +17,20 @@ void main() {
 
       expect(designs, hasLength(60));
       for (final design in designs) {
+        expect(design.grid, isNotNull);
+        final gridDots = design.grid!.dots;
+        for (final path in design.paths) {
+          for (final command in path.commands) {
+            if (command.type.name == 'close') {
+              continue;
+            }
+            expect(command.type.name, anyOf('moveTo', 'lineTo'));
+            expect(
+              gridDots.any((dot) => dot.x == command.x && dot.y == command.y),
+              isTrue,
+            );
+          }
+        }
         expect(design.region, isNull);
         expect(design.tradition, isNull);
         expect(design.rightsReview.status, ReviewStatus.pending);
@@ -37,13 +51,8 @@ void main() {
       final radialDesign = designs.singleWhere(
         (design) => design.id == 'generated_radial_001',
       );
-      expect(radialDesign.recipe?.generatorId, 'radial_flower');
-      expect(
-        radialDesign.paths.first.commands.any(
-          (command) => command.type.name == 'cubicTo',
-        ),
-        isTrue,
-      );
+      expect(radialDesign.grid?.dots, hasLength(169));
+      expect(radialDesign.recipe, isNull);
       final dotGridDesign = designs.singleWhere(
         (design) => design.id == 'generated_dot_grid_001',
       );
@@ -51,6 +60,48 @@ void main() {
       expect(dotGridDesign.recipe?.generatorId, 'dot_grid_diamonds');
     },
   );
+
+  test('schema 3 requires every path endpoint to use a grid dot', () async {
+    final catalog = jsonDecode(
+      await rootBundle.loadString(catalogAssetPath),
+    ) as Map<String, dynamic>;
+    final firstDesign = Map<String, dynamic>.from(
+      (catalog['designs'] as List).first as Map,
+    );
+
+    expect(
+      () => DesignRepository.parseCatalog(
+        jsonEncode({
+          ...catalog,
+          'designs': [
+            {...firstDesign, 'grid': null},
+          ],
+        }),
+      ),
+      throwsFormatException,
+    );
+
+    final firstPath = Map<String, dynamic>.from(
+      (firstDesign['paths'] as List).first as Map,
+    );
+    final commands = [
+      for (final command in firstPath['commands'] as List)
+        Map<String, dynamic>.from(command as Map),
+    ];
+    commands[0] = {...commands[0], 'x': 0.123, 'y': 0.123};
+    firstPath['commands'] = commands;
+    firstDesign['paths'] = [firstPath];
+
+    expect(
+      () => DesignRepository.parseCatalog(
+        jsonEncode({
+          ...catalog,
+          'designs': [firstDesign],
+        }),
+      ),
+      throwsFormatException,
+    );
+  });
 
   test('search matches synonym tags and combined filters', () async {
     final designs = await DesignRepository().loadCatalog();

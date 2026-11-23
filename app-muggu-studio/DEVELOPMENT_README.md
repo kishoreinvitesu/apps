@@ -463,7 +463,8 @@ as traditional, instructional or publication-ready.
 - The bundled catalogue contains 60 design samples, including 40 new
   app-generated original geometric artworks. Rights, cultural, localization
   and lesson reviews remain pending; do not count any sample toward the
-  reviewed-content milestone until evidence and approval are recorded.
+  reviewed-content milestone until evidence and approval are recorded. Every
+  design now has a visible dot grid and grid-anchored path endpoints.
 - The generator registry currently uses recipe version 1. Catalogue geometry
   uses schema version 3 and accepts schema 2 through its migration path. The
   local SQLite database is version 2, with a tested migration from version 1.
@@ -1226,3 +1227,35 @@ generated catalogue examples until their evidence and approval are recorded.
 - `dart format --output=none --set-exit-if-changed lib test` — passed; all
   69 Dart files are formatted.
 - `git diff --check` — passed.
+
+## 2026-11-24 — Made all catalog designs dot-guided
+
+### Implemented
+- Added a visible dot grid to every catalog design and snapped non-grid path
+  vertices to its dots; existing dot-grid patterns retain their authored grids.
+- The schema 3 catalog parser now rejects designs without a dot grid or with
+  path endpoints that do not land on grid dots.
+- Kept new app-made patterns clearly unverified; this structural update does
+  not certify them as authentic South Indian rangolis.
+
+### Validation
+- `python -m unittest discover -s tools -p 'test_*.py' -v` — passed; all 6
+  generator tests verify dot grids and endpoint alignment.
+- `python tools/generate_sample_catalog.py --check` — passed; catalog and
+  decoded thumbnail artwork match generated output.
+- `flutter test` — passed; all 102 tests, including missing-grid and
+  off-grid-endpoint rejection.
+- `flutter analyze` — passed with no issues.
+- `dart format --output=none --set-exit-if-changed lib test` — passed; all
+  69 Dart files are formatted.
+- `flutter build apk --debug` — passed.
+- Installed and launched the debug APK on `emulator-5554`.
+- `git diff --check` — passed.
+
+### Remaining
+- Keep rights, cultural, localization and lesson reviews pending until the
+  required evidence and human approvals are supplied.
+- Publish an approved privacy policy and replace the temporary Settings
+  action before release.
+- Continue Phase 7 maintenance as features evolve. Physical-device
+  performance/accessibility checks and Phase 8 release gates remain deferred.
