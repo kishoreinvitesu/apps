@@ -44,11 +44,18 @@ class DrawnStroke {
     ];
     final colorVal = json['color'] as int;
     final strokeWidth = (json['strokeWidth'] as num).toDouble();
-    final modeName = json['symmetryMode'] as String? ?? 'none';
-    final symmetryMode = SymmetryMode.values.firstWhere(
-      (m) => m.name == modeName,
-      orElse: () => SymmetryMode.none,
-    );
+    final rawMode = json['symmetryMode'];
+    if (rawMode != null && rawMode is! String) {
+      throw FormatException('symmetryMode must be a string.');
+    }
+    final modeName = rawMode ?? 'none';
+    final symmetryMode = switch (modeName) {
+      'none' => SymmetryMode.none,
+      'vertical' => SymmetryMode.vertical,
+      'horizontal' => SymmetryMode.horizontal,
+      'fourWay' => SymmetryMode.fourWay,
+      _ => throw FormatException('Unsupported symmetryMode: $modeName.'),
+    };
     return DrawnStroke(
       points: points,
       color: Color(colorVal),

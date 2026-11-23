@@ -253,6 +253,47 @@ void main() {
       await expectLater(dao.loadCreation(creation.id), throwsFormatException);
     });
 
+    test('unsupported persisted stroke symmetry modes are rejected', () async {
+      final directory = await Directory.systemTemp.createTemp(
+        'muggu_invalid_stroke_symmetry_test_',
+      );
+      final databasePath =
+          '${directory.path}${Platform.pathSeparator}creations.db';
+      final database = AppDatabase(
+        factory: databaseFactoryFfi,
+        databasePath: databasePath,
+      );
+      addTearDown(() async {
+        await database.close();
+        await directory.delete(recursive: true);
+      });
+
+      final dao = CreationsDao(database);
+      final creation = createSampleCreation(id: 'invalid_stroke_symmetry');
+      await dao.saveCreation(creation);
+      await (await database.database).update(
+        'creations',
+        {
+          'strokes_json':
+              '[{"points":[[0.2,0.2],[0.8,0.8]],"color":4294967295,'
+              '"strokeWidth":4.0,"symmetryMode":"diagonal"}]',
+        },
+        where: 'id = ?',
+        whereArgs: [creation.id],
+      );
+
+      await expectLater(
+        dao.loadCreation(creation.id),
+        throwsA(
+          isA<FormatException>().having(
+            (error) => error.message,
+            'message',
+            contains('symmetryMode'),
+          ),
+        ),
+      );
+    });
+
     test('creations persist across database restarts', () async {
       final directory = await Directory.systemTemp.createTemp(
         'muggu_creations_restart_',
