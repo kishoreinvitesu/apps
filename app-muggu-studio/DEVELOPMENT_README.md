@@ -1159,11 +1159,10 @@ generated catalogue examples until their evidence and approval are recorded.
   all 8 registry tests.
 - `flutter test test/data/creations_dao_test.dart` — passed; all 6 DAO tests
   after adding the invalid-type regression.
+- `flutter test` — passed; all 93 tests.
 - `flutter analyze` — passed with no issues.
 - Formatting passed for `user_creation.dart` and `creations_dao_test.dart`.
 - `git diff --check` — passed.
-- The full Flutter suite last passed 90 tests on 2026-11-23; it was not rerun
-  for these focused persistence changes.
 
 ### Remaining
 - Keep rights, cultural, localization and lesson reviews pending until the
