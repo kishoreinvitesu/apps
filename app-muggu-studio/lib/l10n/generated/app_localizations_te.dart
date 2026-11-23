@@ -278,6 +278,24 @@ class AppLocalizationsTe extends AppLocalizations {
   String get dotGridDiamonds => 'చుక్కల గ్రిడ్ డైమండ్స్';
 
   @override
+  String get dotGridLoops => 'చుక్కల గ్రిడ్ వలయాలు';
+
+  @override
+  String get parabolicSikku => 'పరబాలిక్ అల్లిక వంపులు';
+
+  @override
+  String get rangoliMotifs => 'అసలు జ్యామితీయ ఆకృతులు';
+
+  @override
+  String get floralMandalaMotif => 'పుష్ప మండలం';
+
+  @override
+  String get peacockMotif => 'నెమలి ఆకృతి';
+
+  @override
+  String get paisleyMotif => 'పైస్లీ ఆకృతి';
+
+  @override
   String get petals => 'రేకులు';
 
   @override
@@ -312,7 +330,7 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get creatorPreviewNotice =>
-      'ఈ ప్రివ్యూ సవరించదగిన పారామితుల నుండి రూపొందించబడింది. సేవ్ చేయడం, ఎగుమతి చేయడం తదుపరి నవీకరణలో ప్రణాళిక చేయబడ్డాయి.';
+      'సవరించగల పారామితులతో రూపొందించబడింది. స్థానికంగా సేవ్ చేయండి లేదా ఎగుమతి చేసి పంచుకోండి.';
 
   @override
   String get dotGridSizeHelper =>

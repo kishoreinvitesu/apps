@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:muggu_studio/app/app.dart';
 import 'package:muggu_studio/core/localization/locale_controller.dart';
+import 'package:muggu_studio/core/preferences/preferences_storage.dart';
+import 'package:muggu_studio/core/preferences/user_preferences.dart';
 import 'package:muggu_studio/data/local/favorites_dao.dart';
 import 'package:muggu_studio/data/models/muggu_design.dart';
 import 'package:muggu_studio/data/repositories/design_repository.dart';
@@ -35,6 +37,25 @@ class _MemoryFavorites implements FavoritesStore {
   }
 }
 
+class _CompletedOnboardingStorage implements PreferencesStorage {
+  UserPreferences _preferences = const UserPreferences(
+    onboardingComplete: true,
+  );
+
+  @override
+  Future<UserPreferences> readPreferences() async => _preferences;
+
+  @override
+  Future<void> savePreferences(UserPreferences prefs) async {
+    _preferences = prefs;
+  }
+
+  @override
+  Future<void> clearPreferences() async {
+    _preferences = const UserPreferences();
+  }
+}
+
 void main() {
   testWidgets('all primary destinations are reachable', (tester) async {
     final storage = _MemoryLocaleStorage();
@@ -42,6 +63,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          preferencesStorageProvider.overrideWithValue(
+            _CompletedOnboardingStorage(),
+          ),
           localeStorageProvider.overrideWithValue(storage),
           initialLocaleProvider.overrideWithValue(const Locale('en')),
           favoritesDaoProvider.overrideWithValue(_MemoryFavorites()),
@@ -202,6 +226,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          preferencesStorageProvider.overrideWithValue(
+            _CompletedOnboardingStorage(),
+          ),
           localeStorageProvider.overrideWithValue(storage),
           initialLocaleProvider.overrideWithValue(const Locale('en')),
           favoritesDaoProvider.overrideWithValue(_MemoryFavorites()),
@@ -244,6 +271,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          preferencesStorageProvider.overrideWithValue(
+            _CompletedOnboardingStorage(),
+          ),
           localeStorageProvider.overrideWithValue(_MemoryLocaleStorage()),
           initialLocaleProvider.overrideWithValue(const Locale('en')),
           favoritesDaoProvider.overrideWithValue(_MemoryFavorites()),
@@ -271,6 +301,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          preferencesStorageProvider.overrideWithValue(
+            _CompletedOnboardingStorage(),
+          ),
           localeStorageProvider.overrideWithValue(_MemoryLocaleStorage()),
           initialLocaleProvider.overrideWithValue(const Locale('en')),
           favoritesDaoProvider.overrideWithValue(_MemoryFavorites()),

@@ -115,6 +115,53 @@ void main() {
       },
     );
 
+    testWidgets('exposes curved generators and selectable Rangoli motifs', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(800, 1800);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(_createScreenTestApp());
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const ValueKey('generator-dot_grid_loops')));
+      await tester.pumpAndSettle();
+      var preview = tester.widget<VectorPreview>(
+        find.byKey(const ValueKey('pattern-preview')),
+      );
+      expect(preview.grid?.dots, hasLength(25));
+      expect(preview.paths, hasLength(25));
+
+      await tester.tap(find.byKey(const ValueKey('generator-parabolic_sikku')));
+      await tester.pumpAndSettle();
+      preview = tester.widget<VectorPreview>(
+        find.byKey(const ValueKey('pattern-preview')),
+      );
+      expect(preview.paths, hasLength(5));
+
+      await tester.tap(find.byKey(const ValueKey('generator-rangoli_motifs')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('rangoli-motif-paisley')));
+      await tester.pumpAndSettle();
+      preview = tester.widget<VectorPreview>(
+        find.byKey(const ValueKey('pattern-preview')),
+      );
+      expect(preview.grid, isNull);
+      expect(preview.paths, hasLength(2));
+
+      await tester.tap(find.byKey(const ValueKey('creator-save')));
+      await tester.pumpAndSettle();
+      final titleField = tester.widget<TextField>(
+        find.byKey(const ValueKey('creation-title-input')),
+      );
+      expect(titleField.controller?.text, 'Paisley motif');
+      await tester.tap(find.text('Cancel'));
+    });
+
     testWidgets('undo, redo, and reset restore parameter states predictably', (
       tester,
     ) async {

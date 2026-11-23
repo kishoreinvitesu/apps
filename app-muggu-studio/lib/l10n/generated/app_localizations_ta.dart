@@ -278,6 +278,24 @@ class AppLocalizationsTa extends AppLocalizations {
   String get dotGridDiamonds => 'புள்ளிக் கட்ட வைரங்கள்';
 
   @override
+  String get dotGridLoops => 'புள்ளிக் கட்ட வளையங்கள்';
+
+  @override
+  String get parabolicSikku => 'பரபோலிக் பின்னல் வளைவுகள்';
+
+  @override
+  String get rangoliMotifs => 'அசல் வடிவியல் வடிவங்கள்';
+
+  @override
+  String get floralMandalaMotif => 'மலர் மண்டலம்';
+
+  @override
+  String get peacockMotif => 'மயில் வடிவம்';
+
+  @override
+  String get paisleyMotif => 'பைஸ்லி வடிவம்';
+
+  @override
   String get petals => 'இதழ்கள்';
 
   @override
@@ -312,7 +330,7 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get creatorPreviewNotice =>
-      'இந்த முன்னோட்டம் மாற்றக்கூடிய அளவுருக்களிலிருந்து உருவாக்கப்பட்டது. சேமிப்பதும் பகிர்வதும் அடுத்த புதுப்பிப்பில் திட்டமிடப்பட்டுள்ளது.';
+      'மாற்றக்கூடிய அளவுருக்களிலிருந்து உருவாக்கப்பட்டது. உள்ளூரில் சேமிக்கவும் அல்லது ஏற்றுமதி செய்து பகிரவும்.';
 
   @override
   String get dotGridSizeHelper =>

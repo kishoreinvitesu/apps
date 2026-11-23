@@ -277,6 +277,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dotGridDiamonds => 'Dot-grid diamonds';
 
   @override
+  String get dotGridLoops => 'Dot-grid loops';
+
+  @override
+  String get parabolicSikku => 'Parabolic weave curves';
+
+  @override
+  String get rangoliMotifs => 'Original geometric motifs';
+
+  @override
+  String get floralMandalaMotif => 'Floral mandala';
+
+  @override
+  String get peacockMotif => 'Peacock motif';
+
+  @override
+  String get paisleyMotif => 'Paisley motif';
+
+  @override
   String get petals => 'Petals';
 
   @override
@@ -311,7 +329,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get creatorPreviewNotice =>
-      'This preview is generated from editable pattern parameters. Saving and export are planned for a later update.';
+      'Generated from editable parameters. Save locally or export and share.';
 
   @override
   String get dotGridSizeHelper =>

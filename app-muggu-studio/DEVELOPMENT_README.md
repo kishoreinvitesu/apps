@@ -1003,3 +1003,32 @@ generated catalogue examples until their evidence and approval are recorded.
 - **Curved Bézier & Parabolic Generator Sprint**:
   - Curved dot-grid generator algorithms (loops around dots, parabolic Sikku Kolam curves).
   - Complex Rangoli motifs (peacock, floral mandalas, paisley).
+
+## 2026-11-23 — Curved Generator and Motif Sprint
+
+### Implemented
+- Added versioned recipes for dot-grid loops, parabolic weave curves and
+  original geometric motifs (floral mandala, peacock and paisley).
+- Dot-grid loops produce one closed cubic curve around every dot. Parabolic
+  weave patterns use bounded quadratic curves across each row. The three
+  motif families use normalized cubic paths and remain editable in Create.
+- Added Create-screen selection and motif controls. Saved recipes retain their
+  generator parameters, and export/share uses the selected pattern title.
+- Added English, Telugu and Tamil labels; corrected the preview notice to
+  describe the existing save and export actions.
+- Added registry tests for geometry parsing/bounds and widget tests for
+  generator selection, motif switching and save-title selection.
+
+### Verification and limitations
+- The full Flutter test suite passes (90 tests), and analyzer checks for the
+  changed Dart files pass. Project-wide `flutter analyze` still reports five
+  existing diagnostics in the router, settings screen and export test.
+- These are original geometric exercises, not culturally verified depictions
+  of a specific region or tradition. Content provenance and cultural review
+  gates in Phase 5 remain open.
+
+### Next
+- Begin **Phase 6: Make the application feel smooth and accessible** with the
+  documented cold/warm launch, scrolling, detail-rendering, Creator-input,
+  memory and asset-size baseline. Record the device/API and reproducible steps
+  before choosing performance budgets or optimizing.

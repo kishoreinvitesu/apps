@@ -610,6 +610,42 @@ abstract class AppLocalizations {
   /// **'Dot-grid diamonds'**
   String get dotGridDiamonds;
 
+  /// No description provided for @dotGridLoops.
+  ///
+  /// In en, this message translates to:
+  /// **'Dot-grid loops'**
+  String get dotGridLoops;
+
+  /// No description provided for @parabolicSikku.
+  ///
+  /// In en, this message translates to:
+  /// **'Parabolic weave curves'**
+  String get parabolicSikku;
+
+  /// No description provided for @rangoliMotifs.
+  ///
+  /// In en, this message translates to:
+  /// **'Original geometric motifs'**
+  String get rangoliMotifs;
+
+  /// No description provided for @floralMandalaMotif.
+  ///
+  /// In en, this message translates to:
+  /// **'Floral mandala'**
+  String get floralMandalaMotif;
+
+  /// No description provided for @peacockMotif.
+  ///
+  /// In en, this message translates to:
+  /// **'Peacock motif'**
+  String get peacockMotif;
+
+  /// No description provided for @paisleyMotif.
+  ///
+  /// In en, this message translates to:
+  /// **'Paisley motif'**
+  String get paisleyMotif;
+
   /// No description provided for @petals.
   ///
   /// In en, this message translates to:
@@ -679,7 +715,7 @@ abstract class AppLocalizations {
   /// No description provided for @creatorPreviewNotice.
   ///
   /// In en, this message translates to:
-  /// **'This preview is generated from editable pattern parameters. Saving and export are planned for a later update.'**
+  /// **'Generated from editable parameters. Save locally or export and share.'**
   String get creatorPreviewNotice;
 
   /// No description provided for @dotGridSizeHelper.

@@ -31,6 +31,7 @@ class _CreatorState {
     required this.petalWidth,
     required this.gridSize,
     required this.gridLayout,
+    required this.rangoliMotif,
   });
 
   static const initial = _CreatorState(
@@ -40,6 +41,7 @@ class _CreatorState {
     petalWidth: 0.095,
     gridSize: 5,
     gridLayout: 'square',
+    rangoliMotif: 'floral_mandala',
   );
 
   final String generatorId;
@@ -48,6 +50,7 @@ class _CreatorState {
   final double petalWidth;
   final int gridSize;
   final String gridLayout;
+  final String rangoliMotif;
 
   _CreatorState copyWith({
     String? generatorId,
@@ -56,6 +59,7 @@ class _CreatorState {
     double? petalWidth,
     int? gridSize,
     String? gridLayout,
+    String? rangoliMotif,
   }) {
     return _CreatorState(
       generatorId: generatorId ?? this.generatorId,
@@ -64,6 +68,7 @@ class _CreatorState {
       petalWidth: petalWidth ?? this.petalWidth,
       gridSize: gridSize ?? this.gridSize,
       gridLayout: gridLayout ?? this.gridLayout,
+      rangoliMotif: rangoliMotif ?? this.rangoliMotif,
     );
   }
 
@@ -77,7 +82,8 @@ class _CreatorState {
           (outerRadius - other.outerRadius).abs() < 0.0001 &&
           (petalWidth - other.petalWidth).abs() < 0.0001 &&
           gridSize == other.gridSize &&
-          gridLayout == other.gridLayout;
+          gridLayout == other.gridLayout &&
+          rangoliMotif == other.rangoliMotif;
 
   @override
   int get hashCode => Object.hash(
@@ -87,6 +93,7 @@ class _CreatorState {
     petalWidth.toStringAsFixed(3),
     gridSize,
     gridLayout,
+    rangoliMotif,
   );
 }
 
@@ -115,9 +122,9 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
         _drawingController.loadStrokes(initial.strokes!);
       } else if (initial.type == CreationType.template &&
           initial.recipe != null) {
-        final p = initial.recipe!.parameters;
-        if (initial.recipe!.generatorId ==
-            PatternGeneratorRegistry.radialFlowerId) {
+        final recipe = initial.recipe!;
+        final p = recipe.parameters;
+        if (recipe.generatorId == PatternGeneratorRegistry.radialFlowerId) {
           _state = _CreatorState(
             generatorId: PatternGeneratorRegistry.radialFlowerId,
             petalCount: (p['petalCount'] as num?)?.toInt() ?? 8,
@@ -125,15 +132,28 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
             petalWidth: (p['petalWidth'] as num?)?.toDouble() ?? 0.095,
             gridSize: 5,
             gridLayout: 'square',
+            rangoliMotif: 'floral_mandala',
+          );
+        } else if (recipe.generatorId ==
+            PatternGeneratorRegistry.rangoliMotifsId) {
+          _state = _CreatorState(
+            generatorId: recipe.generatorId,
+            petalCount: 8,
+            outerRadius: 0.36,
+            petalWidth: 0.095,
+            gridSize: 5,
+            gridLayout: 'square',
+            rangoliMotif: (p['motif'] as String?) ?? 'floral_mandala',
           );
         } else {
           _state = _CreatorState(
-            generatorId: PatternGeneratorRegistry.dotGridDiamondsId,
+            generatorId: recipe.generatorId,
             petalCount: 8,
             outerRadius: 0.36,
             petalWidth: 0.095,
             gridSize: (p['rows'] as num?)?.toInt() ?? 5,
             gridLayout: (p['layout'] as String?) ?? 'square',
+            rangoliMotif: 'floral_mandala',
           );
         }
       }
@@ -147,33 +167,55 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
     super.dispose();
   }
 
-  GeneratedPattern _generatePattern() {
+  PatternRecipe _recipeForState() {
     if (_state.generatorId == PatternGeneratorRegistry.radialFlowerId) {
-      return _registry.generate(
-        PatternRecipe(
-          generatorId: _state.generatorId,
-          version: PatternGeneratorRegistry.recipeVersion,
-          parameters: {
-            'petalCount': _state.petalCount,
-            'outerRadius': _state.outerRadius,
-            'petalWidth': _state.petalWidth,
-          },
-        ),
-      );
-    }
-    return _registry.generate(
-      PatternRecipe(
+      return PatternRecipe(
         generatorId: _state.generatorId,
         version: PatternGeneratorRegistry.recipeVersion,
         parameters: {
-          'rows': _state.gridSize,
-          'columns': _state.gridSize,
-          'layout': _state.gridLayout,
-          'margin': 0.12,
+          'petalCount': _state.petalCount,
+          'outerRadius': _state.outerRadius,
+          'petalWidth': _state.petalWidth,
         },
-      ),
+      );
+    }
+    if (_state.generatorId == PatternGeneratorRegistry.rangoliMotifsId) {
+      return PatternRecipe(
+        generatorId: _state.generatorId,
+        version: PatternGeneratorRegistry.recipeVersion,
+        parameters: {'motif': _state.rangoliMotif},
+      );
+    }
+    return PatternRecipe(
+      generatorId: _state.generatorId,
+      version: PatternGeneratorRegistry.recipeVersion,
+      parameters: {
+        'rows': _state.gridSize,
+        'columns': _state.gridSize,
+        'layout': _state.gridLayout,
+        'margin': 0.12,
+      },
     );
   }
+
+  GeneratedPattern _generatePattern() => _registry.generate(_recipeForState());
+
+  String _templateTitle(AppLocalizations? l10n) => switch (_state.generatorId) {
+    PatternGeneratorRegistry.radialFlowerId =>
+      l10n?.radialFlower ?? 'Radial flower',
+    PatternGeneratorRegistry.dotGridDiamondsId =>
+      l10n?.dotGridDiamonds ?? 'Dot-grid diamonds',
+    PatternGeneratorRegistry.dotGridLoopsId =>
+      l10n?.dotGridLoops ?? 'Dot-grid loops',
+    PatternGeneratorRegistry.parabolicSikkuId =>
+      l10n?.parabolicSikku ?? 'Parabolic Sikku',
+    PatternGeneratorRegistry.rangoliMotifsId => switch (_state.rangoliMotif) {
+      'peacock' => l10n?.peacockMotif ?? 'Peacock motif',
+      'paisley' => l10n?.paisleyMotif ?? 'Paisley motif',
+      _ => l10n?.floralMandalaMotif ?? 'Floral mandala',
+    },
+    _ => l10n?.createPatternTitle ?? 'Create a pattern',
+  };
 
   void _applyState(_CreatorState next) {
     if (next == _state) return;
@@ -235,10 +277,7 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
     AppLocalizations? l10n,
     GeneratedPattern pattern,
   ) async {
-    final defaultTitle =
-        _state.generatorId == PatternGeneratorRegistry.radialFlowerId
-        ? (l10n?.radialFlower ?? 'Radial flower')
-        : (l10n?.dotGridDiamonds ?? 'Dot-grid diamonds');
+    final defaultTitle = _templateTitle(l10n);
     final titleController = TextEditingController(text: defaultTitle);
 
     final confirmed = await showDialog<bool>(
@@ -282,23 +321,7 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
         createdAt: widget.initialCreation?.createdAt ?? now,
         updatedAt: now,
         type: CreationType.template,
-        recipe: PatternRecipe(
-          generatorId: _state.generatorId,
-          version: PatternGeneratorRegistry.recipeVersion,
-          parameters:
-              _state.generatorId == PatternGeneratorRegistry.radialFlowerId
-              ? {
-                  'petalCount': _state.petalCount,
-                  'outerRadius': _state.outerRadius,
-                  'petalWidth': _state.petalWidth,
-                }
-              : {
-                  'rows': _state.gridSize,
-                  'columns': _state.gridSize,
-                  'layout': _state.gridLayout,
-                  'margin': 0.12,
-                },
-        ),
+        recipe: pattern.recipe,
         paths: pattern.paths,
         grid: pattern.grid,
       );
@@ -387,9 +410,7 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
     AppLocalizations? l10n,
     GeneratedPattern pattern,
   ) async {
-    final title = _state.generatorId == PatternGeneratorRegistry.radialFlowerId
-        ? (l10n?.radialFlower ?? 'Radial flower')
-        : (l10n?.dotGridDiamonds ?? 'Dot-grid diamonds');
+    final title = _templateTitle(l10n);
 
     final exporter = ref.read(designExporterProvider);
     await showExportShareSheet(
@@ -472,14 +493,16 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
     final patternTypeLabel = l10n?.patternType ?? 'Pattern type';
     final radialFlowerLabel = l10n?.radialFlower ?? 'Radial flower';
     final dotGridDiamondsLabel = l10n?.dotGridDiamonds ?? 'Dot-grid diamonds';
+    final dotGridLoopsLabel = l10n?.dotGridLoops ?? 'Dot-grid loops';
+    final parabolicSikkuLabel = l10n?.parabolicSikku ?? 'Parabolic Sikku';
+    final rangoliMotifsLabel = l10n?.rangoliMotifs ?? 'Rangoli motifs';
     final resetLabel = l10n?.reset ?? 'Reset';
     final undoLabel = l10n?.undo ?? 'Undo';
     final redoLabel = l10n?.redo ?? 'Redo';
     final saveLabel = l10n?.save ?? 'Save';
     final previewNotice =
         l10n?.creatorPreviewNotice ??
-        'This preview is generated from editable pattern parameters. '
-            'Saving and export are planned for a later update.';
+        'Generated from editable parameters. Save locally or export and share.';
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -517,6 +540,41 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
                 ),
               ),
             ),
+            ChoiceChip(
+              key: const ValueKey('generator-dot_grid_loops'),
+              label: Text(dotGridLoopsLabel),
+              selected:
+                  _state.generatorId == PatternGeneratorRegistry.dotGridLoopsId,
+              onSelected: (_) => _applyState(
+                _state.copyWith(
+                  generatorId: PatternGeneratorRegistry.dotGridLoopsId,
+                ),
+              ),
+            ),
+            ChoiceChip(
+              key: const ValueKey('generator-parabolic_sikku'),
+              label: Text(parabolicSikkuLabel),
+              selected:
+                  _state.generatorId ==
+                  PatternGeneratorRegistry.parabolicSikkuId,
+              onSelected: (_) => _applyState(
+                _state.copyWith(
+                  generatorId: PatternGeneratorRegistry.parabolicSikkuId,
+                ),
+              ),
+            ),
+            ChoiceChip(
+              key: const ValueKey('generator-rangoli_motifs'),
+              label: Text(rangoliMotifsLabel),
+              selected:
+                  _state.generatorId ==
+                  PatternGeneratorRegistry.rangoliMotifsId,
+              onSelected: (_) => _applyState(
+                _state.copyWith(
+                  generatorId: PatternGeneratorRegistry.rangoliMotifsId,
+                ),
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 16),
@@ -528,6 +586,8 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
         const SizedBox(height: 16),
         if (_state.generatorId == PatternGeneratorRegistry.radialFlowerId)
           _buildRadialControls(theme, l10n)
+        else if (_state.generatorId == PatternGeneratorRegistry.rangoliMotifsId)
+          _buildMotifControls(theme, l10n)
         else
           _buildGridControls(theme, l10n),
         const SizedBox(height: 16),
@@ -791,6 +851,44 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
                     selected: _state.gridLayout == entry.key,
                     onSelected: (_) =>
                         _applyState(_state.copyWith(gridLayout: entry.key)),
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMotifControls(ThemeData theme, AppLocalizations? l10n) {
+    final motifs = {
+      'floral_mandala': l10n?.floralMandalaMotif ?? 'Floral mandala',
+      'peacock': l10n?.peacockMotif ?? 'Peacock motif',
+      'paisley': l10n?.paisleyMotif ?? 'Paisley motif',
+    };
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n?.rangoliMotifs ?? 'Rangoli motifs',
+              style: theme.textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final entry in motifs.entries)
+                  ChoiceChip(
+                    key: ValueKey('rangoli-motif-${entry.key}'),
+                    label: Text(entry.value),
+                    selected: _state.rangoliMotif == entry.key,
+                    onSelected: (_) =>
+                        _applyState(_state.copyWith(rangoliMotif: entry.key)),
                   ),
               ],
             ),

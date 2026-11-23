@@ -62,6 +62,98 @@ void main() {
     );
   });
 
+  test('dot-grid loop recipes generate one bounded closed curve per dot', () {
+    final generated = registry.generate(
+      const PatternRecipe(
+        generatorId: PatternGeneratorRegistry.dotGridLoopsId,
+        version: PatternGeneratorRegistry.recipeVersion,
+        parameters: {
+          'rows': 5,
+          'columns': 5,
+          'layout': 'staggered',
+          'margin': 0.12,
+        },
+      ),
+    );
+
+    expect(generated.grid?.dots, hasLength(25));
+    expect(generated.paths, hasLength(25));
+    for (final path in generated.paths) {
+      expect(path.commands, hasLength(6));
+      expect(path.commands.last.type, PathCommandType.close);
+      DesignPath.fromJson(path.toJson(), 'generated loop');
+    }
+    expect(
+      () => registry.generate(
+        const PatternRecipe(
+          generatorId: PatternGeneratorRegistry.dotGridLoopsId,
+          version: PatternGeneratorRegistry.recipeVersion,
+          parameters: {
+            'rows': 3,
+            'columns': 3,
+            'layout': 'square',
+            'margin': 0,
+          },
+        ),
+      ),
+      throwsFormatException,
+    );
+  });
+
+  test('parabolic Sikku recipes weave quadratic curves across each row', () {
+    final generated = registry.generate(
+      const PatternRecipe(
+        generatorId: PatternGeneratorRegistry.parabolicSikkuId,
+        version: PatternGeneratorRegistry.recipeVersion,
+        parameters: {
+          'rows': 7,
+          'columns': 7,
+          'layout': 'square',
+          'margin': 0.12,
+        },
+      ),
+    );
+
+    expect(generated.grid?.dots, hasLength(49));
+    expect(generated.paths, hasLength(7));
+    for (final path in generated.paths) {
+      expect(path.commands, hasLength(7));
+      expect(
+        path.commands.where(
+          (command) => command.type == PathCommandType.quadraticTo,
+        ),
+        hasLength(6),
+      );
+      DesignPath.fromJson(path.toJson(), 'generated Sikku curve');
+    }
+  });
+
+  test('Rangoli motif recipes generate bounded curved motif paths', () {
+    for (final motif in ['floral_mandala', 'peacock', 'paisley']) {
+      final generated = registry.generate(
+        PatternRecipe(
+          generatorId: PatternGeneratorRegistry.rangoliMotifsId,
+          version: PatternGeneratorRegistry.recipeVersion,
+          parameters: {'motif': motif},
+        ),
+      );
+
+      expect(generated.grid, isNull);
+      expect(generated.paths, isNotEmpty);
+      expect(
+        generated.paths.any(
+          (path) => path.commands.any(
+            (command) => command.type == PathCommandType.cubicTo,
+          ),
+        ),
+        isTrue,
+      );
+      for (final path in generated.paths) {
+        DesignPath.fromJson(path.toJson(), 'generated $motif motif');
+      }
+    }
+  });
+
   test('rectangular square request resolves to a rectangular grid', () {
     final generated = registry.generate(
       const PatternRecipe(
@@ -120,6 +212,16 @@ void main() {
             'layout': 'square',
             'margin': 0.12,
           },
+        ),
+      ),
+      throwsFormatException,
+    );
+    expect(
+      () => registry.generate(
+        const PatternRecipe(
+          generatorId: PatternGeneratorRegistry.rangoliMotifsId,
+          version: PatternGeneratorRegistry.recipeVersion,
+          parameters: {'motif': 'unknown'},
         ),
       ),
       throwsFormatException,
