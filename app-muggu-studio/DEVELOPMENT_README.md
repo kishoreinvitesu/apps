@@ -965,3 +965,41 @@ generated catalogue examples until their evidence and approval are recorded.
 
 ### Next
 - Proceed with **Phase 5: First-Time Onboarding & Settings Screen**.
+
+## 2026-11-23 — Phase 5: First-Time Onboarding & Settings Screen
+
+### Implemented
+- **User Preferences Data Model & Local Storage (`lib/core/preferences/`)**:
+  - `UserPreferences` immutable data model: languageCode, interests (`InterestOption`: `muggu`, `kolam`, `rangoli`, `all`), experienceLevel (`ExperienceLevel`: `beginner`, `experienced`), and `onboardingComplete`.
+  - `PreferencesStorage` interface and `SharedPreferencesStorage` implementation using `shared_preferences`.
+  - Riverpod notifier `userPreferencesProvider` (`UserPreferencesNotifier`) supporting reactive state updates, `savePrefs`, `markOnboardingComplete`, and `clearAll`.
+- **First-Time Onboarding Flow (`lib/features/onboarding/presentation/onboarding_screen.dart`)**:
+  - 3-step personalized, skippable onboarding page sequence with animated step indicator:
+    - Step 1: Language selection (English 🇬🇧, Telugu 🪔, Tamil 🌺) with live locale switching.
+    - Step 2: Tradition interests (Muggu, Kolam, Rangoli, All traditions) with multi-select filter chips.
+    - Step 3: Experience level (Beginner 🌱 / Experienced 🎯) with descriptive level cards.
+  - Skip / Next / Back / Done controls, saving preferences and redirecting to the dashboard upon completion.
+- **Dedicated Settings Screen (`lib/features/settings/presentation/settings_screen.dart`)**:
+  - Accessible directly from top AppBar gear icon (`Icons.settings_outlined`).
+  - Sections:
+    - **Language**: Switch app language dynamically between English, Telugu, and Tamil.
+    - **Preferences**: Adjust tradition interests and switch experience level (SegmentedButton).
+    - **About**: Displays `AppVersion.display` badge (`v1.0.0+1 (dev)`) and offline-ready indicator.
+    - **Data**: Destructive "Clear all local data" tile with confirmation alert dialog, resetting preferences and returning to onboarding.
+    - **Privacy**: Privacy Policy tile with informational feedback.
+- **Router Integration & First-Run Redirection (`lib/app/router.dart`)**:
+  - Configured GoRouter redirect to guard routes: uncompleted onboarding navigates to `/onboarding`.
+  - Registered `/onboarding` and `/settings` as standalone, full-screen routes outside the navigation bar shell.
+- **Trilingual Localization (`lib/l10n/`)**:
+  - Complete trilingual ARB keys added across English, Telugu, and Tamil for all onboarding steps, preferences, and settings dialogs.
+- **Automated Testing (`test/features/preferences_test.dart`)**:
+  - 8/8 comprehensive unit tests passing covering preferences persistence, roundtripping, defaults, equality, and clearing.
+- **Emulator Verification**:
+  - Successfully built debug APK (`build/app/outputs/flutter-apk/app-debug.apk`).
+  - Installed and verified on Android emulator (`emulator-5554`, Android 17 / API 37).
+  - First-time onboarding screen displayed on initial launch.
+
+### Next
+- **Curved Bézier & Parabolic Generator Sprint**:
+  - Curved dot-grid generator algorithms (loops around dots, parabolic Sikku Kolam curves).
+  - Complex Rangoli motifs (peacock, floral mandalas, paisley).

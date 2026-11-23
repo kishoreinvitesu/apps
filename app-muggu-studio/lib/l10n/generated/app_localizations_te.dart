@@ -425,4 +425,104 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get share => 'భాగస్వామ్యం';
+
+  @override
+  String get onboardingTitle => 'ముగ్గు స్టూడియోకు స్వాగతం';
+
+  @override
+  String get onboardingSubtitle => 'మీ అనుభవాన్ని వ్యక్తిగతీకరిద్దాం';
+
+  @override
+  String get chooseLanguageTitle => 'మీ భాషను ఎంచుకోండి';
+
+  @override
+  String get chooseLanguageSubtitle =>
+      'మీరు దీన్ని సెట్టింగ్‌లలో ఎప్పుడైనా మార్చవచ్చు.';
+
+  @override
+  String get chooseInterestsTitle => 'మీకు ఏది ఆసక్తి?';
+
+  @override
+  String get chooseInterestsSubtitle => 'వర్తించే వాటన్నీ ఎంచుకోండి.';
+
+  @override
+  String get interestMuggu => 'ముగ్గు';
+
+  @override
+  String get interestKolam => 'కోలం';
+
+  @override
+  String get interestRangoli => 'రంగోలి';
+
+  @override
+  String get interestAll => 'అన్ని సంప్రదాయాలు';
+
+  @override
+  String get chooseExperienceTitle => 'మీ అనుభవ స్థాయి ఏమిటి?';
+
+  @override
+  String get chooseExperienceSubtitle =>
+      'మీకు అనుకూలమైన డిజైన్లు చూపించడానికి.';
+
+  @override
+  String get experienceBeginner => 'మొదలుపెట్టేవారు';
+
+  @override
+  String get experienceExperienced => 'అనుభవజ్ఞులు';
+
+  @override
+  String get beginnerDescription => 'నేను ముగ్గులో కొత్తగా నేర్చుకుంటున్నాను.';
+
+  @override
+  String get experiencedDescription =>
+      'నాకు ముగ్గు లేదా కోలం గురించి అనుభవం ఉంది.';
+
+  @override
+  String get skip => 'దాటవేయి';
+
+  @override
+  String get done => 'పూర్తయింది';
+
+  @override
+  String get getStarted => 'ప్రారంభించు';
+
+  @override
+  String get settingsTitle => 'సెట్టింగులు';
+
+  @override
+  String get preferencesSection => 'ప్రాధాన్యతలు';
+
+  @override
+  String get aboutSection => 'గురించి';
+
+  @override
+  String get dataSection => 'డేటా';
+
+  @override
+  String get privacySection => 'గోప్యత';
+
+  @override
+  String get clearLocalData => 'అన్ని స్థానిక డేటా తొలగించు';
+
+  @override
+  String get clearLocalDataConfirm => 'డేటా తొలగించాలా?';
+
+  @override
+  String get clearLocalDataDescription =>
+      'ఇది అన్ని సేవ్ అయిన సృష్టులు, ఇష్టాలు మరియు ప్రాధాన్యతలను తొలగిస్తుంది.';
+
+  @override
+  String get dataCleared => 'అన్ని స్థానిక డేటా తొలగించబడింది';
+
+  @override
+  String get appVersion => 'యాప్ వెర్షన్';
+
+  @override
+  String get offlineReady => 'ఆఫ్‌లైన్‌లో పని చేస్తుంది';
+
+  @override
+  String get privacyPolicy => 'గోప్యతా విధానం';
+
+  @override
+  String get onboardingComplete => 'సెటప్ పూర్తయింది';
 }

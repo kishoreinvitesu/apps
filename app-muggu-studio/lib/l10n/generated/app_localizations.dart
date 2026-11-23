@@ -897,6 +897,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Share'**
   String get share;
+
+  /// No description provided for @onboardingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Muggu Studio'**
+  String get onboardingTitle;
+
+  /// No description provided for @onboardingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s personalise your experience'**
+  String get onboardingSubtitle;
+
+  /// No description provided for @chooseLanguageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your language'**
+  String get chooseLanguageTitle;
+
+  /// No description provided for @chooseLanguageSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You can change this anytime in Settings.'**
+  String get chooseLanguageSubtitle;
+
+  /// No description provided for @chooseInterestsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What interests you?'**
+  String get chooseInterestsTitle;
+
+  /// No description provided for @chooseInterestsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all that apply — we\'ll highlight relevant designs.'**
+  String get chooseInterestsSubtitle;
+
+  /// No description provided for @interestMuggu.
+  ///
+  /// In en, this message translates to:
+  /// **'Muggu'**
+  String get interestMuggu;
+
+  /// No description provided for @interestKolam.
+  ///
+  /// In en, this message translates to:
+  /// **'Kolam'**
+  String get interestKolam;
+
+  /// No description provided for @interestRangoli.
+  ///
+  /// In en, this message translates to:
+  /// **'Rangoli'**
+  String get interestRangoli;
+
+  /// No description provided for @interestAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All traditions'**
+  String get interestAll;
+
+  /// No description provided for @chooseExperienceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s your experience level?'**
+  String get chooseExperienceTitle;
+
+  /// No description provided for @chooseExperienceSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This helps us show designs suited to you.'**
+  String get chooseExperienceSubtitle;
+
+  /// No description provided for @experienceBeginner.
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner'**
+  String get experienceBeginner;
+
+  /// No description provided for @experienceExperienced.
+  ///
+  /// In en, this message translates to:
+  /// **'Experienced'**
+  String get experienceExperienced;
+
+  /// No description provided for @beginnerDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m new to floor art and want to start simple.'**
+  String get beginnerDescription;
+
+  /// No description provided for @experiencedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ve drawn Muggu or Kolam before.'**
+  String get experiencedDescription;
+
+  /// No description provided for @skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skip;
+
+  /// No description provided for @done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
+
+  /// No description provided for @getStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Get started'**
+  String get getStarted;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @preferencesSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get preferencesSection;
+
+  /// No description provided for @aboutSection.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get aboutSection;
+
+  /// No description provided for @dataSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Data'**
+  String get dataSection;
+
+  /// No description provided for @privacySection.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get privacySection;
+
+  /// No description provided for @clearLocalData.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all local data'**
+  String get clearLocalData;
+
+  /// No description provided for @clearLocalDataConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear data?'**
+  String get clearLocalDataConfirm;
+
+  /// No description provided for @clearLocalDataDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'This will delete all saved creations, favourites and preferences. This action cannot be undone.'**
+  String get clearLocalDataDescription;
+
+  /// No description provided for @dataCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'All local data cleared'**
+  String get dataCleared;
+
+  /// No description provided for @appVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'App version'**
+  String get appVersion;
+
+  /// No description provided for @offlineReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Works offline — no account needed'**
+  String get offlineReady;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @onboardingComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup complete'**
+  String get onboardingComplete;
 }
 
 class _AppLocalizationsDelegate

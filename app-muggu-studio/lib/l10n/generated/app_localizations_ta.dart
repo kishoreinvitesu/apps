@@ -425,4 +425,104 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get share => 'பகிர்';
+
+  @override
+  String get onboardingTitle => 'முகு ஸ்டுடியோவிற்கு வரவேற்கிறோம்';
+
+  @override
+  String get onboardingSubtitle => 'உங்கள் அனுபவத்தை தனிப்பயனாக்குவோம்';
+
+  @override
+  String get chooseLanguageTitle => 'உங்கள் மொழியை தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get chooseLanguageSubtitle =>
+      'இதை நீங்கள் அமைப்புகளில் எப்போதும் மாற்றலாம்.';
+
+  @override
+  String get chooseInterestsTitle => 'உங்களுக்கு என்ன ஆர்வம்?';
+
+  @override
+  String get chooseInterestsSubtitle =>
+      'பொருந்தும் அனைத்தையும் தேர்ந்தெடுக்கவும்.';
+
+  @override
+  String get interestMuggu => 'முகு';
+
+  @override
+  String get interestKolam => 'கோலம்';
+
+  @override
+  String get interestRangoli => 'ரங்கோலி';
+
+  @override
+  String get interestAll => 'அனைத்து மரபுகள்';
+
+  @override
+  String get chooseExperienceTitle => 'உங்கள் அனுபவ நிலை என்ன?';
+
+  @override
+  String get chooseExperienceSubtitle => 'உங்களுக்கு ஏற்ற வடிவமைப்புகளை காட்ட.';
+
+  @override
+  String get experienceBeginner => 'தொடக்கநிலை';
+
+  @override
+  String get experienceExperienced => 'அனுபவம் வாய்ந்தவர்';
+
+  @override
+  String get beginnerDescription => 'நான் தளம் கலையில் புதியவன்.';
+
+  @override
+  String get experiencedDescription =>
+      'நான் முன்பு கோலம் அல்லது முகு வரைந்திருக்கிறேன்.';
+
+  @override
+  String get skip => 'தவிர்';
+
+  @override
+  String get done => 'முடிந்தது';
+
+  @override
+  String get getStarted => 'தொடங்கு';
+
+  @override
+  String get settingsTitle => 'அமைப்புகள்';
+
+  @override
+  String get preferencesSection => 'விருப்பங்கள்';
+
+  @override
+  String get aboutSection => 'பற்றி';
+
+  @override
+  String get dataSection => 'தரவு';
+
+  @override
+  String get privacySection => 'தனியுரிமை';
+
+  @override
+  String get clearLocalData => 'அனைத்து உள்ளூர் தரவையும் அழிக்கவும்';
+
+  @override
+  String get clearLocalDataConfirm => 'தரவை அழிக்கவா?';
+
+  @override
+  String get clearLocalDataDescription =>
+      'இது சேமிக்கப்பட்ட அனைத்து படைப்புகள், பிடித்தவை மற்றும் விருப்பங்களை அழிக்கும்.';
+
+  @override
+  String get dataCleared => 'அனைத்து உள்ளூர் தரவும் அழிக்கப்பட்டது';
+
+  @override
+  String get appVersion => 'ஆப் பதிப்பு';
+
+  @override
+  String get offlineReady => 'ஆஃப்லைனில் வேலை செய்கிறது';
+
+  @override
+  String get privacyPolicy => 'தனியுரிமைக் கொள்கை';
+
+  @override
+  String get onboardingComplete => 'அமைவு முடிந்தது';
 }

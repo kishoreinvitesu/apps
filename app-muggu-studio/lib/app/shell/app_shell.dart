@@ -50,6 +50,11 @@ class AppShell extends ConsumerWidget {
           style: const TextStyle(fontWeight: FontWeight.w700),
         ),
         actions: [
+          IconButton(
+            tooltip: l10n.settingsTitle,
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => context.push('/settings'),
+          ),
           PopupMenuButton<Locale>(
             tooltip: l10n.chooseLanguage,
             icon: const Icon(Icons.translate_rounded),

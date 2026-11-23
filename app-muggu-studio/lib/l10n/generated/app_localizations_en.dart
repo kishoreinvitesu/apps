@@ -424,4 +424,105 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get share => 'Share';
+
+  @override
+  String get onboardingTitle => 'Welcome to Muggu Studio';
+
+  @override
+  String get onboardingSubtitle => 'Let\'s personalise your experience';
+
+  @override
+  String get chooseLanguageTitle => 'Choose your language';
+
+  @override
+  String get chooseLanguageSubtitle =>
+      'You can change this anytime in Settings.';
+
+  @override
+  String get chooseInterestsTitle => 'What interests you?';
+
+  @override
+  String get chooseInterestsSubtitle =>
+      'Select all that apply — we\'ll highlight relevant designs.';
+
+  @override
+  String get interestMuggu => 'Muggu';
+
+  @override
+  String get interestKolam => 'Kolam';
+
+  @override
+  String get interestRangoli => 'Rangoli';
+
+  @override
+  String get interestAll => 'All traditions';
+
+  @override
+  String get chooseExperienceTitle => 'What\'s your experience level?';
+
+  @override
+  String get chooseExperienceSubtitle =>
+      'This helps us show designs suited to you.';
+
+  @override
+  String get experienceBeginner => 'Beginner';
+
+  @override
+  String get experienceExperienced => 'Experienced';
+
+  @override
+  String get beginnerDescription =>
+      'I\'m new to floor art and want to start simple.';
+
+  @override
+  String get experiencedDescription => 'I\'ve drawn Muggu or Kolam before.';
+
+  @override
+  String get skip => 'Skip';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String get getStarted => 'Get started';
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get preferencesSection => 'Preferences';
+
+  @override
+  String get aboutSection => 'About';
+
+  @override
+  String get dataSection => 'Data';
+
+  @override
+  String get privacySection => 'Privacy';
+
+  @override
+  String get clearLocalData => 'Clear all local data';
+
+  @override
+  String get clearLocalDataConfirm => 'Clear data?';
+
+  @override
+  String get clearLocalDataDescription =>
+      'This will delete all saved creations, favourites and preferences. This action cannot be undone.';
+
+  @override
+  String get dataCleared => 'All local data cleared';
+
+  @override
+  String get appVersion => 'App version';
+
+  @override
+  String get offlineReady => 'Works offline — no account needed';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get onboardingComplete => 'Setup complete';
 }
