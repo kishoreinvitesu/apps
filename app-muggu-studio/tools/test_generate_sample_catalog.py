@@ -38,7 +38,28 @@ class GenerateSampleCatalogTests(unittest.TestCase):
             grid_layout="staggered",
         )
 
-        self.assertEqual(len(catalog), 20)
+        self.assertEqual(len(catalog), 60)
+        ids = [design["id"] for design in catalog]
+        names = [
+            design["localizedName"]["en"]
+            for design in catalog
+        ]
+        self.assertEqual(len(ids), len(set(ids)))
+        self.assertEqual(len(names), len(set(names)))
+        original_designs = [
+            design
+            for design in catalog
+            if design["id"].startswith("original_")
+        ]
+        self.assertEqual(len(original_designs), 40)
+        for design in original_designs:
+            self.assertIsNone(design["region"])
+            self.assertIsNone(design["tradition"])
+            self.assertIn(
+                "not a documented traditional design",
+                design["localizedDescription"]["en"],
+            )
+            self.assertEqual(design["culturalReview"]["status"], "pending")
         self.assertEqual(
             generator._catalog_json(catalog),
             generator._catalog_json(
@@ -142,8 +163,16 @@ class GenerateSampleCatalogTests(unittest.TestCase):
 
             decoded = json.loads(catalog_path.read_text(encoding="utf-8"))
             self.assertEqual(decoded["schemaVersion"], generator.SCHEMA_VERSION)
-            self.assertEqual(len(decoded["designs"]), len(catalog))
+            self.assertEqual(len(decoded["designs"]), 60)
             self.assertEqual(len(list(thumbnail_directory.glob("*.webp"))), len(catalog))
+            original_artwork = {
+                generator._decoded_thumbnail(
+                    thumbnail_directory / f"{design['id']}.webp"
+                )
+                for design in catalog
+                if design["id"].startswith("original_")
+            }
+            self.assertEqual(len(original_artwork), 40)
 
 
 if __name__ == "__main__":

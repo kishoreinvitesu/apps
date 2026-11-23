@@ -330,6 +330,30 @@ def build_catalog(radial_petals=8, grid_size=5, grid_layout="square"):
         "easy", "easy", "easy", "intermediate", "intermediate",
         "intermediate", "advanced", "advanced", "advanced", "advanced",
     ]
+    sample_names = [
+        "Crossed Diamond Frame",
+        "Eight-Point Compass",
+        "Layered Hexagon Sun",
+        "Eight-Petal Medallion",
+        "Orbiting Ring Medallion",
+        "Triangular Starburst",
+        "Stepped Square Spiral",
+        "Fourfold Diamond Lattice",
+        "Twelve-Point Halo",
+        "Interlocked Square Medallion",
+    ]
+    sample_descriptions = [
+        "An original square frame crossed by a centered diamond and axes.",
+        "An original eight-point star framed by a simple compass cross.",
+        "Three nested hexagons joined by evenly spaced spokes.",
+        "A balanced eight-petal flower around a small central ring.",
+        "Concentric rings connected by eight radial lines.",
+        "Two overlapping triangles surrounding a six-sided center.",
+        "A single-line square spiral moving toward its center.",
+        "Rotated square frames joined into a four-way lattice.",
+        "A twelve-point star with nested circular details.",
+        "Crossed square and diamond frames around a compact center.",
+    ]
     tags = [
         "diamond", "star", "hexagon", "radial", "triangle",
         "spiral", "symmetry", "polygon", "star", "square",
@@ -349,11 +373,11 @@ def build_catalog(radial_petals=8, grid_size=5, grid_layout="square"):
         designs.append(
             _base_design(
                 design_id,
-                f"Geometric Sample {index:02}",
-                "Original geometric line pattern.",
+                sample_names[index - 1],
+                sample_descriptions[index - 1],
                 difficulty[index - 1],
                 vector_paths,
-                ["geometric", "sample", "line pattern", tags[index - 1]],
+                ["original", "geometric", tags[index - 1]],
             )
         )
 
@@ -515,6 +539,289 @@ def build_catalog(radial_petals=8, grid_size=5, grid_layout="square"):
         )
         design_item["grid"] = grid_obj
         designs.append(design_item)
+
+    return _original_geometric_designs() + designs
+
+
+def _original_design(design_id, name, description, difficulty, paths, family):
+    return _base_design(
+        design_id,
+        name,
+        (
+            f"Original geometric artwork: {description} "
+            "This is an app-made sample, not a documented traditional design."
+        ),
+        difficulty,
+        paths,
+        ["original", "geometric", family],
+    )
+
+
+def _original_geometric_designs():
+    designs = []
+
+    rosettes = [
+        ("Prism Bloom", 5, 0.32, 0.075, 4),
+        ("Amber Petal Wheel", 6, 0.34, 0.072, 6),
+        ("Crown of Loops", 7, 0.33, 0.068, 8),
+        ("Twelvefold Garden", 12, 0.34, 0.045, 8),
+        ("Twin Halo Bloom", 8, 0.31, 0.082, 4),
+        ("Lattice Blossom", 9, 0.34, 0.06, 6),
+        ("Sunrise Rosette", 10, 0.35, 0.055, 8),
+        ("Orbiting Petals", 16, 0.34, 0.035, 8),
+    ]
+    for index, (name, count, radius, width, frame_sides) in enumerate(
+        rosettes,
+        start=1,
+    ):
+        paths = radial_flower(count, radius, width)
+        paths.extend([
+            _polyline_path(
+                "outer_halo",
+                "group_frame",
+                circle(0.43),
+                True,
+            ),
+            _polyline_path(
+                "frame",
+                "group_frame",
+                polygon(frame_sides, 0.42, math.pi / frame_sides),
+                True,
+            ),
+            _polyline_path(
+                "center_star",
+                "group_center",
+                star(count, 0.16, 0.09),
+                True,
+            ),
+            _polyline_path(
+                "center_ring",
+                "group_center",
+                circle(0.055),
+                True,
+            ),
+        ])
+        difficulty = "easy" if count <= 6 else (
+            "intermediate" if count <= 10 else "advanced"
+        )
+        designs.append(_original_design(
+            f"original_rosette_{index:03}",
+            name,
+            f"a {count}-petal rosette inside a {frame_sides}-sided frame.",
+            difficulty,
+            paths,
+            "rosette",
+        ))
+
+    woven_stars = [
+        ("Woven Star", 5),
+        ("Facet Beacon", 6),
+        ("Nested Starburst", 7),
+        ("Crossed Compass", 8),
+        ("Prismatic Kite", 9),
+        ("Eightfold Lattice", 10),
+        ("Radiant Compass", 12),
+        ("Interlaced Star", 16),
+    ]
+    for index, (name, count) in enumerate(woven_stars, start=1):
+        rotation = -math.pi / 2 + (index % 2) * math.pi / (count * 2)
+        outer = star(count, 0.42, 0.29, rotation)
+        inner = polygon(count, 0.24, rotation + math.pi / count)
+        paths = [
+            _polyline_path("outer_star", "group_frame", outer, True),
+            _polyline_path("inner_frame", "group_lattice", inner, True),
+            _polyline_path(
+                "center_star",
+                "group_center",
+                star(count, 0.13, 0.07, rotation),
+                True,
+            ),
+            _polyline_path(
+                "center_ring",
+                "group_center",
+                circle(0.045),
+                True,
+            ),
+        ]
+        for spoke in range(count):
+            paths.append(_polyline_path(
+                f"weave_{spoke + 1:02}",
+                "group_lattice",
+                [outer[spoke * 2], inner[spoke]],
+                False,
+            ))
+        difficulty = "easy" if count <= 6 else (
+            "intermediate" if count <= 10 else "advanced"
+        )
+        designs.append(_original_design(
+            f"original_starweave_{index:03}",
+            name,
+            f"nested {count}-point star geometry connected by radial facets.",
+            difficulty,
+            paths,
+            "star",
+        ))
+
+    orbit_petals = [
+        ("Orbit Garden", 5),
+        ("Petal Carousel", 6),
+        ("Looped Blossom", 8),
+        ("Fourfold Bloom", 4),
+        ("Dancing Petals", 10),
+        ("Clover Orbit", 7),
+        ("Open Rosette", 9),
+        ("Leaf Halo", 12),
+    ]
+    for index, (name, count) in enumerate(orbit_petals, start=1):
+        paths = []
+        for petal_index in range(count):
+            angle = -math.pi / 2 + petal_index * 2 * math.pi / count
+            points = petal(
+                angle,
+                distance=0.17,
+                length=0.16 + (index % 3) * 0.01,
+                width=0.045 + (index % 2) * 0.008,
+            )
+            paths.append(_polyline_path(
+                f"orbit_petal_{petal_index + 1:02}",
+                "group_petals",
+                points,
+                True,
+            ))
+        paths.extend([
+            _polyline_path(
+                "outer_orbit",
+                "group_frame",
+                circle(0.42),
+                True,
+            ),
+            _polyline_path(
+                "inner_orbit",
+                "group_center",
+                circle(0.12),
+                True,
+            ),
+            _polyline_path(
+                "center_diamond",
+                "group_center",
+                polygon(4, 0.085, math.pi / 4),
+                True,
+            ),
+        ])
+        difficulty = "easy" if count <= 6 else (
+            "intermediate" if count <= 9 else "advanced"
+        )
+        designs.append(_original_design(
+            f"original_orbit_{index:03}",
+            name,
+            f"a ring of {count} rounded petals around a compact diamond core.",
+            difficulty,
+            paths,
+            "petal",
+        ))
+
+    diamond_lattices = [
+        ("Diamond Window", 4),
+        ("Kite Frame", 5),
+        ("Facet Garden", 6),
+        ("Crossed Diamond", 7),
+        ("Layered Tile", 8),
+        ("Compass Lattice", 9),
+        ("Fourfold Prism", 10),
+        ("Nested Jewel", 12),
+    ]
+    for index, (name, count) in enumerate(diamond_lattices, start=1):
+        rotation = math.pi / count if index % 2 else 0
+        outer = polygon(count, 0.42, rotation)
+        middle = polygon(count, 0.29, rotation + math.pi / count)
+        inner = polygon(count, 0.16, rotation)
+        paths = [
+            _polyline_path("outer_frame", "group_frame", outer, True),
+            _polyline_path("middle_frame", "group_lattice", middle, True),
+            _polyline_path("inner_frame", "group_center", inner, True),
+            _polyline_path(
+                "center_star",
+                "group_center",
+                star(count, 0.11, 0.055, rotation),
+                True,
+            ),
+        ]
+        for vertex in range(count):
+            paths.append(_polyline_path(
+                f"facet_{vertex + 1:02}",
+                "group_lattice",
+                [outer[vertex], middle[(vertex + 1) % count]],
+                False,
+            ))
+        difficulty = "easy" if count <= 5 else (
+            "intermediate" if count <= 9 else "advanced"
+        )
+        designs.append(_original_design(
+            f"original_lattice_{index:03}",
+            name,
+            f"a {count}-sided frame woven through alternating polygon rings.",
+            difficulty,
+            paths,
+            "lattice",
+        ))
+
+    scalloped_wreaths = [
+        ("Scallop Crown", 6),
+        ("Rosette Wreath", 8),
+        ("Lobed Halo", 10),
+        ("Petal Lace", 12),
+        ("Clover Ring", 5),
+        ("Radiant Wreath", 7),
+        ("Tidal Scallop", 9),
+        ("Looped Garland", 14),
+    ]
+    for index, (name, count) in enumerate(scalloped_wreaths, start=1):
+        paths = []
+        for lobe in range(count):
+            angle = -math.pi / 2 + lobe * 2 * math.pi / count
+            points = petal(
+                angle,
+                distance=0.27,
+                length=0.12,
+                width=0.038 + (index % 3) * 0.004,
+            )
+            paths.append(_polyline_path(
+                f"wreath_lobe_{lobe + 1:02}",
+                "group_petals",
+                points,
+                True,
+            ))
+        paths.extend([
+            _polyline_path(
+                "outer_ring",
+                "group_frame",
+                circle(0.43),
+                True,
+            ),
+            _polyline_path(
+                "inner_ring",
+                "group_center",
+                circle(0.17),
+                True,
+            ),
+            _polyline_path(
+                "center_star",
+                "group_center",
+                star(max(4, count // 2), 0.13, 0.065),
+                True,
+            ),
+        ])
+        difficulty = "easy" if count <= 6 else (
+            "intermediate" if count <= 10 else "advanced"
+        )
+        designs.append(_original_design(
+            f"original_wreath_{index:03}",
+            name,
+            f"a scalloped wreath of {count} petal loops around two circular bands.",
+            difficulty,
+            paths,
+            "wreath",
+        ))
 
     return designs
 
@@ -1024,7 +1331,7 @@ def draw_thumbnail(paths, destination, grid=None):
         format="WEBP",
         lossless=True,
         quality=100,
-        method=6,
+        method=4,
     )
 
 

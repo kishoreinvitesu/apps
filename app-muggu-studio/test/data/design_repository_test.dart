@@ -11,11 +11,11 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test(
-    'bundled catalog has twenty unassigned samples and decodable thumbnails',
+    'bundled catalog has sixty unreviewed samples and decodable thumbnails',
     () async {
       final designs = await DesignRepository().loadCatalog();
 
-      expect(designs, hasLength(20));
+      expect(designs, hasLength(60));
       for (final design in designs) {
         expect(design.region, isNull);
         expect(design.tradition, isNull);
@@ -64,13 +64,16 @@ void main() {
       ),
     );
 
-    expect(results.map((design) => design.id), ['geometric_sample_005']);
+    expect(results.map((design) => design.id), [
+      'geometric_sample_005',
+      'geometric_sample_006',
+    ]);
     expect(
       DesignRepository.query(
         designs: designs,
-        searchQuery: 'Geometric Sample 01',
+        searchQuery: 'Eight-Point Compass',
       ).map((design) => design.id),
-      ['geometric_sample_001'],
+      ['geometric_sample_002'],
     );
   });
 

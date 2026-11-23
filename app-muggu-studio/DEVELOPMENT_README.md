@@ -460,10 +460,10 @@ as traditional, instructional or publication-ready.
 - Create supports versioned template generators and a freehand canvas with
   symmetry, pen controls, undo/redo, and local save/reopen/rename/delete.
   Designs and creations can be exported and shared as PNGs.
-- The bundled catalogue contains 20 designs. The content review log states
-  that rights and human cultural review remain pending for every bundled
-  sample; do not count them toward the reviewed-content milestone until
-  evidence and approval are recorded.
+- The bundled catalogue contains 60 design samples, including 40 new
+  app-generated original geometric artworks. Rights, cultural, localization
+  and lesson reviews remain pending; do not count any sample toward the
+  reviewed-content milestone until evidence and approval are recorded.
 - The generator registry currently uses recipe version 1. Catalogue geometry
   uses schema version 3 and accepts schema 2 through its migration path. The
   local SQLite database is version 2, with a tested migration from version 1.
@@ -601,8 +601,8 @@ and core features do not require a network connection.
    tradition only when supported by evidence and reviewed by knowledgeable
    people; do not use search synonyms as cultural classification.
 3. First content milestone: deliver 10 reviewed designs and five complete,
-   reference-checked tutorials. The current 10 generic samples plus two
-   generated patterns do not satisfy this milestone.
+   reference-checked tutorials. The 60 bundled examples are unreviewed samples
+   and do not satisfy this milestone.
 4. Expand progressively toward the product target of 60 reviewed designs and
    20 reviewed lessons. The proposed mix is 15 simple daily designs, 15
    Pulli/Dot Kolam, 10 Sikku/Kambi Kolam, 10 floral/geometric Rangoli and 10
@@ -1198,6 +1198,30 @@ generated catalogue examples until their evidence and approval are recorded.
 - `flutter gen-l10n` — passed.
 - `flutter test test/widget_test.dart` — passed; all 4 widget tests.
 - `flutter test` — passed; all 101 tests.
+- `flutter analyze` — passed with no issues.
+- `dart format --output=none --set-exit-if-changed lib test` — passed; all
+  69 Dart files are formatted.
+- `git diff --check` — passed.
+
+## 2026-11-24 — Expanded the bundled design library
+
+### Implemented
+- Expanded the bundled catalogue from 20 to 60 samples with 40 new original
+  geometric designs across rosette, star, orbit, lattice and wreath styles.
+- Added descriptive names to the first ten generic geometric examples and
+  placed the new designs first in the recommended catalogue order.
+- Kept new designs explicitly identified as app-made samples, without region
+  or tradition claims; all content reviews remain pending.
+- Reduced lossless WebP encoder effort to keep 60-design generation fast;
+  generated-art validation compares decoded pixels.
+
+### Validation
+- `python -m unittest discover -s tools -p 'test_*.py' -v` — passed; all 6
+  generator tests, including 40 unique new thumbnail artworks.
+- `python tools/generate_sample_catalog.py --check` — passed; catalogue and
+  decoded thumbnail artwork match.
+- `flutter test` — passed; all 101 tests, including catalog parsing and
+  thumbnail decoding.
 - `flutter analyze` — passed with no issues.
 - `dart format --output=none --set-exit-if-changed lib test` — passed; all
   69 Dart files are formatted.
