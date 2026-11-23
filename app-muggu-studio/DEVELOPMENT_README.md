@@ -1150,7 +1150,9 @@ generated catalogue examples until their evidence and approval are recorded.
   their saved geometry snapshots; malformed recipe JSON now reports the field
   that could not be decoded.
 - Unknown persisted freehand symmetry modes now fail explicitly instead of
-  silently becoming `none`.
+  silently becoming `none`; malformed stroke fields now produce
+  `FormatException`s instead of cast failures.
+- Stroke equality now compares exact geometry values, with matching hash codes.
 - Unsupported persisted creation types now fail explicitly instead of being
   silently interpreted as templates.
 - Corrected formatting drift in nine Dart files that caused the GitHub
@@ -1164,12 +1166,14 @@ generated catalogue examples until their evidence and approval are recorded.
 ### Validation
 - `flutter test test/features/pattern_generator_registry_test.dart` — passed;
   all 8 registry tests.
-- `flutter test test/data/creations_dao_test.dart` — passed; all 8 DAO tests,
+- `flutter test test/data/creations_dao_test.dart` — passed; all 9 DAO tests,
   including unsupported-version, malformed-recipe and symmetry regressions.
-- `flutter test` — passed; all 96 tests.
+- `flutter test test/features/drawn_stroke_test.dart` — passed; all 3
+  validation and value-semantics tests.
+- `flutter test` — passed; all 99 tests.
 - `flutter analyze` — passed with no issues.
 - `dart format --output=none --set-exit-if-changed lib test` — passed; all
-  67 Dart files are formatted.
+  68 Dart files are formatted.
 - `git diff --check` — passed.
 
 ### Remaining

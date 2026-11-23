@@ -37,13 +37,25 @@ class DrawnStroke {
   };
 
   factory DrawnStroke.fromJson(Map<String, dynamic> json) {
-    final rawPoints = json['points'] as List;
+    final rawPoints = json['points'];
+    if (rawPoints is! List) {
+      throw FormatException('points must be a list.');
+    }
     final points = [
       for (var i = 0; i < rawPoints.length; i++)
         DesignPoint.fromJson(rawPoints[i], 'points[$i]'),
     ];
-    final colorVal = json['color'] as int;
-    final strokeWidth = (json['strokeWidth'] as num).toDouble();
+    final rawColor = json['color'];
+    if (rawColor is! int || rawColor < 0 || rawColor > 0xFFFFFFFF) {
+      throw FormatException('color must be a 32-bit ARGB integer.');
+    }
+    final rawStrokeWidth = json['strokeWidth'];
+    if (rawStrokeWidth is! num ||
+        !rawStrokeWidth.isFinite ||
+        rawStrokeWidth <= 0) {
+      throw FormatException('strokeWidth must be a positive finite number.');
+    }
+    final strokeWidth = rawStrokeWidth.toDouble();
     final rawMode = json['symmetryMode'];
     if (rawMode != null && rawMode is! String) {
       throw FormatException('symmetryMode must be a string.');
@@ -58,7 +70,7 @@ class DrawnStroke {
     };
     return DrawnStroke(
       points: points,
-      color: Color(colorVal),
+      color: Color(rawColor),
       strokeWidth: strokeWidth,
       symmetryMode: symmetryMode,
     );
@@ -84,7 +96,7 @@ class DrawnStroke {
       other is DrawnStroke &&
           runtimeType == other.runtimeType &&
           color.toARGB32() == other.color.toARGB32() &&
-          (strokeWidth - other.strokeWidth).abs() < 0.001 &&
+          strokeWidth == other.strokeWidth &&
           symmetryMode == other.symmetryMode &&
           points.length == other.points.length &&
           _pointsEqual(points, other.points);
@@ -92,15 +104,14 @@ class DrawnStroke {
   @override
   int get hashCode => Object.hash(
     color.toARGB32(),
-    strokeWidth.toStringAsFixed(2),
+    strokeWidth,
     symmetryMode,
-    points.length,
+    Object.hashAll(points.map((point) => Object.hash(point.x, point.y))),
   );
 
   static bool _pointsEqual(List<DesignPoint> a, List<DesignPoint> b) {
     for (var i = 0; i < a.length; i++) {
-      if ((a[i].x - b[i].x).abs() > 0.0001 ||
-          (a[i].y - b[i].y).abs() > 0.0001) {
+      if (a[i].x != b[i].x || a[i].y != b[i].y) {
         return false;
       }
     }
