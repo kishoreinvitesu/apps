@@ -43,11 +43,11 @@ class UserPreferences {
 
   @override
   int get hashCode => Object.hash(
-        languageCode,
-        Object.hashAll(interests),
-        experienceLevel,
-        onboardingComplete,
-      );
+    languageCode,
+    Object.hashAll(interests),
+    experienceLevel,
+    onboardingComplete,
+  );
 
   bool _setsEqual(Set<InterestOption> a, Set<InterestOption> b) {
     if (a.length != b.length) return false;

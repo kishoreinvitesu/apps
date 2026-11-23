@@ -46,10 +46,7 @@ void main() {
       final storage = SharedPreferencesStorage(prefs);
 
       await storage.savePreferences(
-        const UserPreferences(
-          languageCode: 'ta',
-          onboardingComplete: true,
-        ),
+        const UserPreferences(languageCode: 'ta', onboardingComplete: true),
       );
       await storage.clearPreferences();
       final result = await storage.readPreferences();

@@ -1148,6 +1148,8 @@ generated catalogue examples until their evidence and approval are recorded.
   when its recipe generator is unavailable in the current registry.
 - Unsupported persisted creation types now fail explicitly instead of being
   silently interpreted as templates.
+- Corrected formatting drift in nine Dart files that caused the GitHub
+  formatting check to fail.
 - Reconciled the current baseline and working order with the implemented
   Creator, 20-design catalogue, geometry/schema versions, Phase 6 emulator
   captures and deferred physical-device checks.
@@ -1161,7 +1163,8 @@ generated catalogue examples until their evidence and approval are recorded.
   after adding the invalid-type regression.
 - `flutter test` — passed; all 93 tests.
 - `flutter analyze` — passed with no issues.
-- Formatting passed for `user_creation.dart` and `creations_dao_test.dart`.
+- `dart format --output=none --set-exit-if-changed lib test` — passed; all
+  67 Dart files are formatted.
 - `git diff --check` — passed.
 
 ### Remaining

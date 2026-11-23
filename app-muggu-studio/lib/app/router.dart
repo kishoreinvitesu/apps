@@ -18,8 +18,7 @@ GoRouter createAppRouter() {
     initialLocation: '/',
     redirect: (context, state) async {
       final container = ProviderScope.containerOf(context, listen: false);
-      final prefs =
-          await container.read(userPreferencesProvider.future);
+      final prefs = await container.read(userPreferencesProvider.future);
       final goingToOnboarding = state.uri.path == '/onboarding';
       if (!prefs.onboardingComplete && !goingToOnboarding) {
         return '/onboarding';

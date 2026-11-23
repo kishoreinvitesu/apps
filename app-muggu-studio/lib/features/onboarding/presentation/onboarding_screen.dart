@@ -94,9 +94,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       children: [
                         Text(
                           l10n.appName,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
+                          style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(
                                 color: MugguColors.deepMaroon,
                                 fontWeight: FontWeight.w700,
@@ -104,9 +102,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         ),
                         Text(
                           l10n.onboardingSubtitle,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall
+                          style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(color: colorScheme.onSurfaceVariant),
                         ),
                       ],
@@ -171,10 +167,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               child: Row(
                 children: [
                   if (_page > 0)
-                    OutlinedButton(
-                      onPressed: _prevPage,
-                      child: Text(l10n.back),
-                    )
+                    OutlinedButton(onPressed: _prevPage, child: Text(l10n.back))
                   else
                     const SizedBox(width: 80),
                   const Spacer(),
@@ -377,16 +370,15 @@ class _PageHeader extends StatelessWidget {
         Text(
           title,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: MugguColors.darkBrown,
-              ),
+            fontWeight: FontWeight.w700,
+            color: MugguColors.darkBrown,
+          ),
         ),
         const SizedBox(height: 4),
         Text(
           subtitle,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+          style: Theme.of(context).textTheme.bodyMedium
+              ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
       ],
     );
@@ -435,12 +427,11 @@ class _SelectionTile extends StatelessWidget {
                 child: Text(
                   label,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight:
-                            selected ? FontWeight.w600 : FontWeight.w400,
-                        color: selected
-                            ? MugguColors.deepMaroon
-                            : colorScheme.onSurface,
-                      ),
+                    fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+                    color: selected
+                        ? MugguColors.deepMaroon
+                        : colorScheme.onSurface,
+                  ),
                 ),
               ),
               if (selected)
@@ -502,19 +493,17 @@ class _ExperienceTile extends StatelessWidget {
                   Text(
                     title,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight:
-                              selected ? FontWeight.w600 : FontWeight.w500,
-                          color: selected
-                              ? MugguColors.deepMaroon
-                              : colorScheme.onSurface,
-                        ),
+                      fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                      color: selected
+                          ? MugguColors.deepMaroon
+                          : colorScheme.onSurface,
+                    ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     description,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
-                        ),
+                    style: Theme.of(context).textTheme.bodySmall
+                        ?.copyWith(color: colorScheme.onSurfaceVariant),
                   ),
                 ],
               ),

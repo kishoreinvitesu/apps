@@ -8,7 +8,8 @@ import '../../../data/repositories/design_repository.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../export/application/design_exporter.dart';
 import '../../export/presentation/export_dialog.dart';
-import '../application/lesson_playback.dart';import 'vector_preview.dart';
+import '../application/lesson_playback.dart';
+import 'vector_preview.dart';
 
 class DesignDetailScreen extends ConsumerStatefulWidget {
   const DesignDetailScreen({

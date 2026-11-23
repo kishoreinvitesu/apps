@@ -30,9 +30,9 @@ class SharedPreferencesStorage implements PreferencesStorage {
     final interests = interestStrings == null
         ? const <InterestOption>{InterestOption.all}
         : interestStrings
-            .map((s) => _parseInterest(s))
-            .whereType<InterestOption>()
-            .toSet();
+              .map((s) => _parseInterest(s))
+              .whereType<InterestOption>()
+              .toSet();
 
     final levelStr = _prefs.getString(_kExperienceLevel);
     final level = _parseLevel(levelStr) ?? ExperienceLevel.beginner;
@@ -119,5 +119,5 @@ class UserPreferencesNotifier extends AsyncNotifier<UserPreferences> {
 
 final userPreferencesProvider =
     AsyncNotifierProvider<UserPreferencesNotifier, UserPreferences>(
-  UserPreferencesNotifier.new,
-);
+      UserPreferencesNotifier.new,
+    );

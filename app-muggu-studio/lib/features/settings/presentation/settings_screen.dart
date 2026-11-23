@@ -40,21 +40,24 @@ class SettingsScreen extends ConsumerWidget {
               label: l10n.english,
               emoji: '🇬🇧',
               selected: currentLocale.languageCode == 'en',
-              onTap: () => _changeLocale(context, ref, const Locale('en'), l10n),
+              onTap: () =>
+                  _changeLocale(context, ref, const Locale('en'), l10n),
             ),
             _LanguageTile(
               locale: const Locale('te'),
               label: l10n.telugu,
               emoji: '🪔',
               selected: currentLocale.languageCode == 'te',
-              onTap: () => _changeLocale(context, ref, const Locale('te'), l10n),
+              onTap: () =>
+                  _changeLocale(context, ref, const Locale('te'), l10n),
             ),
             _LanguageTile(
               locale: const Locale('ta'),
               label: l10n.tamil,
               emoji: '🌺',
               selected: currentLocale.languageCode == 'ta',
-              onTap: () => _changeLocale(context, ref, const Locale('ta'), l10n),
+              onTap: () =>
+                  _changeLocale(context, ref, const Locale('ta'), l10n),
             ),
 
             // ── Preferences ────────────────────────────────────────────────
@@ -72,8 +75,7 @@ class SettingsScreen extends ConsumerWidget {
                   AppVersion.display,
                   style: Theme.of(context).textTheme.labelSmall,
                 ),
-                backgroundColor:
-                    MugguColors.deepMaroon.withAlpha(20),
+                backgroundColor: MugguColors.deepMaroon.withAlpha(20),
                 side: BorderSide.none,
                 padding: const EdgeInsets.symmetric(horizontal: 4),
               ),
@@ -92,9 +94,7 @@ class SettingsScreen extends ConsumerWidget {
               ),
               title: Text(
                 l10n.clearLocalData,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.error,
-                ),
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
               onTap: () => _confirmClearData(context, ref, l10n),
             ),
@@ -140,9 +140,8 @@ class SettingsScreen extends ConsumerWidget {
       }
     } on PlatformException {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.languageSaveError)),
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(l10n.languageSaveError)));
       }
     }
   }
@@ -175,9 +174,8 @@ class SettingsScreen extends ConsumerWidget {
     if (confirmed == true) {
       await ref.read(userPreferencesProvider.notifier).clearAll();
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.dataCleared)),
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(l10n.dataCleared)));
         // Restart onboarding
         context.go('/onboarding');
       }
@@ -228,9 +226,9 @@ class _InterestsTile extends ConsumerWidget {
                   if (interest == InterestOption.all) {
                     await ref
                         .read(userPreferencesProvider.notifier)
-                        .savePrefs(prefs.copyWith(
-                          interests: {InterestOption.all},
-                        ));
+                        .savePrefs(
+                          prefs.copyWith(interests: {InterestOption.all}),
+                        );
                   } else {
                     next.remove(InterestOption.all);
                     if (selected) {
@@ -313,10 +311,10 @@ class _SectionHeader extends StatelessWidget {
       child: Text(
         label.toUpperCase(),
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: MugguColors.deepMaroon,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 1.1,
-            ),
+          color: MugguColors.deepMaroon,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 1.1,
+        ),
       ),
     );
   }

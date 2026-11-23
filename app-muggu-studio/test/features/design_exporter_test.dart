@@ -115,8 +115,10 @@ void _expectValidPng(Uint8List bytes, int expectedDimension) {
   expect(bytes[7], 0x0A, reason: 'PNG signature byte 7');
 
   // IHDR chunk: bytes 12-15 = width, 16-19 = height (big-endian uint32)
-  final width = (bytes[16] << 24) | (bytes[17] << 16) | (bytes[18] << 8) | bytes[19];
-  final height = (bytes[20] << 24) | (bytes[21] << 16) | (bytes[22] << 8) | bytes[23];
+  final width =
+      (bytes[16] << 24) | (bytes[17] << 16) | (bytes[18] << 8) | bytes[19];
+  final height =
+      (bytes[20] << 24) | (bytes[21] << 16) | (bytes[22] << 8) | bytes[23];
   expect(width, expectedDimension, reason: 'PNG width');
   expect(height, expectedDimension, reason: 'PNG height');
 }

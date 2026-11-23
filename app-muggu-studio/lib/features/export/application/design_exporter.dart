@@ -74,7 +74,8 @@ class DesignExporter {
     }
 
     // --- Layer 2: Vector Paths ---
-    final baseStrokeWidth = size.width * 0.0055; // ~6px at 1080p, ~11px at 2048p
+    final baseStrokeWidth =
+        size.width * 0.0055; // ~6px at 1080p, ~11px at 2048p
     for (final designPath in paths) {
       final path = buildDesignPath(designPath, size);
 
@@ -97,10 +98,9 @@ class DesignExporter {
 
     // --- Layer 3: Cultural Branding / Attribution Footer ---
     if (includeBranding) {
-      final attributionText =
-          title != null && title.isNotEmpty
-              ? '$title • Muggu Studio'
-              : 'Muggu Studio • traditional floor art';
+      final attributionText = title != null && title.isNotEmpty
+          ? '$title • Muggu Studio'
+          : 'Muggu Studio • traditional floor art';
 
       final paragraphStyle = ui.ParagraphStyle(
         textAlign: TextAlign.center,
