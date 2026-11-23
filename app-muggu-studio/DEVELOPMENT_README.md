@@ -1056,6 +1056,37 @@ generated catalogue examples until their evidence and approval are recorded.
 - `dumpsys gfxinfo` did not yield useful Flutter frame timings on this run
   (one anomalous frame and a service timeout); no scrolling, detail-rendering
   or Creator-drag performance result is claimed from it.
-- Next, collect a Flutter DevTools profile-mode timeline for Explore scrolling,
-  design detail and Creator input. Then repeat on an agreed mid-range/lowest
+- A profile-mode emulator timeline for Explore scrolling, design detail and
+  Creator input is recorded below. Repeat on an agreed mid-range/lowest
   supported Android device before setting budgets or optimizing.
+
+## 2026-11-23 — Phase 6: Profile-Mode Emulator Timeline
+
+### Capture
+- Device: Android 17 / API 37 x86_64 emulator, 1080×2400 at 420 dpi, 60 Hz.
+- Build: Flutter profile mode using Impeller/OpenGLES. Captured Dart VM timeline
+  `Frame` and `Rasterizer::DoDraw` slices after clearing the timeline for each
+  interaction.
+- Workloads: five vertical Explore-list swipes; opening the first design
+  detail; and four freehand-canvas strokes.
+- The 60 Hz frame interval is 16.67 ms. Values below are paired timeline slice
+  durations, not release-device acceptance thresholds.
+
+| Workload | UI `Frame` slices | UI p95 / max; over 16.67 ms | Raster slices | Raster p95 / max; over 16.67 ms |
+| --- | ---: | --- | ---: | --- |
+| Explore scroll | 127 | 15.77 / 23.72 ms; 5 | 127 | 38.40 / 129.08 ms; 97 (14 over 33.3 ms) |
+| Design detail | 20 | 19.66 / 28.91 ms; 2 | 20 | 28.34 / 35.38 ms; 12 (1 over 33.3 ms) |
+| Creator strokes | 76 | 16.99 / 34.39 ms; 5 | 76 | 32.87 / 46.97 ms; 41 (4 over 33.3 ms) |
+
+### Interpretation and next
+- These are single exploratory captures on an emulator hosted by an Intel
+  Core i5-9300H Windows machine. Raster timings are especially sensitive to
+  emulator and host graphics overhead; they do not establish an app-side
+  bottleneck or a physical-device performance result.
+- Capture windows included idle time and tool-driven interactions, and the
+  design-detail sample is small. Do not compare these as statistically robust
+  scenario benchmarks or set budgets from them.
+- Repeat the captures with bounded, repeatable interaction windows on an
+  agreed mid-range or lowest-supported physical Android device. If raster
+  misses persist there, use a DevTools timeline to locate the expensive work
+  before choosing a narrowly targeted optimization.
