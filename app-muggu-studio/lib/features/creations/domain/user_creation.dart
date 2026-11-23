@@ -9,8 +9,9 @@ enum CreationType {
   freehand;
 
   static CreationType fromName(String name) => switch (name) {
+    'template' => CreationType.template,
     'freehand' => CreationType.freehand,
-    _ => CreationType.template,
+    _ => throw FormatException('Unsupported creation type: $name.'),
   };
 }
 

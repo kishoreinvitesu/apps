@@ -142,6 +142,34 @@ void main() {
       },
     );
 
+    test('unsupported persisted creation types are rejected', () async {
+      final directory = await Directory.systemTemp.createTemp(
+        'muggu_invalid_creation_type_test_',
+      );
+      final databasePath =
+          '${directory.path}${Platform.pathSeparator}creations.db';
+      final database = AppDatabase(
+        factory: databaseFactoryFfi,
+        databasePath: databasePath,
+      );
+      addTearDown(() async {
+        await database.close();
+        await directory.delete(recursive: true);
+      });
+
+      final dao = CreationsDao(database);
+      final creation = createSampleCreation(id: 'invalid_type');
+      await dao.saveCreation(creation);
+      await (await database.database).update(
+        'creations',
+        {'type': 'unrecognized'},
+        where: 'id = ?',
+        whereArgs: [creation.id],
+      );
+
+      await expectLater(dao.loadCreation(creation.id), throwsFormatException);
+    });
+
     test('creations persist across database restarts', () async {
       final directory = await Directory.systemTemp.createTemp(
         'muggu_creations_restart_',
