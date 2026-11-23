@@ -198,6 +198,8 @@ void main() {
       200,
       scrollable: templateScrollable,
     );
+    await tester.ensureVisible(staggeredChip);
+    await tester.pumpAndSettle();
     await tester.tap(staggeredChip);
     await tester.pumpAndSettle();
     expect(find.text('Dot layout'), findsOneWidget);

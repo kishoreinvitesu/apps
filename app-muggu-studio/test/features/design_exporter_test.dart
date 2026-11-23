@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart' show Color;
+import 'package:material_ui/material_ui.dart' show Color;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:muggu_studio/data/models/design_geometry.dart';
 import 'package:muggu_studio/data/models/dot_grid.dart';

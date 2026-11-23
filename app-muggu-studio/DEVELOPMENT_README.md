@@ -1032,3 +1032,30 @@ generated catalogue examples until their evidence and approval are recorded.
   documented cold/warm launch, scrolling, detail-rendering, Creator-input,
   memory and asset-size baseline. Record the device/API and reproducible steps
   before choosing performance budgets or optimizing.
+
+## 2026-11-23 — Phase 6: Initial Emulator Baseline
+
+### Environment and measurements
+- Device: Android 17 / API 37 emulator, 1080×2400 at 420 dpi, Windows host.
+- Build: debug APK; measurements are exploratory and are not release budgets.
+- Process-cold launch: three `adb shell am force-stop` + `am start -W` runs
+  measured 9.47–12.22 seconds (`TotalTime` median 10.43 seconds).
+- Warm resume: `TotalTime` 0 ms and `WaitTime` 11 ms while the app was already
+  foregrounded.
+- Post-launch memory: `dumpsys meminfo` reported 364,837 KB total PSS and
+  492,624 KB total RSS.
+- Debug APK: 198,323,268 bytes (~189.1 MiB). Bundled `assets/`: 231,902 bytes
+  (~226.5 KiB).
+- Home, Explore, Saved, Create, Settings, and the new generated-pattern
+  previews were visually smoke-tested. No Flutter or Android exceptions were
+  found in the app process log.
+
+### Limitations and next
+- These debug-emulator timings and memory numbers do not represent a release
+  build or a minimum-supported physical device.
+- `dumpsys gfxinfo` did not yield useful Flutter frame timings on this run
+  (one anomalous frame and a service timeout); no scrolling, detail-rendering
+  or Creator-drag performance result is claimed from it.
+- Next, collect a Flutter DevTools profile-mode timeline for Explore scrolling,
+  design detail and Creator input. Then repeat on an agreed mid-range/lowest
+  supported Android device before setting budgets or optimizing.
