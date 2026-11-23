@@ -280,15 +280,26 @@ def dot_grid_diamonds(grid):
     return paths
 
 
-def _base_design(design_id, name, description, difficulty, paths, tags):
+def _base_design(
+    design_id,
+    name,
+    description,
+    difficulty,
+    paths,
+    tags,
+    localized_name=None,
+    localized_description=None,
+    technique="geometric_lines",
+    localized_technique=None,
+):
     return {
         "id": design_id,
-        "localizedName": {"en": name},
-        "localizedDescription": {"en": description},
+        "localizedName": localized_name or {"en": name},
+        "localizedDescription": localized_description or {"en": description},
         "region": None,
         "tradition": None,
-        "technique": "geometric_lines",
-        "localizedTechnique": {"en": "Geometric lines"},
+        "technique": technique,
+        "localizedTechnique": localized_technique or {"en": "Geometric lines"},
         "difficulty": difficulty,
         "grid": None,
         "searchTags": tags,
@@ -388,7 +399,521 @@ def build_catalog(radial_petals=8, grid_size=5, grid_layout="square"):
         },
     }
     designs.append(dot_pattern)
+
+    # ── Additional traditional dot-grid and motif designs ───────────────────
+    extra_configs = [
+        (
+            "dot_grid_sample_001",
+            "3×3 Chukkala Muggu (Little Star)",
+            {"en": "3×3 Chukkala Muggu (Little Star)", "te": "3×3 చుక్కల ముగ్గు (చిన్న నక్షత్రం)", "ta": "3×3 புள்ளி கோலம் (சிறு நட்சத்திரம்)"},
+            "A traditional 4-point star motif connecting corner loops on a 3 by 3 dot grid.",
+            {"en": "A traditional 4-point star motif connecting corner loops on a 3 by 3 dot grid.", "te": "3x3 చుక్కల పై మూలల లూప్‌లతో రూపొందించిన సాంప్రదాయ నక్షత్ర ముగ్గు.", "ta": "3x3 புள்ளிகளில் மூலை சுழிகளுடன் கூடிய பாரம்பரிய நட்சத்திரக் கோலம்."},
+            "easy",
+            dot_grid(3, 3, "square"),
+            dot_grid_chikka_star,
+            ["dot grid", "chukkala", "muggu", "kolam", "3x3", "star", "beginner"],
+        ),
+        (
+            "dot_grid_sample_002",
+            "5×5 Pulli Kolam (Lotus Nelavu)",
+            {"en": "5×5 Pulli Kolam (Lotus Nelavu)", "te": "5×5 చుక్కల ముగ్గు (కమలం)", "ta": "5×5 புள்ளி கோலம் (தாமரை நிலவு)"},
+            "A classic stepped lotus and floral contour embracing a 5 by 5 dot grid.",
+            {"en": "A classic stepped lotus and floral contour embracing a 5 by 5 dot grid.", "te": "5x5 చుక్కలపై కమల పుష్ప ఆకృతితో అమర్చిన ముగ్గు.", "ta": "5x5 புள்ளிகளில் அமைந்த பாரம்பரிய தாமரை இதழ் கோலம்."},
+            "easy",
+            dot_grid(5, 5, "square"),
+            dot_grid_lotus_nelavu,
+            ["dot grid", "pulli", "kolam", "lotus", "nelavu", "5x5", "flower"],
+        ),
+        (
+            "dot_grid_sample_003",
+            "5×5 Sikku Kolam (Brahma Mudi)",
+            {"en": "5×5 Sikku Kolam (Brahma Mudi)", "te": "5×5 చిక్కు ముగ్గు (బ్రహ్మముడి)", "ta": "5×5 சிக்கு கோலம் (பிரம்முடி)"},
+            "An unbroken auspicious knot looping symmetrically through a 5 by 5 dot grid.",
+            {"en": "An unbroken auspicious knot looping symmetrically through a 5 by 5 dot grid.", "te": "5x5 చుక్కల మధ్య తిరుగుతూ సాగే పవిత్రమైన బ్రహ్మముడి చిక్కు ముగ్గు.", "ta": "5x5 புள்ளிகளைச் சுற்றி வளைந்து வரும் மங்களகரமான பிரம்முடி சிக்கு கோலம்."},
+            "intermediate",
+            dot_grid(5, 5, "square"),
+            dot_grid_brahma_mudi,
+            ["dot grid", "sikku", "kolam", "brahma mudi", "knot", "5x5", "traditional"],
+        ),
+        (
+            "dot_grid_sample_004",
+            "5×5 Padi Muggu (Step Diamond)",
+            {"en": "5×5 Padi Muggu (Step Diamond)", "te": "5×5 పడి ముగ్గు (మెట్ల వజ్రం)", "ta": "5×5 படி கோலம் (படி வைரம்)"},
+            "Concentric threshold stepped diamonds with auspicious corner lines.",
+            {"en": "Concentric threshold stepped diamonds with auspicious corner lines.", "te": "గడప వద్ద వేసే సాంప్రదాయ మెట్ల వజ్ర పడి ముగ్గు.", "ta": "வாசல் படியில் போடும் மங்களகரமான படி வைரக் கோலம்."},
+            "easy",
+            dot_grid(5, 5, "square"),
+            dot_grid_padi_muggu,
+            ["dot grid", "padi", "muggu", "kolam", "step", "diamond", "5x5"],
+        ),
+        (
+            "dot_grid_sample_005",
+            "5×5 Deepam Muggu (Four Lamps)",
+            {"en": "5×5 Deepam Muggu (Four Lamps)", "te": "5×5 దీపం ముగ్గు (నాలుగు దీపాలు)", "ta": "5×5 தீபம் கோலம் (நான்கு விளக்குகள்)"},
+            "Four festive oil lamps radiating outward from a central flower on 5 by 5 dots.",
+            {"en": "Four festive oil lamps radiating outward from a central flower on 5 by 5 dots.", "te": "మధ్య కమలం నుండి నాలుగు దిక్కులా వెలిగే దీపాలతో కూడిన ముగ్గు.", "ta": "மைய மலரிலிருந்து நான்கு திசைகளிலும் ஒளிரும் அகல் விளக்குகள் கொண்ட கோலம்."},
+            "intermediate",
+            dot_grid(5, 5, "square"),
+            dot_grid_deepam,
+            ["dot grid", "deepam", "diya", "lamp", "festival", "karthika", "5x5"],
+        ),
+        (
+            "dot_grid_sample_006",
+            "7×7 Suzhi Kolam (Star of Harmony)",
+            {"en": "7×7 Suzhi Kolam (Star of Harmony)", "te": "7×7 సుడి ముగ్గు (సామరస్య నక్షత్రం)", "ta": "7×7 சுழி கோலம் (இசைவு நட்சத்திரம்)"},
+            "Intricate multi-loop intertwining knot rings across a 7 by 7 dot grid.",
+            {"en": "Intricate multi-loop intertwining knot rings across a 7 by 7 dot grid.", "te": "7x7 చుక్కలపై వలయాలుగా అల్లుకున్న క్లిష్టమైన సుడి ముగ్గు.", "ta": "7x7 புள்ளிகளில் பின்னப்பட்ட நுணுக்கமான சுழி கோல நட்சத்திரம்."},
+            "advanced",
+            dot_grid(7, 7, "square"),
+            dot_grid_suzhi_star,
+            ["dot grid", "suzhi", "sikku", "kolam", "7x7", "advanced", "star"],
+        ),
+        (
+            "dot_grid_sample_007",
+            "7×7 Sankranti Ratham (Chariot)",
+            {"en": "7×7 Sankranti Ratham (Chariot)", "te": "7×7 సంక్రాంతి రథం ముగ్గు", "ta": "7×7 பொங்கல் தேர் கோலம்"},
+            "A festive temple chariot with wheels, canopy gopuram, and pinnacle flag on 7 by 7 dots.",
+            {"en": "A festive temple chariot with wheels, canopy gopuram, and pinnacle flag on 7 by 7 dots.", "te": "సంక్రాంతి పండుగ సందర్భంగా వేసే సాంప్రదాయ రథం ముగ్గు.", "ta": "மார்கழி, பொங்கல் திருநாளில் வரையும் மங்களகரமான தேர் கோலம்."},
+            "advanced",
+            dot_grid(7, 7, "square"),
+            dot_grid_ratham,
+            ["dot grid", "ratham", "chariot", "sankranti", "pongal", "7x7", "festival"],
+        ),
+        (
+            "dot_grid_sample_008",
+            "5×5 Hridaya Kamalam (8-Petal Lotus)",
+            {"en": "5×5 Hridaya Kamalam (8-Petal Lotus)", "te": "5×5 హృదయ కమలం (అష్టదళ పద్మం)", "ta": "5×5 இதய கமலம் (எட்டு இதழ் தாமரை)"},
+            "Sacred 8-petal lotus drawn with continuous loops from center to perimeter dots.",
+            {"en": "Sacred 8-petal lotus drawn with continuous loops from center to perimeter dots.", "te": "పూజాగదుల్లో వేసే పవిత్రమైన అష్టదళ హృదయ కమల ముగ్గు.", "ta": "பூஜை அறைகளில் வரையும் மங்களகரமான எட்டு இதழ் இதய கமலக் கோலம்."},
+            "intermediate",
+            dot_grid(5, 5, "square"),
+            dot_grid_hridaya_kamalam,
+            ["dot grid", "hridaya kamalam", "lotus", "pooja", "spiritual", "5x5"],
+        ),
+    ]
+
+    for (
+        extra_id,
+        name,
+        loc_name,
+        desc,
+        loc_desc,
+        diff,
+        grid_obj,
+        generator_fn,
+        extra_tags,
+    ) in extra_configs:
+        design_item = _base_design(
+            extra_id,
+            name,
+            desc,
+            diff,
+            generator_fn(grid_obj),
+            extra_tags,
+            localized_name=loc_name,
+            localized_description=loc_desc,
+        )
+        design_item["grid"] = grid_obj
+        designs.append(design_item)
+
     return designs
+
+
+def dot_grid_chikka_star(grid):
+    cols = grid["columns"]
+    dots = grid["dots"]
+
+    def pt(r, c):
+        return dots[r * cols + c]
+
+    return [
+        _polyline_path(
+            "star_center",
+            "group_center",
+            [pt(0, 1), pt(1, 2), pt(2, 1), pt(1, 0)],
+            True,
+        ),
+        _polyline_path(
+            "corner_nw",
+            "group_corners",
+            [pt(0, 1), pt(0, 0), pt(1, 0)],
+            True,
+        ),
+        _polyline_path(
+            "corner_ne",
+            "group_corners",
+            [pt(0, 1), pt(0, 2), pt(1, 2)],
+            True,
+        ),
+        _polyline_path(
+            "corner_se",
+            "group_corners",
+            [pt(2, 1), pt(2, 2), pt(1, 2)],
+            True,
+        ),
+        _polyline_path(
+            "corner_sw",
+            "group_corners",
+            [pt(2, 1), pt(2, 0), pt(1, 0)],
+            True,
+        ),
+    ]
+
+
+def dot_grid_lotus_nelavu(grid):
+    cols = grid["columns"]
+    dots = grid["dots"]
+
+    def pt(r, c):
+        return dots[r * cols + c]
+
+    outer = [
+        pt(0, 1),
+        pt(0, 2),
+        pt(0, 3),
+        pt(1, 4),
+        pt(2, 4),
+        pt(3, 4),
+        pt(4, 3),
+        pt(4, 2),
+        pt(4, 1),
+        pt(3, 0),
+        pt(2, 0),
+        pt(1, 0),
+    ]
+    return [
+        _polyline_path(
+            "lotus_core",
+            "group_core",
+            [pt(1, 2), pt(2, 3), pt(3, 2), pt(2, 1)],
+            True,
+        ),
+        _polyline_path(
+            "petal_north",
+            "group_petals",
+            [pt(1, 1), pt(0, 2), pt(1, 3), pt(2, 2)],
+            True,
+        ),
+        _polyline_path(
+            "petal_east",
+            "group_petals",
+            [pt(1, 3), pt(2, 4), pt(3, 3), pt(2, 2)],
+            True,
+        ),
+        _polyline_path(
+            "petal_south",
+            "group_petals",
+            [pt(3, 3), pt(4, 2), pt(3, 1), pt(2, 2)],
+            True,
+        ),
+        _polyline_path(
+            "petal_west",
+            "group_petals",
+            [pt(3, 1), pt(2, 0), pt(1, 1), pt(2, 2)],
+            True,
+        ),
+        _polyline_path("outer_frame", "group_frame", outer, True),
+    ]
+
+
+def dot_grid_brahma_mudi(grid):
+    cols = grid["columns"]
+    dots = grid["dots"]
+
+    def pt(r, c):
+        return dots[r * cols + c]
+
+    return [
+        _polyline_path(
+            "mudi_center",
+            "group_center",
+            [pt(1, 2), pt(2, 3), pt(3, 2), pt(2, 1)],
+            True,
+        ),
+        _polyline_path(
+            "loop_nw",
+            "group_loops",
+            [pt(0, 2), pt(1, 1), pt(2, 0), pt(1, 2)],
+            True,
+        ),
+        _polyline_path(
+            "loop_ne",
+            "group_loops",
+            [pt(0, 2), pt(1, 3), pt(2, 4), pt(1, 2)],
+            True,
+        ),
+        _polyline_path(
+            "loop_se",
+            "group_loops",
+            [pt(4, 2), pt(3, 3), pt(2, 4), pt(3, 2)],
+            True,
+        ),
+        _polyline_path(
+            "loop_sw",
+            "group_loops",
+            [pt(4, 2), pt(3, 1), pt(2, 0), pt(3, 2)],
+            True,
+        ),
+        _polyline_path(
+            "diag_nw_se",
+            "group_diags",
+            [pt(0, 0), pt(1, 1), pt(3, 3), pt(4, 4)],
+            False,
+        ),
+        _polyline_path(
+            "diag_ne_sw",
+            "group_diags",
+            [pt(0, 4), pt(1, 3), pt(3, 1), pt(4, 0)],
+            False,
+        ),
+    ]
+
+
+def dot_grid_padi_muggu(grid):
+    cols = grid["columns"]
+    dots = grid["dots"]
+
+    def pt(r, c):
+        return dots[r * cols + c]
+
+    return [
+        _polyline_path(
+            "padi_inner",
+            "group_diamonds",
+            [pt(1, 2), pt(2, 3), pt(3, 2), pt(2, 1)],
+            True,
+        ),
+        _polyline_path(
+            "padi_mid",
+            "group_diamonds",
+            [pt(1, 1), pt(1, 3), pt(3, 3), pt(3, 1)],
+            True,
+        ),
+        _polyline_path(
+            "padi_outer",
+            "group_diamonds",
+            [pt(0, 2), pt(2, 4), pt(4, 2), pt(2, 0)],
+            True,
+        ),
+        _polyline_path(
+            "step_nw", "group_steps", [pt(0, 1), pt(1, 1), pt(1, 0)], False
+        ),
+        _polyline_path(
+            "step_ne", "group_steps", [pt(0, 3), pt(1, 3), pt(1, 4)], False
+        ),
+        _polyline_path(
+            "step_se", "group_steps", [pt(4, 3), pt(3, 3), pt(3, 4)], False
+        ),
+        _polyline_path(
+            "step_sw", "group_steps", [pt(4, 1), pt(3, 1), pt(3, 0)], False
+        ),
+    ]
+
+
+def dot_grid_deepam(grid):
+    cols = grid["columns"]
+    dots = grid["dots"]
+
+    def pt(r, c):
+        return dots[r * cols + c]
+
+    return [
+        _polyline_path(
+            "center_flower",
+            "group_center",
+            [pt(1, 2), pt(2, 3), pt(3, 2), pt(2, 1)],
+            True,
+        ),
+        _polyline_path(
+            "diya_north_base",
+            "group_lamps",
+            [pt(1, 1), pt(1, 2), pt(1, 3), pt(0, 2)],
+            True,
+        ),
+        _polyline_path(
+            "diya_north_flame",
+            "group_flames",
+            [pt(0, 1), pt(0, 2), pt(0, 3)],
+            True,
+        ),
+        _polyline_path(
+            "diya_east_base",
+            "group_lamps",
+            [pt(1, 3), pt(2, 3), pt(3, 3), pt(2, 4)],
+            True,
+        ),
+        _polyline_path(
+            "diya_east_flame",
+            "group_flames",
+            [pt(1, 4), pt(2, 4), pt(3, 4)],
+            True,
+        ),
+        _polyline_path(
+            "diya_south_base",
+            "group_lamps",
+            [pt(3, 1), pt(3, 2), pt(3, 3), pt(4, 2)],
+            True,
+        ),
+        _polyline_path(
+            "diya_south_flame",
+            "group_flames",
+            [pt(4, 1), pt(4, 2), pt(4, 3)],
+            True,
+        ),
+        _polyline_path(
+            "diya_west_base",
+            "group_lamps",
+            [pt(1, 1), pt(2, 1), pt(3, 1), pt(2, 0)],
+            True,
+        ),
+        _polyline_path(
+            "diya_west_flame",
+            "group_flames",
+            [pt(1, 0), pt(2, 0), pt(3, 0)],
+            True,
+        ),
+    ]
+
+
+def dot_grid_suzhi_star(grid):
+    cols = grid["columns"]
+    dots = grid["dots"]
+
+    def pt(r, c):
+        return dots[r * cols + c]
+
+    return [
+        _polyline_path(
+            "suzhi_inner",
+            "group_rings",
+            [pt(2, 3), pt(3, 4), pt(4, 3), pt(3, 2)],
+            True,
+        ),
+        _polyline_path(
+            "suzhi_mid",
+            "group_rings",
+            [pt(1, 3), pt(3, 5), pt(5, 3), pt(3, 1)],
+            True,
+        ),
+        _polyline_path(
+            "suzhi_outer",
+            "group_rings",
+            [pt(0, 3), pt(3, 6), pt(6, 3), pt(3, 0)],
+            True,
+        ),
+        _polyline_path(
+            "suzhi_nw",
+            "group_corners",
+            [pt(0, 3), pt(1, 1), pt(3, 0), pt(2, 2)],
+            True,
+        ),
+        _polyline_path(
+            "suzhi_ne",
+            "group_corners",
+            [pt(0, 3), pt(1, 5), pt(3, 6), pt(2, 4)],
+            True,
+        ),
+        _polyline_path(
+            "suzhi_se",
+            "group_corners",
+            [pt(6, 3), pt(5, 5), pt(3, 6), pt(4, 4)],
+            True,
+        ),
+        _polyline_path(
+            "suzhi_sw",
+            "group_corners",
+            [pt(6, 3), pt(5, 1), pt(3, 0), pt(4, 2)],
+            True,
+        ),
+    ]
+
+
+def dot_grid_ratham(grid):
+    cols = grid["columns"]
+    dots = grid["dots"]
+
+    def pt(r, c):
+        return dots[r * cols + c]
+
+    return [
+        _polyline_path(
+            "ratham_flag", "group_flag", [pt(0, 3), pt(0, 4), pt(1, 3)], True
+        ),
+        _polyline_path(
+            "ratham_dome",
+            "group_dome",
+            [pt(1, 2), pt(0, 3), pt(1, 4), pt(2, 5), pt(2, 1)],
+            True,
+        ),
+        _polyline_path(
+            "ratham_body",
+            "group_body",
+            [pt(2, 1), pt(4, 1), pt(4, 5), pt(2, 5)],
+            True,
+        ),
+        _polyline_path(
+            "ratham_pillar", "group_body", [pt(2, 3), pt(4, 3)], False
+        ),
+        _polyline_path(
+            "ratham_cross", "group_body", [pt(3, 2), pt(3, 4)], False
+        ),
+        _polyline_path(
+            "ratham_base",
+            "group_base",
+            [pt(4, 0), pt(5, 0), pt(5, 6), pt(4, 6)],
+            True,
+        ),
+        _polyline_path(
+            "wheel_left",
+            "group_wheels",
+            [pt(5, 1), pt(5, 2), pt(6, 2), pt(6, 1)],
+            True,
+        ),
+        _polyline_path(
+            "spoke_left", "group_wheels", [pt(5, 1), pt(6, 2)], False
+        ),
+        _polyline_path(
+            "wheel_right",
+            "group_wheels",
+            [pt(5, 4), pt(5, 5), pt(6, 5), pt(6, 4)],
+            True,
+        ),
+        _polyline_path(
+            "spoke_right", "group_wheels", [pt(5, 4), pt(6, 5)], False
+        ),
+        _polyline_path(
+            "rope_left", "group_ropes", [pt(5, 0), pt(6, 0)], False
+        ),
+        _polyline_path(
+            "rope_right", "group_ropes", [pt(5, 6), pt(6, 6)], False
+        ),
+    ]
+
+
+def dot_grid_hridaya_kamalam(grid):
+    cols = grid["columns"]
+    dots = grid["dots"]
+
+    def pt(r, c):
+        return dots[r * cols + c]
+
+    center = pt(2, 2)
+    petals = [
+        [center, pt(1, 2), pt(0, 2), pt(1, 1), center],
+        [center, pt(1, 3), pt(0, 3), pt(1, 4), center],
+        [center, pt(2, 3), pt(2, 4), pt(3, 3), center],
+        [center, pt(3, 3), pt(4, 4), pt(4, 3), center],
+        [center, pt(3, 2), pt(4, 2), pt(3, 1), center],
+        [center, pt(3, 1), pt(4, 0), pt(3, 0), center],
+        [center, pt(2, 1), pt(2, 0), pt(1, 1), center],
+        [center, pt(1, 1), pt(0, 0), pt(0, 1), center],
+    ]
+    return [
+        _polyline_path(
+            f"kamalam_petal_{idx:02}", "group_petals", petal_pts, True
+        )
+        for idx, petal_pts in enumerate(petals, start=1)
+    ]
 
 
 def _flatten_path(commands, curve_steps=16):

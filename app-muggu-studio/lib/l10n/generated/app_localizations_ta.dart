@@ -401,4 +401,28 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get save => 'சேமி';
+
+  @override
+  String get exportPng => 'PNG ஏற்றுமதி';
+
+  @override
+  String get shareDesign => 'வடிவமைப்பைப் பகிரவும்';
+
+  @override
+  String get exportingImage => 'படம் ஏற்றுமதி செய்யப்படுகிறது...';
+
+  @override
+  String get imageExported => 'படம் ஏற்றுமதி செய்யப்பட்டது';
+
+  @override
+  String get resolutionStandard => 'நிலையானது (1080 × 1080)';
+
+  @override
+  String get resolutionHigh => 'உயர் தெளிவுத்திறன் (2048 × 2048)';
+
+  @override
+  String get selectResolution => 'தெளிவுத்திறனைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get share => 'பகிர்';
 }

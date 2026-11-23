@@ -400,4 +400,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get save => 'Save';
+
+  @override
+  String get exportPng => 'Export PNG';
+
+  @override
+  String get shareDesign => 'Share design';
+
+  @override
+  String get exportingImage => 'Exporting image...';
+
+  @override
+  String get imageExported => 'Image exported';
+
+  @override
+  String get resolutionStandard => 'Standard (1080 × 1080)';
+
+  @override
+  String get resolutionHigh => 'High-resolution (2048 × 2048)';
+
+  @override
+  String get selectResolution => 'Select resolution';
+
+  @override
+  String get share => 'Share';
 }

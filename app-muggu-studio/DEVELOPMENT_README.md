@@ -887,3 +887,81 @@ generated catalogue examples until their evidence and approval are recorded.
 
 ### Next
 - Proceed with **Phase 4: Export and offline reliability** (clean PNG export at target resolution, Android system sharesheet integration, and network-disabled offline validation).
+
+## 2026-11-22 — Phase 4: PNG Export, Share Sheet Integration & Offline Reliability Architecture Plan
+
+### Technical Architecture Baseline
+
+1. **Headless Vector-to-PNG Exporter (`lib/features/export/application/design_exporter.dart`)**:
+   - `DesignExporter`:
+     - Headless rendering using Flutter engine graphics primitives: `ui.PictureRecorder` and `Canvas`.
+     - Supports target resolutions: Standard (1080 × 1080) and High-Resolution (2048 × 2048) or arbitrary square dimensions.
+     - Layers:
+       - Layer 0: Background solid fill (`MugguColors.warmCream`).
+       - Layer 1: Dot grid underlay with scaled dot radii and proportional opacity.
+       - Layer 2: Vector `DesignPath`s with antialiased stroke, rounded caps/joins, and fills.
+       - Layer 3: Cultural branding footer watermark ("Muggu Studio • traditional floor art") in subtle terracotta.
+     - Converts `ui.Image` to `Uint8List` PNG bytes via `image.toByteData(format: ui.ImageByteFormat.png)`.
+     - High-level methods:
+       - `Future<Uint8List> exportPaths(...)`
+       - `Future<Uint8List> exportCreation(UserCreation creation, ...)`
+       - `Future<Uint8List> exportDesign(Design design, ...)`
+
+2. **Share Service & Scoped Storage (`lib/features/export/application/share_service.dart`)**:
+   - Abstract `ShareService` interface:
+     - `Future<void> sharePng({required Uint8List pngBytes, required String filename, required String title, String? text, Rect? sharePositionOrigin})`
+   - Platform implementation `PlatformShareService`:
+     - Uses `path_provider` to write temporary image bytes to app-specific cache directory (`cacheDir`), avoiding any broad Android `WRITE_EXTERNAL_STORAGE` permission requirements.
+     - Dispatches native Android sharesheet via `share_plus` (`SharePlus.instance.shareXFiles`).
+   - Riverpod provider: `shareServiceProvider`.
+
+3. **Presentation Layer Integration**:
+   - **CreateScreen**:
+     - Template tab: "Share" / "Export" button in action bar alongside Save.
+     - Freehand tab: "Share" action icon in drawing toolbar.
+   - **SavedScreen**:
+     - Added "Share" action in `_CreationCard` menu allowing one-tap sharing of saved creations.
+   - **DesignDetailScreen**:
+     - Added Share action icon button in app bar allowing sharing catalog designs.
+   - Export modal/dialog allowing choice of Standard (1080×1080) vs High-Resolution (2048×2048) export.
+
+4. **Trilingual Localization (`lib/l10n/`)**:
+   - ARB updates across English, Telugu, and Tamil:
+     - `exportPng`, `shareDesign`, `exportingImage`, `imageExported`, `resolutionStandard`, `resolutionHigh`.
+
+5. **Validation Suite Plan**:
+   - `test/features/design_exporter_test.dart`:
+     - PNG header signature validation (`0x89 0x50 0x4E 0x47 0x0D 0x0A 0x1A 0x0A`).
+     - Dimension verification for 1080p and 2048p.
+     - Verification with dot grid and without dot grid.
+     - Verification of template creations and freehand drawn stroke creations.
+   - `test/features/share_service_test.dart`:
+     - Temporary file generation, naming, and cleanup.
+   - Widget tests for Share button triggers on Create, Saved, and Detail screens.
+   - Offline reliability audit: verify zero remote network requests in airplane mode.
+
+
+## 2026-11-23 — Phase 4 Completion & Catalog Mini-Scaling to 20 Designs
+
+### Implemented
+- **Development Version Indicator (lib/core/constants/app_version.dart)**:
+  - Centralized application version metadata: AppVersion.display (1.0.0+1 (dev)).
+  - Integrated header chip in HomeScreen and footer version indicator on the dashboard.
+- **Catalog Mini-Expansion (8 authentic dot-grid designs, 12 -> 20 total)**:
+  - Added 8 authentic traditional dot-grid patterns across varying grid sizes (3x3, 5x5, 7x7) and difficulty levels:
+    1. dot_grid_sample_001: 3×3 Chukkala Muggu (Little Star / Chikka Muggu)
+    2. dot_grid_sample_002: 5×5 Pulli Kolam (Lotus Nelavu)
+    3. dot_grid_sample_003: 5×5 Sikku Kolam (Brahma Mudi)
+    4. dot_grid_sample_004: 5×5 Padi Muggu (Step Diamond)
+    5. dot_grid_sample_005: 5×5 Deepam Muggu (Four Lamps)
+    6. dot_grid_sample_006: 7×7 Suzhi Kolam (Star of Harmony)
+    7. dot_grid_sample_007: 7×7 Sankranti Ratham (Chariot)
+    8. dot_grid_sample_008: 5×5 Hridaya Kamalam (8-Petal Lotus)
+  - Full trilingual names and descriptions (English, Telugu, Tamil).
+  - Lossless 320×320 .webp thumbnails generated for all 8 designs.
+- **Testing & Verification**:
+  - Python tool suite: 	est_generate_sample_catalog.py updated and passing (6/6 tests).
+  - Flutter test suite: design_repository_test.dart and full suite passing (78/78 tests).
+
+### Next
+- Proceed with **Phase 5: First-Time Onboarding & Settings Screen**.

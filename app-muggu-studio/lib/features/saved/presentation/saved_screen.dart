@@ -10,6 +10,8 @@ import '../../../data/repositories/design_repository.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../creations/domain/user_creation.dart';
 import '../../design/presentation/vector_preview.dart';
+import '../../export/application/design_exporter.dart';
+import '../../export/presentation/export_dialog.dart';
 import '../../explore/presentation/design_card.dart';
 
 enum SavedSection { favorites, creations }
@@ -276,6 +278,17 @@ class _CreationCard extends ConsumerWidget {
     }
   }
 
+  Future<void> _shareCreation(BuildContext context, WidgetRef ref) async {
+    final exporter = ref.read(designExporterProvider);
+    await showExportShareSheet(
+      context: context,
+      ref: ref,
+      title: creation.title,
+      onExportBytes: (resolution) =>
+          exporter.exportCreation(creation, resolution: resolution),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
@@ -326,13 +339,25 @@ class _CreationCard extends ConsumerWidget {
                 PopupMenuButton<String>(
                   icon: const Icon(Icons.more_vert_rounded, size: 20),
                   onSelected: (action) {
-                    if (action == 'rename') {
+                    if (action == 'share') {
+                      _shareCreation(context, ref);
+                    } else if (action == 'rename') {
                       _showRenameDialog(context, ref);
                     } else if (action == 'delete') {
                       _showDeleteDialog(context, ref);
                     }
                   },
                   itemBuilder: (ctx) => [
+                    PopupMenuItem(
+                      value: 'share',
+                      child: Row(
+                        children: [
+                          const Icon(Icons.share_rounded, size: 18),
+                          const SizedBox(width: 8),
+                          Text(l10n.shareDesign),
+                        ],
+                      ),
+                    ),
                     PopupMenuItem(
                       value: 'rename',
                       child: Row(

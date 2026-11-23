@@ -10,6 +10,8 @@ import '../../design/presentation/vector_preview.dart';
 import '../../drawing/application/drawing_controller.dart';
 import '../../drawing/presentation/drawing_canvas.dart';
 import '../../drawing/presentation/drawing_toolbar.dart';
+import '../../export/application/design_exporter.dart';
+import '../../export/presentation/export_dialog.dart';
 import '../application/pattern_generator_registry.dart';
 
 class CreateScreen extends ConsumerStatefulWidget {
@@ -380,6 +382,52 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
     }
   }
 
+  Future<void> _shareTemplatePattern(
+    BuildContext context,
+    AppLocalizations? l10n,
+    GeneratedPattern pattern,
+  ) async {
+    final title = _state.generatorId == PatternGeneratorRegistry.radialFlowerId
+        ? (l10n?.radialFlower ?? 'Radial flower')
+        : (l10n?.dotGridDiamonds ?? 'Dot-grid diamonds');
+
+    final exporter = ref.read(designExporterProvider);
+    await showExportShareSheet(
+      context: context,
+      ref: ref,
+      title: title,
+      onExportBytes: (resolution) => exporter.exportToPngBytes(
+        paths: pattern.paths,
+        grid: pattern.grid,
+        targetResolution: resolution.dimension,
+        title: title,
+      ),
+    );
+  }
+
+  Future<void> _shareFreehandDrawing(
+    BuildContext context,
+    AppLocalizations? l10n,
+    DotGrid grid,
+  ) async {
+    final title = l10n?.freehandCanvas ?? 'Freehand Drawing';
+    final strokes = _drawingController.strokes;
+    final paths = UserCreation.strokesToDesignPaths(strokes);
+    final exporter = ref.read(designExporterProvider);
+
+    await showExportShareSheet(
+      context: context,
+      ref: ref,
+      title: title,
+      onExportBytes: (resolution) => exporter.exportToPngBytes(
+        paths: paths,
+        grid: grid,
+        targetResolution: resolution.dimension,
+        title: title,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -518,6 +566,14 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
                   label: Text(resetLabel),
                 ),
                 const SizedBox(width: 8),
+                OutlinedButton.icon(
+                  key: const ValueKey('creator-share'),
+                  onPressed: () =>
+                      _shareTemplatePattern(context, l10n, pattern),
+                  icon: const Icon(Icons.share_rounded),
+                  label: Text(l10n?.share ?? 'Share'),
+                ),
+                const SizedBox(width: 8),
                 FilledButton.icon(
                   key: const ValueKey('creator-save'),
                   onPressed: () =>
@@ -564,6 +620,7 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
         DrawingToolbar(
           controller: _drawingController,
           onSave: () => _showSaveFreehandDialog(context, l10n, freehandGrid),
+          onShare: () => _shareFreehandDrawing(context, l10n, freehandGrid),
         ),
       ],
     );

@@ -401,4 +401,28 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get save => 'సేవ్ చేయి';
+
+  @override
+  String get exportPng => 'PNG ఎగుమతి';
+
+  @override
+  String get shareDesign => 'డిజైన్‌ను భాగస్వామ్యం చేయండి';
+
+  @override
+  String get exportingImage => 'చిత్రాన్ని ఎగుమతి చేస్తోంది...';
+
+  @override
+  String get imageExported => 'చిత్రం ఎగుమతి చేయబడింది';
+
+  @override
+  String get resolutionStandard => 'ప్రామాణిక (1080 × 1080)';
+
+  @override
+  String get resolutionHigh => 'అధిక నాణ్యత (2048 × 2048)';
+
+  @override
+  String get selectResolution => 'రిజల్యూషన్‌ను ఎంచుకోండి';
+
+  @override
+  String get share => 'భాగస్వామ్యం';
 }

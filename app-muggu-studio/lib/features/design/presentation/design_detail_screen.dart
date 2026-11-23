@@ -3,10 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../app/app_tab.dart';
+import '../../../data/models/muggu_design.dart';
 import '../../../data/repositories/design_repository.dart';
 import '../../../l10n/generated/app_localizations.dart';
-import '../application/lesson_playback.dart';
-import 'vector_preview.dart';
+import '../../export/application/design_exporter.dart';
+import '../../export/presentation/export_dialog.dart';
+import '../application/lesson_playback.dart';import 'vector_preview.dart';
 
 class DesignDetailScreen extends ConsumerStatefulWidget {
   const DesignDetailScreen({
@@ -55,6 +57,25 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
     } else {
       _playback!.play();
     }
+  }
+
+  Future<void> _shareDesign(
+    BuildContext context,
+    MugguDesign design,
+    String languageCode,
+  ) async {
+    final title = design.nameFor(languageCode);
+    final exporter = ref.read(designExporterProvider);
+    await showExportShareSheet(
+      context: context,
+      ref: ref,
+      title: title,
+      onExportBytes: (resolution) => exporter.exportDesign(
+        design,
+        resolution: resolution,
+        languageCode: languageCode,
+      ),
+    );
   }
 
   @override
@@ -160,13 +181,26 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
           value: design.traditionFor(languageCode) ?? l10n.metadataUnassigned,
         ),
         const SizedBox(height: 16),
-        FilledButton.icon(
-          onPressed: () => context.push(
-            '/design/${design.id}/practice',
-            extra: widget.originTab,
-          ),
-          icon: const Icon(Icons.gesture_rounded),
-          label: Text(l10n.practiceDesign),
+        Row(
+          children: [
+            Expanded(
+              child: FilledButton.icon(
+                onPressed: () => context.push(
+                  '/design/${design.id}/practice',
+                  extra: widget.originTab,
+                ),
+                icon: const Icon(Icons.gesture_rounded),
+                label: Text(l10n.practiceDesign),
+              ),
+            ),
+            const SizedBox(width: 8),
+            IconButton.outlined(
+              key: const ValueKey('design-share-button'),
+              tooltip: l10n.shareDesign,
+              onPressed: () => _shareDesign(context, design, languageCode),
+              icon: const Icon(Icons.share_rounded),
+            ),
+          ],
         ),
         if (hasReviewedLesson) ...[
           const SizedBox(height: 12),

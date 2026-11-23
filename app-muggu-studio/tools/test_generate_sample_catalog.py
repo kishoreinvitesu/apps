@@ -38,7 +38,7 @@ class GenerateSampleCatalogTests(unittest.TestCase):
             grid_layout="staggered",
         )
 
-        self.assertEqual(len(catalog), 12)
+        self.assertEqual(len(catalog), 20)
         self.assertEqual(
             generator._catalog_json(catalog),
             generator._catalog_json(
@@ -78,7 +78,10 @@ class GenerateSampleCatalogTests(unittest.TestCase):
                             self.assertGreaterEqual(command[key], 0)
                             self.assertLessEqual(command[key], 1)
 
-        grid = catalog[-1]["grid"]
+        generated_dot_grid = next(
+            d for d in catalog if d["id"] == "generated_dot_grid_001"
+        )
+        grid = generated_dot_grid["grid"]
         self.assertEqual(grid["layout"], "staggered")
         self.assertEqual(len(grid["dots"]), 49)
         for x, y in grid["dots"]:
@@ -140,7 +143,7 @@ class GenerateSampleCatalogTests(unittest.TestCase):
             decoded = json.loads(catalog_path.read_text(encoding="utf-8"))
             self.assertEqual(decoded["schemaVersion"], generator.SCHEMA_VERSION)
             self.assertEqual(len(decoded["designs"]), len(catalog))
-            self.assertEqual(len(list(thumbnail_directory.glob("*.webp"))), 12)
+            self.assertEqual(len(list(thumbnail_directory.glob("*.webp"))), len(catalog))
 
 
 if __name__ == "__main__":

@@ -12,26 +12,36 @@ import '../domain/drawn_stroke.dart';
 /// - Symmetry chip row (None / Vertical / Horizontal / 4-Way)
 /// - Action row: Undo, Redo, Clear
 class DrawingToolbar extends StatelessWidget {
-  const DrawingToolbar({required this.controller, this.onSave, super.key});
+  const DrawingToolbar({
+    required this.controller,
+    this.onSave,
+    this.onShare,
+    super.key,
+  });
 
   final DrawingController controller;
   final VoidCallback? onSave;
+  final VoidCallback? onShare;
 
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
       listenable: controller,
-      builder: (context, _) =>
-          _ToolbarContent(controller: controller, onSave: onSave),
+      builder: (context, _) => _ToolbarContent(
+        controller: controller,
+        onSave: onSave,
+        onShare: onShare,
+      ),
     );
   }
 }
 
 class _ToolbarContent extends StatelessWidget {
-  const _ToolbarContent({required this.controller, this.onSave});
+  const _ToolbarContent({required this.controller, this.onSave, this.onShare});
 
   final DrawingController controller;
   final VoidCallback? onSave;
+  final VoidCallback? onShare;
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +84,7 @@ class _ToolbarContent extends StatelessWidget {
             l10n: l10n,
             context: context,
             onSave: onSave,
+            onShare: onShare,
           ),
         ],
       ),
@@ -317,12 +328,14 @@ class _ActionRow extends StatelessWidget {
     required this.l10n,
     required this.context,
     this.onSave,
+    this.onShare,
   });
 
   final DrawingController controller;
   final AppLocalizations l10n;
   final BuildContext context;
   final VoidCallback? onSave;
+  final VoidCallback? onShare;
 
   Future<void> _confirmClear() async {
     final confirmed = await showDialog<bool>(
@@ -366,6 +379,15 @@ class _ActionRow extends StatelessWidget {
           icon: const Icon(Icons.delete_outline_rounded),
           onPressed: controller.strokes.isEmpty ? null : _confirmClear,
         ),
+        if (onShare != null) ...[
+          const SizedBox(width: 8),
+          IconButton.outlined(
+            key: const ValueKey('drawing-share'),
+            tooltip: l10n.shareDesign,
+            icon: const Icon(Icons.share_rounded),
+            onPressed: controller.strokes.isEmpty ? null : onShare,
+          ),
+        ],
         if (onSave != null) ...[
           const SizedBox(width: 8),
           IconButton.filled(

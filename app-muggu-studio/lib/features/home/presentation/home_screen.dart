@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../core/constants/app_version.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../app/app_tab.dart';
 import '../../../data/models/muggu_design.dart';
@@ -43,12 +44,52 @@ class HomeScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  l10n.brandLine,
-                  style: textTheme.titleMedium?.copyWith(
-                    color: MugguColors.leafGreen,
-                    fontWeight: FontWeight.w700,
-                  ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        l10n.brandLine,
+                        style: textTheme.titleMedium?.copyWith(
+                          color: MugguColors.leafGreen,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: MugguColors.deepMaroon.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: MugguColors.deepMaroon.withValues(alpha: 0.25),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.code_rounded,
+                            size: 13,
+                            color: MugguColors.deepMaroon,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            AppVersion.display,
+                            style: textTheme.labelSmall?.copyWith(
+                              color: MugguColors.deepMaroon,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.3,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -112,6 +153,15 @@ class HomeScreen extends ConsumerWidget {
                   title: l10n.openCreator,
                   description: l10n.openCreatorDescription,
                   onTap: () => context.go('/create'),
+                ),
+                const SizedBox(height: 24),
+                Center(
+                  child: Text(
+                    'Muggu Studio ${AppVersion.display}',
+                    style: textTheme.bodySmall?.copyWith(
+                      color: MugguColors.darkBrown.withValues(alpha: 0.5),
+                    ),
+                  ),
                 ),
               ],
             ),

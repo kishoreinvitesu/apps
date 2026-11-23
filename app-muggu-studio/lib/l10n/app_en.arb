@@ -124,5 +124,13 @@
   "noCreationsYet": "No creations yet",
   "noCreationsDescription": "Designs you create and save will appear here.",
   "editCreation": "Edit",
-  "save": "Save"
+  "save": "Save",
+  "exportPng": "Export PNG",
+  "shareDesign": "Share design",
+  "exportingImage": "Exporting image...",
+  "imageExported": "Image exported",
+  "resolutionStandard": "Standard (1080 × 1080)",
+  "resolutionHigh": "High-resolution (2048 × 2048)",
+  "selectResolution": "Select resolution",
+  "share": "Share"
 }

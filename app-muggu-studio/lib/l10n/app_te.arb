@@ -124,5 +124,13 @@
   "noCreationsYet": "ఇంకా సృష్టిలు లేవు",
   "noCreationsDescription": "మీరు రూపొందించి సేవ్ చేసిన డిజైన్లు ఇక్కడ కనిపిస్తాయి.",
   "editCreation": "సవరించు",
-  "save": "సేవ్ చేయి"
+  "save": "సేవ్ చేయి",
+  "exportPng": "PNG ఎగుమతి",
+  "shareDesign": "డిజైన్‌ను భాగస్వామ్యం చేయండి",
+  "exportingImage": "చిత్రాన్ని ఎగుమతి చేస్తోంది...",
+  "imageExported": "చిత్రం ఎగుమతి చేయబడింది",
+  "resolutionStandard": "ప్రామాణిక (1080 × 1080)",
+  "resolutionHigh": "అధిక నాణ్యత (2048 × 2048)",
+  "selectResolution": "రిజల్యూషన్‌ను ఎంచుకోండి",
+  "share": "భాగస్వామ్యం"
 }

@@ -5181,6 +5181,3114 @@
         "reviewer": "",
         "evidence": ""
       }
+    },
+    {
+      "id": "dot_grid_sample_001",
+      "localizedName": {
+        "en": "3×3 Chukkala Muggu (Little Star)",
+        "te": "3×3 చుక్కల ముగ్గు (చిన్న నక్షత్రం)",
+        "ta": "3×3 புள்ளி கோலம் (சிறு நட்சத்திரம்)"
+      },
+      "localizedDescription": {
+        "en": "A traditional 4-point star motif connecting corner loops on a 3 by 3 dot grid.",
+        "te": "3x3 చుక్కల పై మూలల లూప్‌లతో రూపొందించిన సాంప్రదాయ నక్షత్ర ముగ్గు.",
+        "ta": "3x3 புள்ளிகளில் மூலை சுழிகளுடன் கூடிய பாரம்பரிய நட்சத்திரக் கோலம்."
+      },
+      "region": null,
+      "tradition": null,
+      "technique": "geometric_lines",
+      "localizedTechnique": {
+        "en": "Geometric lines"
+      },
+      "difficulty": "easy",
+      "grid": {
+        "layout": "square",
+        "rows": 3,
+        "columns": 3,
+        "dots": [
+          [
+            0.12,
+            0.12
+          ],
+          [
+            0.5,
+            0.12
+          ],
+          [
+            0.88,
+            0.12
+          ],
+          [
+            0.12,
+            0.5
+          ],
+          [
+            0.5,
+            0.5
+          ],
+          [
+            0.88,
+            0.5
+          ],
+          [
+            0.12,
+            0.88
+          ],
+          [
+            0.5,
+            0.88
+          ],
+          [
+            0.88,
+            0.88
+          ]
+        ]
+      },
+      "searchTags": [
+        "dot grid",
+        "chukkala",
+        "muggu",
+        "kolam",
+        "3x3",
+        "star",
+        "beginner"
+      ],
+      "thumbnail": "assets/designs/thumbnails/dot_grid_sample_001.webp",
+      "paths": [
+        {
+          "id": "star_center",
+          "groupId": "group_center",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "corner_nw",
+          "groupId": "group_corners",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "corner_ne",
+          "groupId": "group_corners",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "corner_se",
+          "groupId": "group_corners",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "corner_sw",
+          "groupId": "group_corners",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        }
+      ],
+      "recipe": null,
+      "lessonSteps": [],
+      "rightsReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": "Original app-generated geometric vector; provenance and rights documentation pending."
+      },
+      "culturalReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "localizationReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      }
+    },
+    {
+      "id": "dot_grid_sample_002",
+      "localizedName": {
+        "en": "5×5 Pulli Kolam (Lotus Nelavu)",
+        "te": "5×5 చుక్కల ముగ్గు (కమలం)",
+        "ta": "5×5 புள்ளி கோலம் (தாமரை நிலவு)"
+      },
+      "localizedDescription": {
+        "en": "A classic stepped lotus and floral contour embracing a 5 by 5 dot grid.",
+        "te": "5x5 చుక్కలపై కమల పుష్ప ఆకృతితో అమర్చిన ముగ్గు.",
+        "ta": "5x5 புள்ளிகளில் அமைந்த பாரம்பரிய தாமரை இதழ் கோலம்."
+      },
+      "region": null,
+      "tradition": null,
+      "technique": "geometric_lines",
+      "localizedTechnique": {
+        "en": "Geometric lines"
+      },
+      "difficulty": "easy",
+      "grid": {
+        "layout": "square",
+        "rows": 5,
+        "columns": 5,
+        "dots": [
+          [
+            0.12,
+            0.12
+          ],
+          [
+            0.31,
+            0.12
+          ],
+          [
+            0.5,
+            0.12
+          ],
+          [
+            0.6900000000000001,
+            0.12
+          ],
+          [
+            0.88,
+            0.12
+          ],
+          [
+            0.12,
+            0.31
+          ],
+          [
+            0.31,
+            0.31
+          ],
+          [
+            0.5,
+            0.31
+          ],
+          [
+            0.6900000000000001,
+            0.31
+          ],
+          [
+            0.88,
+            0.31
+          ],
+          [
+            0.12,
+            0.5
+          ],
+          [
+            0.31,
+            0.5
+          ],
+          [
+            0.5,
+            0.5
+          ],
+          [
+            0.6900000000000001,
+            0.5
+          ],
+          [
+            0.88,
+            0.5
+          ],
+          [
+            0.12,
+            0.6900000000000001
+          ],
+          [
+            0.31,
+            0.6900000000000001
+          ],
+          [
+            0.5,
+            0.6900000000000001
+          ],
+          [
+            0.6900000000000001,
+            0.6900000000000001
+          ],
+          [
+            0.88,
+            0.6900000000000001
+          ],
+          [
+            0.12,
+            0.88
+          ],
+          [
+            0.31,
+            0.88
+          ],
+          [
+            0.5,
+            0.88
+          ],
+          [
+            0.6900000000000001,
+            0.88
+          ],
+          [
+            0.88,
+            0.88
+          ]
+        ]
+      },
+      "searchTags": [
+        "dot grid",
+        "pulli",
+        "kolam",
+        "lotus",
+        "nelavu",
+        "5x5",
+        "flower"
+      ],
+      "thumbnail": "assets/designs/thumbnails/dot_grid_sample_002.webp",
+      "paths": [
+        {
+          "id": "lotus_core",
+          "groupId": "group_core",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "petal_north",
+          "groupId": "group_petals",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.31,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "petal_east",
+          "groupId": "group_petals",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.6900000000000001,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "petal_south",
+          "groupId": "group_petals",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.6900000000000001,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "petal_west",
+          "groupId": "group_petals",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.31,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "outer_frame",
+          "groupId": "group_frame",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.31,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.31
+            },
+            {
+              "type": "close"
+            }
+          ]
+        }
+      ],
+      "recipe": null,
+      "lessonSteps": [],
+      "rightsReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": "Original app-generated geometric vector; provenance and rights documentation pending."
+      },
+      "culturalReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "localizationReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      }
+    },
+    {
+      "id": "dot_grid_sample_003",
+      "localizedName": {
+        "en": "5×5 Sikku Kolam (Brahma Mudi)",
+        "te": "5×5 చిక్కు ముగ్గు (బ్రహ్మముడి)",
+        "ta": "5×5 சிக்கு கோலம் (பிரம்முடி)"
+      },
+      "localizedDescription": {
+        "en": "An unbroken auspicious knot looping symmetrically through a 5 by 5 dot grid.",
+        "te": "5x5 చుక్కల మధ్య తిరుగుతూ సాగే పవిత్రమైన బ్రహ్మముడి చిక్కు ముగ్గు.",
+        "ta": "5x5 புள்ளிகளைச் சுற்றி வளைந்து வரும் மங்களகரமான பிரம்முடி சிக்கு கோலம்."
+      },
+      "region": null,
+      "tradition": null,
+      "technique": "geometric_lines",
+      "localizedTechnique": {
+        "en": "Geometric lines"
+      },
+      "difficulty": "intermediate",
+      "grid": {
+        "layout": "square",
+        "rows": 5,
+        "columns": 5,
+        "dots": [
+          [
+            0.12,
+            0.12
+          ],
+          [
+            0.31,
+            0.12
+          ],
+          [
+            0.5,
+            0.12
+          ],
+          [
+            0.6900000000000001,
+            0.12
+          ],
+          [
+            0.88,
+            0.12
+          ],
+          [
+            0.12,
+            0.31
+          ],
+          [
+            0.31,
+            0.31
+          ],
+          [
+            0.5,
+            0.31
+          ],
+          [
+            0.6900000000000001,
+            0.31
+          ],
+          [
+            0.88,
+            0.31
+          ],
+          [
+            0.12,
+            0.5
+          ],
+          [
+            0.31,
+            0.5
+          ],
+          [
+            0.5,
+            0.5
+          ],
+          [
+            0.6900000000000001,
+            0.5
+          ],
+          [
+            0.88,
+            0.5
+          ],
+          [
+            0.12,
+            0.6900000000000001
+          ],
+          [
+            0.31,
+            0.6900000000000001
+          ],
+          [
+            0.5,
+            0.6900000000000001
+          ],
+          [
+            0.6900000000000001,
+            0.6900000000000001
+          ],
+          [
+            0.88,
+            0.6900000000000001
+          ],
+          [
+            0.12,
+            0.88
+          ],
+          [
+            0.31,
+            0.88
+          ],
+          [
+            0.5,
+            0.88
+          ],
+          [
+            0.6900000000000001,
+            0.88
+          ],
+          [
+            0.88,
+            0.88
+          ]
+        ]
+      },
+      "searchTags": [
+        "dot grid",
+        "sikku",
+        "kolam",
+        "brahma mudi",
+        "knot",
+        "5x5",
+        "traditional"
+      ],
+      "thumbnail": "assets/designs/thumbnails/dot_grid_sample_003.webp",
+      "paths": [
+        {
+          "id": "mudi_center",
+          "groupId": "group_center",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "loop_nw",
+          "groupId": "group_loops",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.31
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "loop_ne",
+          "groupId": "group_loops",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.31
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "loop_se",
+          "groupId": "group_loops",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "loop_sw",
+          "groupId": "group_loops",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "diag_nw_se",
+          "groupId": "group_diags",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.12,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.88
+            }
+          ]
+        },
+        {
+          "id": "diag_ne_sw",
+          "groupId": "group_diags",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.88,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.88
+            }
+          ]
+        }
+      ],
+      "recipe": null,
+      "lessonSteps": [],
+      "rightsReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": "Original app-generated geometric vector; provenance and rights documentation pending."
+      },
+      "culturalReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "localizationReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      }
+    },
+    {
+      "id": "dot_grid_sample_004",
+      "localizedName": {
+        "en": "5×5 Padi Muggu (Step Diamond)",
+        "te": "5×5 పడి ముగ్గు (మెట్ల వజ్రం)",
+        "ta": "5×5 படி கோலம் (படி வைரம்)"
+      },
+      "localizedDescription": {
+        "en": "Concentric threshold stepped diamonds with auspicious corner lines.",
+        "te": "గడప వద్ద వేసే సాంప్రదాయ మెట్ల వజ్ర పడి ముగ్గు.",
+        "ta": "வாசல் படியில் போடும் மங்களகரமான படி வைரக் கோலம்."
+      },
+      "region": null,
+      "tradition": null,
+      "technique": "geometric_lines",
+      "localizedTechnique": {
+        "en": "Geometric lines"
+      },
+      "difficulty": "easy",
+      "grid": {
+        "layout": "square",
+        "rows": 5,
+        "columns": 5,
+        "dots": [
+          [
+            0.12,
+            0.12
+          ],
+          [
+            0.31,
+            0.12
+          ],
+          [
+            0.5,
+            0.12
+          ],
+          [
+            0.6900000000000001,
+            0.12
+          ],
+          [
+            0.88,
+            0.12
+          ],
+          [
+            0.12,
+            0.31
+          ],
+          [
+            0.31,
+            0.31
+          ],
+          [
+            0.5,
+            0.31
+          ],
+          [
+            0.6900000000000001,
+            0.31
+          ],
+          [
+            0.88,
+            0.31
+          ],
+          [
+            0.12,
+            0.5
+          ],
+          [
+            0.31,
+            0.5
+          ],
+          [
+            0.5,
+            0.5
+          ],
+          [
+            0.6900000000000001,
+            0.5
+          ],
+          [
+            0.88,
+            0.5
+          ],
+          [
+            0.12,
+            0.6900000000000001
+          ],
+          [
+            0.31,
+            0.6900000000000001
+          ],
+          [
+            0.5,
+            0.6900000000000001
+          ],
+          [
+            0.6900000000000001,
+            0.6900000000000001
+          ],
+          [
+            0.88,
+            0.6900000000000001
+          ],
+          [
+            0.12,
+            0.88
+          ],
+          [
+            0.31,
+            0.88
+          ],
+          [
+            0.5,
+            0.88
+          ],
+          [
+            0.6900000000000001,
+            0.88
+          ],
+          [
+            0.88,
+            0.88
+          ]
+        ]
+      },
+      "searchTags": [
+        "dot grid",
+        "padi",
+        "muggu",
+        "kolam",
+        "step",
+        "diamond",
+        "5x5"
+      ],
+      "thumbnail": "assets/designs/thumbnails/dot_grid_sample_004.webp",
+      "paths": [
+        {
+          "id": "padi_inner",
+          "groupId": "group_diamonds",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "padi_mid",
+          "groupId": "group_diamonds",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.31,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "padi_outer",
+          "groupId": "group_diamonds",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "step_nw",
+          "groupId": "group_steps",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.31,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.31
+            }
+          ]
+        },
+        {
+          "id": "step_ne",
+          "groupId": "group_steps",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.6900000000000001,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.31
+            }
+          ]
+        },
+        {
+          "id": "step_se",
+          "groupId": "group_steps",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.6900000000000001,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.6900000000000001
+            }
+          ]
+        },
+        {
+          "id": "step_sw",
+          "groupId": "group_steps",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.31,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.6900000000000001
+            }
+          ]
+        }
+      ],
+      "recipe": null,
+      "lessonSteps": [],
+      "rightsReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": "Original app-generated geometric vector; provenance and rights documentation pending."
+      },
+      "culturalReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "localizationReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      }
+    },
+    {
+      "id": "dot_grid_sample_005",
+      "localizedName": {
+        "en": "5×5 Deepam Muggu (Four Lamps)",
+        "te": "5×5 దీపం ముగ్గు (నాలుగు దీపాలు)",
+        "ta": "5×5 தீபம் கோலம் (நான்கு விளக்குகள்)"
+      },
+      "localizedDescription": {
+        "en": "Four festive oil lamps radiating outward from a central flower on 5 by 5 dots.",
+        "te": "మధ్య కమలం నుండి నాలుగు దిక్కులా వెలిగే దీపాలతో కూడిన ముగ్గు.",
+        "ta": "மைய மலரிலிருந்து நான்கு திசைகளிலும் ஒளிரும் அகல் விளக்குகள் கொண்ட கோலம்."
+      },
+      "region": null,
+      "tradition": null,
+      "technique": "geometric_lines",
+      "localizedTechnique": {
+        "en": "Geometric lines"
+      },
+      "difficulty": "intermediate",
+      "grid": {
+        "layout": "square",
+        "rows": 5,
+        "columns": 5,
+        "dots": [
+          [
+            0.12,
+            0.12
+          ],
+          [
+            0.31,
+            0.12
+          ],
+          [
+            0.5,
+            0.12
+          ],
+          [
+            0.6900000000000001,
+            0.12
+          ],
+          [
+            0.88,
+            0.12
+          ],
+          [
+            0.12,
+            0.31
+          ],
+          [
+            0.31,
+            0.31
+          ],
+          [
+            0.5,
+            0.31
+          ],
+          [
+            0.6900000000000001,
+            0.31
+          ],
+          [
+            0.88,
+            0.31
+          ],
+          [
+            0.12,
+            0.5
+          ],
+          [
+            0.31,
+            0.5
+          ],
+          [
+            0.5,
+            0.5
+          ],
+          [
+            0.6900000000000001,
+            0.5
+          ],
+          [
+            0.88,
+            0.5
+          ],
+          [
+            0.12,
+            0.6900000000000001
+          ],
+          [
+            0.31,
+            0.6900000000000001
+          ],
+          [
+            0.5,
+            0.6900000000000001
+          ],
+          [
+            0.6900000000000001,
+            0.6900000000000001
+          ],
+          [
+            0.88,
+            0.6900000000000001
+          ],
+          [
+            0.12,
+            0.88
+          ],
+          [
+            0.31,
+            0.88
+          ],
+          [
+            0.5,
+            0.88
+          ],
+          [
+            0.6900000000000001,
+            0.88
+          ],
+          [
+            0.88,
+            0.88
+          ]
+        ]
+      },
+      "searchTags": [
+        "dot grid",
+        "deepam",
+        "diya",
+        "lamp",
+        "festival",
+        "karthika",
+        "5x5"
+      ],
+      "thumbnail": "assets/designs/thumbnails/dot_grid_sample_005.webp",
+      "paths": [
+        {
+          "id": "center_flower",
+          "groupId": "group_center",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "diya_north_base",
+          "groupId": "group_lamps",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.31,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.12
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "diya_north_flame",
+          "groupId": "group_flames",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.31,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.12
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "diya_east_base",
+          "groupId": "group_lamps",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.6900000000000001,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "diya_east_flame",
+          "groupId": "group_flames",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.88,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "diya_south_base",
+          "groupId": "group_lamps",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.31,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.88
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "diya_south_flame",
+          "groupId": "group_flames",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.31,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.88
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "diya_west_base",
+          "groupId": "group_lamps",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.31,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "diya_west_flame",
+          "groupId": "group_flames",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.12,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "close"
+            }
+          ]
+        }
+      ],
+      "recipe": null,
+      "lessonSteps": [],
+      "rightsReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": "Original app-generated geometric vector; provenance and rights documentation pending."
+      },
+      "culturalReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "localizationReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      }
+    },
+    {
+      "id": "dot_grid_sample_006",
+      "localizedName": {
+        "en": "7×7 Suzhi Kolam (Star of Harmony)",
+        "te": "7×7 సుడి ముగ్గు (సామరస్య నక్షత్రం)",
+        "ta": "7×7 சுழி கோலம் (இசைவு நட்சத்திரம்)"
+      },
+      "localizedDescription": {
+        "en": "Intricate multi-loop intertwining knot rings across a 7 by 7 dot grid.",
+        "te": "7x7 చుక్కలపై వలయాలుగా అల్లుకున్న క్లిష్టమైన సుడి ముగ్గు.",
+        "ta": "7x7 புள்ளிகளில் பின்னப்பட்ட நுணுக்கமான சுழி கோல நட்சத்திரம்."
+      },
+      "region": null,
+      "tradition": null,
+      "technique": "geometric_lines",
+      "localizedTechnique": {
+        "en": "Geometric lines"
+      },
+      "difficulty": "advanced",
+      "grid": {
+        "layout": "square",
+        "rows": 7,
+        "columns": 7,
+        "dots": [
+          [
+            0.12,
+            0.12
+          ],
+          [
+            0.24666666666666665,
+            0.12
+          ],
+          [
+            0.3733333333333333,
+            0.12
+          ],
+          [
+            0.5,
+            0.12
+          ],
+          [
+            0.6266666666666666,
+            0.12
+          ],
+          [
+            0.7533333333333334,
+            0.12
+          ],
+          [
+            0.88,
+            0.12
+          ],
+          [
+            0.12,
+            0.24666666666666667
+          ],
+          [
+            0.24666666666666665,
+            0.24666666666666667
+          ],
+          [
+            0.3733333333333333,
+            0.24666666666666667
+          ],
+          [
+            0.5,
+            0.24666666666666667
+          ],
+          [
+            0.6266666666666666,
+            0.24666666666666667
+          ],
+          [
+            0.7533333333333334,
+            0.24666666666666667
+          ],
+          [
+            0.88,
+            0.24666666666666667
+          ],
+          [
+            0.12,
+            0.37333333333333335
+          ],
+          [
+            0.24666666666666665,
+            0.37333333333333335
+          ],
+          [
+            0.3733333333333333,
+            0.37333333333333335
+          ],
+          [
+            0.5,
+            0.37333333333333335
+          ],
+          [
+            0.6266666666666666,
+            0.37333333333333335
+          ],
+          [
+            0.7533333333333334,
+            0.37333333333333335
+          ],
+          [
+            0.88,
+            0.37333333333333335
+          ],
+          [
+            0.12,
+            0.5
+          ],
+          [
+            0.24666666666666665,
+            0.5
+          ],
+          [
+            0.3733333333333333,
+            0.5
+          ],
+          [
+            0.5,
+            0.5
+          ],
+          [
+            0.6266666666666666,
+            0.5
+          ],
+          [
+            0.7533333333333334,
+            0.5
+          ],
+          [
+            0.88,
+            0.5
+          ],
+          [
+            0.12,
+            0.6266666666666667
+          ],
+          [
+            0.24666666666666665,
+            0.6266666666666667
+          ],
+          [
+            0.3733333333333333,
+            0.6266666666666667
+          ],
+          [
+            0.5,
+            0.6266666666666667
+          ],
+          [
+            0.6266666666666666,
+            0.6266666666666667
+          ],
+          [
+            0.7533333333333334,
+            0.6266666666666667
+          ],
+          [
+            0.88,
+            0.6266666666666667
+          ],
+          [
+            0.12,
+            0.7533333333333333
+          ],
+          [
+            0.24666666666666665,
+            0.7533333333333333
+          ],
+          [
+            0.3733333333333333,
+            0.7533333333333333
+          ],
+          [
+            0.5,
+            0.7533333333333333
+          ],
+          [
+            0.6266666666666666,
+            0.7533333333333333
+          ],
+          [
+            0.7533333333333334,
+            0.7533333333333333
+          ],
+          [
+            0.88,
+            0.7533333333333333
+          ],
+          [
+            0.12,
+            0.8800000000000001
+          ],
+          [
+            0.24666666666666665,
+            0.8800000000000001
+          ],
+          [
+            0.3733333333333333,
+            0.8800000000000001
+          ],
+          [
+            0.5,
+            0.8800000000000001
+          ],
+          [
+            0.6266666666666666,
+            0.8800000000000001
+          ],
+          [
+            0.7533333333333334,
+            0.8800000000000001
+          ],
+          [
+            0.88,
+            0.8800000000000001
+          ]
+        ]
+      },
+      "searchTags": [
+        "dot grid",
+        "suzhi",
+        "sikku",
+        "kolam",
+        "7x7",
+        "advanced",
+        "star"
+      ],
+      "thumbnail": "assets/designs/thumbnails/dot_grid_sample_006.webp",
+      "paths": [
+        {
+          "id": "suzhi_inner",
+          "groupId": "group_rings",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.37333333333333335
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6266666666666666,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.6266666666666667
+            },
+            {
+              "type": "lineTo",
+              "x": 0.3733333333333333,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "suzhi_mid",
+          "groupId": "group_rings",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.24666666666666667
+            },
+            {
+              "type": "lineTo",
+              "x": 0.7533333333333334,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.7533333333333333
+            },
+            {
+              "type": "lineTo",
+              "x": 0.24666666666666665,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "suzhi_outer",
+          "groupId": "group_rings",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.8800000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "suzhi_nw",
+          "groupId": "group_corners",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.24666666666666665,
+              "y": 0.24666666666666667
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.3733333333333333,
+              "y": 0.37333333333333335
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "suzhi_ne",
+          "groupId": "group_corners",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.7533333333333334,
+              "y": 0.24666666666666667
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6266666666666666,
+              "y": 0.37333333333333335
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "suzhi_se",
+          "groupId": "group_corners",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.8800000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.7533333333333334,
+              "y": 0.7533333333333333
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6266666666666666,
+              "y": 0.6266666666666667
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "suzhi_sw",
+          "groupId": "group_corners",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.8800000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.24666666666666665,
+              "y": 0.7533333333333333
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.3733333333333333,
+              "y": 0.6266666666666667
+            },
+            {
+              "type": "close"
+            }
+          ]
+        }
+      ],
+      "recipe": null,
+      "lessonSteps": [],
+      "rightsReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": "Original app-generated geometric vector; provenance and rights documentation pending."
+      },
+      "culturalReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "localizationReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      }
+    },
+    {
+      "id": "dot_grid_sample_007",
+      "localizedName": {
+        "en": "7×7 Sankranti Ratham (Chariot)",
+        "te": "7×7 సంక్రాంతి రథం ముగ్గు",
+        "ta": "7×7 பொங்கல் தேர் கோலம்"
+      },
+      "localizedDescription": {
+        "en": "A festive temple chariot with wheels, canopy gopuram, and pinnacle flag on 7 by 7 dots.",
+        "te": "సంక్రాంతి పండుగ సందర్భంగా వేసే సాంప్రదాయ రథం ముగ్గు.",
+        "ta": "மார்கழி, பொங்கல் திருநாளில் வரையும் மங்களகரமான தேர் கோலம்."
+      },
+      "region": null,
+      "tradition": null,
+      "technique": "geometric_lines",
+      "localizedTechnique": {
+        "en": "Geometric lines"
+      },
+      "difficulty": "advanced",
+      "grid": {
+        "layout": "square",
+        "rows": 7,
+        "columns": 7,
+        "dots": [
+          [
+            0.12,
+            0.12
+          ],
+          [
+            0.24666666666666665,
+            0.12
+          ],
+          [
+            0.3733333333333333,
+            0.12
+          ],
+          [
+            0.5,
+            0.12
+          ],
+          [
+            0.6266666666666666,
+            0.12
+          ],
+          [
+            0.7533333333333334,
+            0.12
+          ],
+          [
+            0.88,
+            0.12
+          ],
+          [
+            0.12,
+            0.24666666666666667
+          ],
+          [
+            0.24666666666666665,
+            0.24666666666666667
+          ],
+          [
+            0.3733333333333333,
+            0.24666666666666667
+          ],
+          [
+            0.5,
+            0.24666666666666667
+          ],
+          [
+            0.6266666666666666,
+            0.24666666666666667
+          ],
+          [
+            0.7533333333333334,
+            0.24666666666666667
+          ],
+          [
+            0.88,
+            0.24666666666666667
+          ],
+          [
+            0.12,
+            0.37333333333333335
+          ],
+          [
+            0.24666666666666665,
+            0.37333333333333335
+          ],
+          [
+            0.3733333333333333,
+            0.37333333333333335
+          ],
+          [
+            0.5,
+            0.37333333333333335
+          ],
+          [
+            0.6266666666666666,
+            0.37333333333333335
+          ],
+          [
+            0.7533333333333334,
+            0.37333333333333335
+          ],
+          [
+            0.88,
+            0.37333333333333335
+          ],
+          [
+            0.12,
+            0.5
+          ],
+          [
+            0.24666666666666665,
+            0.5
+          ],
+          [
+            0.3733333333333333,
+            0.5
+          ],
+          [
+            0.5,
+            0.5
+          ],
+          [
+            0.6266666666666666,
+            0.5
+          ],
+          [
+            0.7533333333333334,
+            0.5
+          ],
+          [
+            0.88,
+            0.5
+          ],
+          [
+            0.12,
+            0.6266666666666667
+          ],
+          [
+            0.24666666666666665,
+            0.6266666666666667
+          ],
+          [
+            0.3733333333333333,
+            0.6266666666666667
+          ],
+          [
+            0.5,
+            0.6266666666666667
+          ],
+          [
+            0.6266666666666666,
+            0.6266666666666667
+          ],
+          [
+            0.7533333333333334,
+            0.6266666666666667
+          ],
+          [
+            0.88,
+            0.6266666666666667
+          ],
+          [
+            0.12,
+            0.7533333333333333
+          ],
+          [
+            0.24666666666666665,
+            0.7533333333333333
+          ],
+          [
+            0.3733333333333333,
+            0.7533333333333333
+          ],
+          [
+            0.5,
+            0.7533333333333333
+          ],
+          [
+            0.6266666666666666,
+            0.7533333333333333
+          ],
+          [
+            0.7533333333333334,
+            0.7533333333333333
+          ],
+          [
+            0.88,
+            0.7533333333333333
+          ],
+          [
+            0.12,
+            0.8800000000000001
+          ],
+          [
+            0.24666666666666665,
+            0.8800000000000001
+          ],
+          [
+            0.3733333333333333,
+            0.8800000000000001
+          ],
+          [
+            0.5,
+            0.8800000000000001
+          ],
+          [
+            0.6266666666666666,
+            0.8800000000000001
+          ],
+          [
+            0.7533333333333334,
+            0.8800000000000001
+          ],
+          [
+            0.88,
+            0.8800000000000001
+          ]
+        ]
+      },
+      "searchTags": [
+        "dot grid",
+        "ratham",
+        "chariot",
+        "sankranti",
+        "pongal",
+        "7x7",
+        "festival"
+      ],
+      "thumbnail": "assets/designs/thumbnails/dot_grid_sample_007.webp",
+      "paths": [
+        {
+          "id": "ratham_flag",
+          "groupId": "group_flag",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6266666666666666,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.24666666666666667
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "ratham_dome",
+          "groupId": "group_dome",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.3733333333333333,
+              "y": 0.24666666666666667
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6266666666666666,
+              "y": 0.24666666666666667
+            },
+            {
+              "type": "lineTo",
+              "x": 0.7533333333333334,
+              "y": 0.37333333333333335
+            },
+            {
+              "type": "lineTo",
+              "x": 0.24666666666666665,
+              "y": 0.37333333333333335
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "ratham_body",
+          "groupId": "group_body",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.24666666666666665,
+              "y": 0.37333333333333335
+            },
+            {
+              "type": "lineTo",
+              "x": 0.24666666666666665,
+              "y": 0.6266666666666667
+            },
+            {
+              "type": "lineTo",
+              "x": 0.7533333333333334,
+              "y": 0.6266666666666667
+            },
+            {
+              "type": "lineTo",
+              "x": 0.7533333333333334,
+              "y": 0.37333333333333335
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "ratham_pillar",
+          "groupId": "group_body",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.37333333333333335
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.6266666666666667
+            }
+          ]
+        },
+        {
+          "id": "ratham_cross",
+          "groupId": "group_body",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.3733333333333333,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6266666666666666,
+              "y": 0.5
+            }
+          ]
+        },
+        {
+          "id": "ratham_base",
+          "groupId": "group_base",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.12,
+              "y": 0.6266666666666667
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.7533333333333333
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.7533333333333333
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.6266666666666667
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "wheel_left",
+          "groupId": "group_wheels",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.24666666666666665,
+              "y": 0.7533333333333333
+            },
+            {
+              "type": "lineTo",
+              "x": 0.3733333333333333,
+              "y": 0.7533333333333333
+            },
+            {
+              "type": "lineTo",
+              "x": 0.3733333333333333,
+              "y": 0.8800000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.24666666666666665,
+              "y": 0.8800000000000001
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "spoke_left",
+          "groupId": "group_wheels",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.24666666666666665,
+              "y": 0.7533333333333333
+            },
+            {
+              "type": "lineTo",
+              "x": 0.3733333333333333,
+              "y": 0.8800000000000001
+            }
+          ]
+        },
+        {
+          "id": "wheel_right",
+          "groupId": "group_wheels",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.6266666666666666,
+              "y": 0.7533333333333333
+            },
+            {
+              "type": "lineTo",
+              "x": 0.7533333333333334,
+              "y": 0.7533333333333333
+            },
+            {
+              "type": "lineTo",
+              "x": 0.7533333333333334,
+              "y": 0.8800000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6266666666666666,
+              "y": 0.8800000000000001
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "spoke_right",
+          "groupId": "group_wheels",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.6266666666666666,
+              "y": 0.7533333333333333
+            },
+            {
+              "type": "lineTo",
+              "x": 0.7533333333333334,
+              "y": 0.8800000000000001
+            }
+          ]
+        },
+        {
+          "id": "rope_left",
+          "groupId": "group_ropes",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.12,
+              "y": 0.7533333333333333
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.8800000000000001
+            }
+          ]
+        },
+        {
+          "id": "rope_right",
+          "groupId": "group_ropes",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.88,
+              "y": 0.7533333333333333
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.8800000000000001
+            }
+          ]
+        }
+      ],
+      "recipe": null,
+      "lessonSteps": [],
+      "rightsReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": "Original app-generated geometric vector; provenance and rights documentation pending."
+      },
+      "culturalReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "localizationReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      }
+    },
+    {
+      "id": "dot_grid_sample_008",
+      "localizedName": {
+        "en": "5×5 Hridaya Kamalam (8-Petal Lotus)",
+        "te": "5×5 హృదయ కమలం (అష్టదళ పద్మం)",
+        "ta": "5×5 இதய கமலம் (எட்டு இதழ் தாமரை)"
+      },
+      "localizedDescription": {
+        "en": "Sacred 8-petal lotus drawn with continuous loops from center to perimeter dots.",
+        "te": "పూజాగదుల్లో వేసే పవిత్రమైన అష్టదళ హృదయ కమల ముగ్గు.",
+        "ta": "பூஜை அறைகளில் வரையும் மங்களகரமான எட்டு இதழ் இதய கமலக் கோலம்."
+      },
+      "region": null,
+      "tradition": null,
+      "technique": "geometric_lines",
+      "localizedTechnique": {
+        "en": "Geometric lines"
+      },
+      "difficulty": "intermediate",
+      "grid": {
+        "layout": "square",
+        "rows": 5,
+        "columns": 5,
+        "dots": [
+          [
+            0.12,
+            0.12
+          ],
+          [
+            0.31,
+            0.12
+          ],
+          [
+            0.5,
+            0.12
+          ],
+          [
+            0.6900000000000001,
+            0.12
+          ],
+          [
+            0.88,
+            0.12
+          ],
+          [
+            0.12,
+            0.31
+          ],
+          [
+            0.31,
+            0.31
+          ],
+          [
+            0.5,
+            0.31
+          ],
+          [
+            0.6900000000000001,
+            0.31
+          ],
+          [
+            0.88,
+            0.31
+          ],
+          [
+            0.12,
+            0.5
+          ],
+          [
+            0.31,
+            0.5
+          ],
+          [
+            0.5,
+            0.5
+          ],
+          [
+            0.6900000000000001,
+            0.5
+          ],
+          [
+            0.88,
+            0.5
+          ],
+          [
+            0.12,
+            0.6900000000000001
+          ],
+          [
+            0.31,
+            0.6900000000000001
+          ],
+          [
+            0.5,
+            0.6900000000000001
+          ],
+          [
+            0.6900000000000001,
+            0.6900000000000001
+          ],
+          [
+            0.88,
+            0.6900000000000001
+          ],
+          [
+            0.12,
+            0.88
+          ],
+          [
+            0.31,
+            0.88
+          ],
+          [
+            0.5,
+            0.88
+          ],
+          [
+            0.6900000000000001,
+            0.88
+          ],
+          [
+            0.88,
+            0.88
+          ]
+        ]
+      },
+      "searchTags": [
+        "dot grid",
+        "hridaya kamalam",
+        "lotus",
+        "pooja",
+        "spiritual",
+        "5x5"
+      ],
+      "thumbnail": "assets/designs/thumbnails/dot_grid_sample_008.webp",
+      "paths": [
+        {
+          "id": "kamalam_petal_01",
+          "groupId": "group_petals",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "kamalam_petal_02",
+          "groupId": "group_petals",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "kamalam_petal_03",
+          "groupId": "group_petals",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "kamalam_petal_04",
+          "groupId": "group_petals",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.88,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.6900000000000001,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "kamalam_petal_05",
+          "groupId": "group_petals",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "kamalam_petal_06",
+          "groupId": "group_petals",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.88
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.6900000000000001
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "kamalam_petal_07",
+          "groupId": "group_petals",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        },
+        {
+          "id": "kamalam_petal_08",
+          "groupId": "group_petals",
+          "commands": [
+            {
+              "type": "moveTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.31
+            },
+            {
+              "type": "lineTo",
+              "x": 0.12,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.31,
+              "y": 0.12
+            },
+            {
+              "type": "lineTo",
+              "x": 0.5,
+              "y": 0.5
+            },
+            {
+              "type": "close"
+            }
+          ]
+        }
+      ],
+      "recipe": null,
+      "lessonSteps": [],
+      "rightsReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": "Original app-generated geometric vector; provenance and rights documentation pending."
+      },
+      "culturalReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "localizationReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      },
+      "lessonReview": {
+        "status": "pending",
+        "reviewer": "",
+        "evidence": ""
+      }
     }
   ]
 }

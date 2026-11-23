@@ -11,11 +11,11 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test(
-    'bundled catalog has twelve unassigned samples and decodable thumbnails',
+    'bundled catalog has twenty unassigned samples and decodable thumbnails',
     () async {
       final designs = await DesignRepository().loadCatalog();
 
-      expect(designs, hasLength(12));
+      expect(designs, hasLength(20));
       for (final design in designs) {
         expect(design.region, isNull);
         expect(design.tradition, isNull);

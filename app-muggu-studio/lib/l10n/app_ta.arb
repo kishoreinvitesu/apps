@@ -124,5 +124,13 @@
   "noCreationsYet": "இன்னும் படைப்புகள் இல்லை",
   "noCreationsDescription": "நீங்கள் உருவாக்கி சேமிக்கும் வடிவங்கள் இங்கே தோன்றும்.",
   "editCreation": "திருத்து",
-  "save": "சேமி"
+  "save": "சேமி",
+  "exportPng": "PNG ஏற்றுமதி",
+  "shareDesign": "வடிவமைப்பைப் பகிரவும்",
+  "exportingImage": "படம் ஏற்றுமதி செய்யப்படுகிறது...",
+  "imageExported": "படம் ஏற்றுமதி செய்யப்பட்டது",
+  "resolutionStandard": "நிலையானது (1080 × 1080)",
+  "resolutionHigh": "உயர் தெளிவுத்திறன் (2048 × 2048)",
+  "selectResolution": "தெளிவுத்திறனைத் தேர்ந்தெடுக்கவும்",
+  "share": "பகிர்"
 }

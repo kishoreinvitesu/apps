@@ -849,6 +849,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get save;
+
+  /// No description provided for @exportPng.
+  ///
+  /// In en, this message translates to:
+  /// **'Export PNG'**
+  String get exportPng;
+
+  /// No description provided for @shareDesign.
+  ///
+  /// In en, this message translates to:
+  /// **'Share design'**
+  String get shareDesign;
+
+  /// No description provided for @exportingImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting image...'**
+  String get exportingImage;
+
+  /// No description provided for @imageExported.
+  ///
+  /// In en, this message translates to:
+  /// **'Image exported'**
+  String get imageExported;
+
+  /// No description provided for @resolutionStandard.
+  ///
+  /// In en, this message translates to:
+  /// **'Standard (1080 × 1080)'**
+  String get resolutionStandard;
+
+  /// No description provided for @resolutionHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High-resolution (2048 × 2048)'**
+  String get resolutionHigh;
+
+  /// No description provided for @selectResolution.
+  ///
+  /// In en, this message translates to:
+  /// **'Select resolution'**
+  String get selectResolution;
+
+  /// No description provided for @share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share;
 }
 
 class _AppLocalizationsDelegate
