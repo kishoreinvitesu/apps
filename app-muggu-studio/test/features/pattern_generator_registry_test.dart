@@ -100,6 +100,31 @@ void main() {
     );
   });
 
+  test('the same recipe always generates the same geometry snapshot', () {
+    const recipe = PatternRecipe(
+      generatorId: PatternGeneratorRegistry.dotGridLoopsId,
+      version: PatternGeneratorRegistry.recipeVersion,
+      parameters: {
+        'rows': 5,
+        'columns': 5,
+        'layout': 'staggered',
+        'margin': 0.12,
+      },
+    );
+    final first = registry.generate(recipe);
+    final second = registry.generate(recipe);
+
+    expect(second.recipe.toJson(), equals(first.recipe.toJson()));
+    expect(
+      second.grid?.dots.map((dot) => [dot.x, dot.y]).toList(),
+      equals(first.grid?.dots.map((dot) => [dot.x, dot.y]).toList()),
+    );
+    expect(
+      second.paths.map((path) => path.toJson()).toList(),
+      equals(first.paths.map((path) => path.toJson()).toList()),
+    );
+  });
+
   test('parabolic Sikku recipes weave quadratic curves across each row', () {
     final generated = registry.generate(
       const PatternRecipe(

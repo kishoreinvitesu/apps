@@ -444,7 +444,7 @@ Sprint 1 is ready for review. Sprint 2 has not been started.
   installed and launched on `emulator-5554`.
 - `git diff --check` — passed.
 
-## Remaining work roadmap (updated 2026-11-22)
+## Remaining work roadmap (updated 2026-11-24)
 
 This is the working backlog for completing the Creator, growing the design
 library, improving app smoothness and keeping the implementation maintainable
@@ -455,40 +455,43 @@ as traditional, instructional or publication-ready.
 
 ### Current baseline
 
-- The latest pushed app change is `cf7fd48` (interactive Creator preview MVP).
-- Create can preview the radial-flower and dot-grid-diamond generators, adjust
-  petal count, grid size and grid layout, and reset. The preview uses the same
-  vector renderer as catalogue designs.
-- Create is not yet a drawing canvas: there is no freehand input, symmetry
-  editor, undo/redo history, local creation storage, rename/delete, PNG export
-  or sharing.
-- The catalogue contains 12 designs: 10 generic geometric samples and two
-  generated examples. This is not yet a reviewed regional/tradition library.
-  Their rights, cultural, localization and lesson review records remain
-  pending.
-- Creator controls currently use English temporarily. Approved Telugu and
-  Tamil translations have not been supplied.
-- The 31 Flutter tests, Flutter analysis, five Python generator tests,
-  catalogue-artwork check and Android debug build passed before the latest
-  push. GitHub Actions was still running when last checked; verify that run.
+- The Phase 6 emulator profile results and current work order are recorded
+  below. The latest application-source quality changes were pushed in
+  `5442054`.
+- Create supports versioned template generators and a freehand canvas with
+  symmetry, pen controls, undo/redo, and local save/reopen/rename/delete.
+  Designs and creations can be exported and shared as PNGs.
+- The bundled catalogue contains 20 designs. The content review log states
+  that rights and human cultural review remain pending for every bundled
+  sample; do not count them toward the reviewed-content milestone until
+  evidence and approval are recorded.
+- The generator registry currently uses recipe version 1. Catalogue geometry
+  uses schema version 3 and accepts schema 2 through its migration path. The
+  local SQLite database is version 2, with a tested migration from version 1.
+- The full Flutter suite last passed 90 tests on 2026-11-23. The generator
+  registry suite now passes 8 tests, including a new determinism check, and
+  `flutter analyze` reports no issues.
+- Phase 6 has three repeated profile-mode emulator traces for Explore, detail
+  and Creator interactions. Physical-device checks and performance budgets
+  are deferred; the emulator results are not release-device evidence.
+- The Android application ID remains the setup placeholder
+  `com.example.muggu_studio`. No release AAB has been built or verified for
+  16 KB page-size compatibility.
 - The built debug APK declares target SDK 36 and contains native `.so`
-  libraries. Android Gradle Plugin is 9.3.1. No release AAB has been built or
-  verified for 16 KB page-size compatibility; do not infer release readiness
-  from the toolchain version or debug APK.
-- ADB did not detect the emulator at 08:10 on 2026-11-22. At 08:23 it was
-  online as `emulator-5554`; the current debug APK installed successfully and
-  `com.example.muggu_studio/.MainActivity` launched. A follow-up check found
-  the app process alive and the activity in the foreground.
+  libraries; do not infer release readiness from the toolchain version or a
+  debug build.
 
 ### Phase 0 — Re-establish the baseline
 
-1. Check the GitHub Actions run for `cf7fd48`; resolve any CI failure before
-   adding more work.
-2. **Done:** ADB detected `emulator-5554`; the debug APK installed, the app
-   process remained alive and MainActivity was resumed after launch. Still
-   visually check Home, Explore, Create and Saved on the emulator.
-3. Record the test/build commands and actual supported device/API configuration
-   used for subsequent comparisons.
+1. Check the current GitHub Actions run for application-source changes before
+   merging or releasing; the workflow is
+   `.github/workflows/muggu-studio.yml`.
+2. **Done on emulator:** the debug APK was installed and Home, Explore, Saved,
+   Create and Settings were smoke-tested on `emulator-5554` (Android 17 / API
+   37). Physical-device checks are deferred.
+3. **Recorded:** local test/build commands and the emulator/API configuration
+   are in this log. Add the supported physical-device configuration when one
+   is selected.
 
 **Done when:** CI is green, the main screens are visually checked on a
 connected Android target, and the verified baseline/device configuration is
@@ -664,6 +667,46 @@ offline user journeys.
 7. Document migration, generator addition, design contribution and release
    procedures so new contributors can follow the same workflow.
 
+#### Contributor workflow
+
+- **Add a generator:** implement it in
+  `lib/features/create/application/pattern_generator_registry.dart` with a
+  stable generator ID, explicit parameter bounds and a versioned recipe.
+  Return normalized `DesignPath` geometry; keep saved path snapshots usable
+  even if a generator later changes or is removed. Add examples, bounds and
+  invalid-input cases to `test/features/pattern_generator_registry_test.dart`,
+  including a repeat-generation equality check. Update Create controls and
+  English/Telugu/Tamil ARB strings when the UI exposes the new family.
+- **Add catalogue content:** update the appropriate catalogue source and
+  `assets/designs/thumbnails/` artwork together. Keep IDs stable and unique,
+  geometry normalized, lesson groups valid and all review records explicit.
+  For output generated by the Python sample-catalog tool, change
+  `tools/generate_sample_catalog.py` and its tests, regenerate the assets, and
+  verify with `python tools/generate_sample_catalog.py --check`. Do not
+  represent content as traditional or instructional until its rights,
+  cultural, localization and lesson reviews are approved.
+- **Change catalogue schema:** update `catalogSchemaVersion` and
+  `supportedCatalogSchemaVersions` in
+  `lib/data/repositories/design_repository.dart`; add a migration for each
+  still-supported prior schema and tests for valid, invalid and migrated
+  examples. Keep catalogue schema changes separate from generator recipe and
+  SQLite database version changes.
+- **Change local persistence:** increment `OpenDatabaseOptions.version` in
+  `lib/data/local/app_database.dart`, add ordered `oldVersion` migration steps
+  that preserve existing user data, and extend
+  `test/data/creations_dao_test.dart` with a database created at the previous
+  version.
+- **Run the required local gates:** `flutter gen-l10n` when ARB files change;
+  `dart format --output=none --set-exit-if-changed lib test`;
+  `flutter analyze`; `flutter test`;
+  `python -m unittest discover -s tools -p 'test_*.py' -v`; and
+  `python tools/generate_sample_catalog.py --check`. The same checks plus
+  the Android x64 debug build are defined in
+  `../.github/workflows/muggu-studio.yml`.
+- **Prepare a release:** use Phase 8 as a separate gate; confirm the permanent
+  application ID, signing/versioning and store disclosures, and verify the
+  production AAB and its 16 KB page-size compatibility before release.
+
 **Done when:** new designs/generators and persistence changes can be added
 without editing unrelated features, breaking old saved geometry or bypassing
 automated validation.
@@ -695,12 +738,13 @@ responsibilities are understood.
 
 ### Working order and completion rule
 
-The immediate next step is **Phase 0**, followed by **Phase 1**. The drawing
-engine precedes reliable saving; saving precedes creation management and
-export. Content review can proceed in parallel, but reviewed labels and lessons
-must not be claimed before approval. Performance work begins with a measured
-baseline. Scaling work should strengthen these real boundaries and migrations,
-not trigger a broad rewrite.
+Phases 1–4 have implementation logs below. Phase 5 remains gated on evidence
+and human review of catalogue content. Phase 6 has an emulator baseline, while
+physical-device checks are deferred; do not set performance budgets from the
+emulator traces. Continue Phase 7 engineering and documentation that do not
+depend on device access or unprovided cultural-review material. Scaling work
+should strengthen the existing feature boundaries and migrations, not trigger
+a broad rewrite.
 
 For each phase, record the specific changes, tests/device checks, unresolved
 issues and next phase in this log. A phase is complete only when its acceptance
@@ -1060,7 +1104,7 @@ generated catalogue examples until their evidence and approval are recorded.
   Creator input is recorded below. Repeat on an agreed mid-range/lowest
   supported Android device before setting budgets or optimizing.
 
-## 2026-11-23 — Phase 6: Profile-Mode Emulator Timeline
+## 2026-11-24 — Phase 6: Repeated Profile-Mode Emulator Timeline
 
 ### Capture
 - Device: Android 17 / API 37 x86_64 emulator, 1080×2400 at 420 dpi, 60 Hz.
@@ -1090,6 +1134,32 @@ generated catalogue examples until their evidence and approval are recorded.
   Core i5-9300H Windows machine. Per-trace p95 values varied, particularly for
   detail rendering. Emulator and host graphics overhead prevent treating them
   as physical-device results or setting budgets from them.
-- Next, repeat on an agreed mid-range or lowest-supported physical Android
-  device. If raster misses persist there, use a DevTools timeline to locate
+- Physical-device repeat is deferred per user request. When a representative
+  mid-range or lowest-supported device is available, repeat there before
+  setting budgets. If raster misses persist, use a DevTools timeline to locate
   app-owned expensive work before choosing a narrowly targeted optimization.
+
+## 2026-11-24 — Phase 7: Generator and Contributor Workflow
+
+### Implemented
+- Added a registry test proving that repeated generation from the same
+  dot-grid-loop recipe produces identical recipe, grid and path snapshots.
+- Reconciled the current baseline and working order with the implemented
+  Creator, 20-design catalogue, geometry/schema versions, Phase 6 emulator
+  captures and deferred physical-device checks.
+- Documented the generator, catalogue, schema migration, local database
+  migration, validation and release workflows above.
+
+### Validation
+- `flutter test test/features/pattern_generator_registry_test.dart` — passed;
+  all 8 registry tests.
+- `flutter analyze` — passed with no issues.
+- `git diff --check` — passed.
+- The full Flutter suite last passed 90 tests on 2026-11-23; it was not rerun
+  for this test-only change.
+
+### Remaining
+- Keep rights, cultural, localization and lesson reviews pending until the
+  required evidence and human approvals are supplied.
+- Continue Phase 7 maintenance as features evolve. Physical-device
+  performance/accessibility checks and Phase 8 release gates remain deferred.
