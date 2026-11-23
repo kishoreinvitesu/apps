@@ -5,6 +5,8 @@ abstract interface class LocaleStorage {
   Future<String?> readLanguageCode();
 
   Future<void> writeLanguageCode(String languageCode);
+
+  Future<void> clearLanguageCode();
 }
 
 final localeStorageProvider = Provider<LocaleStorage>(
@@ -32,5 +34,10 @@ class LocaleController extends Notifier<Locale> {
         .read(localeStorageProvider)
         .writeLanguageCode(locale.languageCode);
     state = locale;
+  }
+
+  Future<void> clearLocale() async {
+    await ref.read(localeStorageProvider).clearLanguageCode();
+    state = const Locale('en');
   }
 }

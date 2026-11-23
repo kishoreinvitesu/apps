@@ -16,4 +16,7 @@ class SharedPreferencesLocaleStorage implements LocaleStorage {
   @override
   Future<void> writeLanguageCode(String languageCode) =>
       _preferences.setString(_languageCodeKey, languageCode);
+
+  @override
+  Future<void> clearLanguageCode() => _preferences.remove(_languageCodeKey);
 }

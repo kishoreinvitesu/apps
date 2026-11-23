@@ -1153,6 +1153,8 @@ generated catalogue examples until their evidence and approval are recorded.
   silently becoming `none`; malformed stroke fields now produce
   `FormatException`s instead of cast failures.
 - Stroke equality now compares exact geometry values, with matching hash codes.
+- Clear all local data now removes creations and favourites transactionally,
+  clears preferences and locale, resets onboarding and reports storage errors.
 - Unsupported persisted creation types now fail explicitly instead of being
   silently interpreted as templates.
 - Corrected formatting drift in nine Dart files that caused the GitHub
@@ -1166,18 +1168,22 @@ generated catalogue examples until their evidence and approval are recorded.
 ### Validation
 - `flutter test test/features/pattern_generator_registry_test.dart` — passed;
   all 8 registry tests.
-- `flutter test test/data/creations_dao_test.dart` — passed; all 9 DAO tests,
+- `flutter test test/data/creations_dao_test.dart` — passed; all 10 DAO tests,
   including unsupported-version, malformed-recipe and symmetry regressions.
 - `flutter test test/features/drawn_stroke_test.dart` — passed; all 3
   validation and value-semantics tests.
-- `flutter test` — passed; all 99 tests.
+- `flutter test test/features/clear_local_data_test.dart` — passed; the
+  Settings confirmation clears all local stores and resets locale.
+- `flutter test` — passed; all 101 tests.
 - `flutter analyze` — passed with no issues.
 - `dart format --output=none --set-exit-if-changed lib test` — passed; all
-  68 Dart files are formatted.
+  69 Dart files are formatted.
 - `git diff --check` — passed.
 
 ### Remaining
 - Keep rights, cultural, localization and lesson reviews pending until the
   required evidence and human approvals are supplied.
+- Publish an approved privacy policy and replace the temporary Settings
+  action before release.
 - Continue Phase 7 maintenance as features evolve. Physical-device
   performance/accessibility checks and Phase 8 release gates remain deferred.

@@ -533,6 +533,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dataCleared => 'All local data cleared';
 
   @override
+  String get clearLocalDataError =>
+      'Couldn\'t clear all local data. Please try again.';
+
+  @override
   String get appVersion => 'App version';
 
   @override

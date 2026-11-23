@@ -330,6 +330,31 @@ void main() {
       expect(loaded.paths.length, 1);
     });
 
+    test('clearUserData removes creations and favourites', () async {
+      final directory = await Directory.systemTemp.createTemp(
+        'muggu_clear_user_data_test_',
+      );
+      final databasePath = '${directory.path}${Platform.pathSeparator}app.db';
+      final database = AppDatabase(
+        factory: databaseFactoryFfi,
+        databasePath: databasePath,
+      );
+      addTearDown(() async {
+        await database.close();
+        await directory.delete(recursive: true);
+      });
+
+      final favoritesDao = FavoritesDao(database);
+      final creationsDao = CreationsDao(database);
+      await favoritesDao.toggleFavorite('design_1');
+      await creationsDao.saveCreation(createSampleCreation(id: 'creation_1'));
+
+      await database.clearUserData();
+
+      expect(await favoritesDao.favoriteDesignIds(), isEmpty);
+      expect(await creationsDao.listCreations(), isEmpty);
+    });
+
     test(
       'freehand strokes serialization and strokesToDesignPaths conversion',
       () {

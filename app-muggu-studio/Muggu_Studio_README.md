@@ -3,12 +3,12 @@
 **Document purpose:** Source of truth for product scope, UX,
 architecture, content, implementation rules and release acceptance.
 
-**Status:** Sprint 1–3 foundations, review-led stabilization, and the
-versioned geometry/generator foundation are implemented. The Create screen
-is still a placeholder. Human content review and reviewed localization remain
-gates before publishing tradition-specific lessons or attribution; generic
-original-pattern creation may proceed with clear labeling. See the Development
-Log for verified implementation status.
+**Status:** The Creator now includes deterministic template generators and a
+freehand canvas, with local creation storage and export/share support. The
+bundled catalogue contains 20 designs. Rights, cultural, localization and
+lesson reviews remain gates before publishing tradition-specific lessons or
+attribution; generic original-pattern creation may proceed with clear
+labeling. See the Development Log for verified implementation status.
 
 **Working product name:** Muggu Studio\
 **Platform:** Android first\

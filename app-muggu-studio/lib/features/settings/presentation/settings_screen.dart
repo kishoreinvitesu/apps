@@ -2,12 +2,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:sqflite/sqflite.dart' show DatabaseException;
 
 import '../../../core/constants/app_version.dart';
 import '../../../core/localization/locale_controller.dart';
 import '../../../core/preferences/preferences_storage.dart';
 import '../../../core/preferences/user_preferences.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../data/local/app_database.dart';
+import '../../../data/local/creations_dao.dart';
+import '../../../data/local/favorites_dao.dart';
 import '../../../l10n/generated/app_localizations.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -172,7 +176,25 @@ class SettingsScreen extends ConsumerWidget {
       ),
     );
     if (confirmed == true) {
-      await ref.read(userPreferencesProvider.notifier).clearAll();
+      try {
+        await ref.read(appDatabaseProvider).clearUserData();
+        await ref.read(userPreferencesProvider.notifier).clearAll();
+        await ref.read(localeProvider.notifier).clearLocale();
+        ref.invalidate(creationsListProvider);
+        ref.invalidate(favoriteIdsProvider);
+      } on DatabaseException {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(l10n.clearLocalDataError)));
+        }
+        return;
+      } on PlatformException {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(l10n.clearLocalDataError)));
+        }
+        return;
+      }
       if (context.mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(l10n.dataCleared)));

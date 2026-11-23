@@ -533,6 +533,10 @@ class AppLocalizationsTe extends AppLocalizations {
   String get dataCleared => 'అన్ని స్థానిక డేటా తొలగించబడింది';
 
   @override
+  String get clearLocalDataError =>
+      'స్థానిక డేటాను తొలగించలేకపోయాం. మళ్లీ ప్రయత్నించండి.';
+
+  @override
   String get appVersion => 'యాప్ వెర్షన్';
 
   @override

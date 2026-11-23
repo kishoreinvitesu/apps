@@ -1102,6 +1102,12 @@ abstract class AppLocalizations {
   /// **'All local data cleared'**
   String get dataCleared;
 
+  /// No description provided for @clearLocalDataError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t clear all local data. Please try again.'**
+  String get clearLocalDataError;
+
   /// No description provided for @appVersion.
   ///
   /// In en, this message translates to:

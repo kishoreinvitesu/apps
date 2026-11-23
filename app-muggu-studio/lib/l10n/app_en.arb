@@ -168,6 +168,7 @@
   "clearLocalDataConfirm": "Clear data?",
   "clearLocalDataDescription": "This will delete all saved creations, favourites and preferences. This action cannot be undone.",
   "dataCleared": "All local data cleared",
+  "clearLocalDataError": "Couldn't clear all local data. Please try again.",
   "appVersion": "App version",
   "offlineReady": "Works offline — no account needed",
   "privacyPolicy": "Privacy Policy",

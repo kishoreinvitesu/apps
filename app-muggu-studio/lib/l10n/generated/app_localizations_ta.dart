@@ -533,6 +533,10 @@ class AppLocalizationsTa extends AppLocalizations {
   String get dataCleared => 'அனைத்து உள்ளூர் தரவும் அழிக்கப்பட்டது';
 
   @override
+  String get clearLocalDataError =>
+      'உள்ளூர் தரவை அழிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
   String get appVersion => 'ஆப் பதிப்பு';
 
   @override

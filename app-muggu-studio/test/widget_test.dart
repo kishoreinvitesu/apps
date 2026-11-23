@@ -19,6 +19,11 @@ class _MemoryLocaleStorage implements LocaleStorage {
   Future<void> writeLanguageCode(String languageCode) async {
     this.languageCode = languageCode;
   }
+
+  @override
+  Future<void> clearLanguageCode() async {
+    languageCode = null;
+  }
 }
 
 class _MemoryFavorites implements FavoritesStore {

@@ -77,6 +77,14 @@ class AppDatabase {
       _database = null;
     }
   }
+
+  Future<void> clearUserData() async {
+    final database = await this.database;
+    await database.transaction((transaction) async {
+      await transaction.delete('creations');
+      await transaction.delete('favorites');
+    });
+  }
 }
 
 final appDatabaseProvider = Provider<AppDatabase>((ref) {
