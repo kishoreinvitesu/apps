@@ -6,6 +6,7 @@ import 'package:muggu_studio/data/local/creations_dao.dart';
 import 'package:muggu_studio/data/local/favorites_dao.dart';
 import 'package:muggu_studio/data/models/design_geometry.dart';
 import 'package:muggu_studio/data/models/dot_grid.dart';
+import 'package:muggu_studio/features/create/application/pattern_generator_registry.dart';
 import 'package:muggu_studio/features/creations/domain/user_creation.dart';
 import 'package:muggu_studio/features/drawing/application/drawing_controller.dart';
 import 'package:muggu_studio/features/drawing/domain/drawn_stroke.dart';
@@ -99,6 +100,47 @@ void main() {
       expect(await dao.listCreations(), isEmpty);
       expect(await dao.loadCreation('c1'), isNull);
     });
+
+    test(
+      'saved geometry loads when its generator is no longer available',
+      () async {
+        final directory = await Directory.systemTemp.createTemp(
+          'muggu_retired_generator_test_',
+        );
+        final databasePath =
+            '${directory.path}${Platform.pathSeparator}creations.db';
+        final database = AppDatabase(
+          factory: databaseFactoryFfi,
+          databasePath: databasePath,
+        );
+        addTearDown(() async {
+          await database.close();
+          await directory.delete(recursive: true);
+        });
+
+        final creation = createSampleCreation(id: 'retired_generator').copyWith(
+          recipe: const PatternRecipe(
+            generatorId: 'retired_generator',
+            version: 1,
+            parameters: {},
+          ),
+        );
+        final dao = CreationsDao(database);
+        await dao.saveCreation(creation);
+
+        final loaded = await dao.loadCreation(creation.id);
+        expect(loaded, isNotNull);
+        final restored = loaded!;
+        expect(
+          () => const PatternGeneratorRegistry().generate(restored.recipe!),
+          throwsFormatException,
+        );
+        expect(
+          restored.paths.map((path) => path.toJson()).toList(),
+          equals(creation.paths.map((path) => path.toJson()).toList()),
+        );
+      },
+    );
 
     test('creations persist across database restarts', () async {
       final directory = await Directory.systemTemp.createTemp(

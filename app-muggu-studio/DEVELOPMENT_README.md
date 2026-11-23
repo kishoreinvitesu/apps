@@ -1144,6 +1144,8 @@ generated catalogue examples until their evidence and approval are recorded.
 ### Implemented
 - Added a registry test proving that repeated generation from the same
   dot-grid-loop recipe produces identical recipe, grid and path snapshots.
+- Added a persistence regression proving saved path geometry remains loadable
+  when its recipe generator is unavailable in the current registry.
 - Reconciled the current baseline and working order with the implemented
   Creator, 20-design catalogue, geometry/schema versions, Phase 6 emulator
   captures and deferred physical-device checks.
@@ -1153,10 +1155,12 @@ generated catalogue examples until their evidence and approval are recorded.
 ### Validation
 - `flutter test test/features/pattern_generator_registry_test.dart` — passed;
   all 8 registry tests.
+- `flutter test test/data/creations_dao_test.dart` — passed; all 5 DAO tests.
 - `flutter analyze` — passed with no issues.
+- `dart format test/data/creations_dao_test.dart` — passed.
 - `git diff --check` — passed.
 - The full Flutter suite last passed 90 tests on 2026-11-23; it was not rerun
-  for this test-only change.
+  for these test-only changes.
 
 ### Remaining
 - Keep rights, cultural, localization and lesson reviews pending until the
