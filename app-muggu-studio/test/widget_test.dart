@@ -8,6 +8,7 @@ import 'package:muggu_studio/core/preferences/user_preferences.dart';
 import 'package:muggu_studio/data/local/favorites_dao.dart';
 import 'package:muggu_studio/data/models/muggu_design.dart';
 import 'package:muggu_studio/data/repositories/design_repository.dart';
+import 'package:muggu_studio/features/drawing/presentation/drawing_canvas.dart';
 
 class _MemoryLocaleStorage implements LocaleStorage {
   String? languageCode;
@@ -127,10 +128,7 @@ void main() {
       find.text('Trace the faint guide, then add your own colors and details.'),
       findsOneWidget,
     );
-    expect(
-      tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
-      0,
-    );
+    expect(find.byType(NavigationBar), findsNothing);
     await tester.binding.handlePopRoute();
     await tester.pumpAndSettle();
     expect(find.text('Design details'), findsOneWidget);
@@ -214,6 +212,41 @@ void main() {
     await tester.tap(find.text('Home').last);
     await tester.pumpAndSettle();
     expect(find.text('Design of the day'), findsOneWidget);
+  });
+
+  testWidgets('practice provides a square phone canvas without bottom nav', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1080, 2340);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          preferencesStorageProvider.overrideWithValue(
+            _CompletedOnboardingStorage(),
+          ),
+          localeStorageProvider.overrideWithValue(_MemoryLocaleStorage()),
+          initialLocaleProvider.overrideWithValue(const Locale('en')),
+          favoritesDaoProvider.overrideWithValue(_MemoryFavorites()),
+          catalogProvider.overrideWith((ref) async => _testCatalog()),
+        ],
+        child: const MugguStudioApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Learn this design'));
+    await tester.tap(find.text('Learn this design'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Practise / Trace'), 250);
+    await tester.tap(find.text('Practise / Trace'));
+    await tester.pumpAndSettle();
+
+    final canvas = tester.renderObject<RenderBox>(find.byType(DrawingCanvas));
+    expect(canvas.size.width, closeTo(canvas.size.height, 1));
+    expect(canvas.size.height, greaterThan(300));
+    expect(find.byType(NavigationBar), findsNothing);
   });
 
   testWidgets('language changes update the UI and persist', (tester) async {

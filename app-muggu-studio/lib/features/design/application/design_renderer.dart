@@ -39,11 +39,7 @@ void paintDotGrid(
     if (haloColor != null) {
       canvas.drawCircle(center, radius * 1.8, haloPaint);
     }
-    canvas.drawCircle(
-      center,
-      radius,
-      paint,
-    );
+    canvas.drawCircle(center, radius, paint);
   }
 }
 

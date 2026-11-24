@@ -16,12 +16,14 @@ class DrawingToolbar extends StatelessWidget {
     required this.controller,
     this.onSave,
     this.onShare,
+    this.compact = false,
     super.key,
   });
 
   final DrawingController controller;
   final VoidCallback? onSave;
   final VoidCallback? onShare;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -31,15 +33,22 @@ class DrawingToolbar extends StatelessWidget {
         controller: controller,
         onSave: onSave,
         onShare: onShare,
+        compact: compact,
       ),
     );
   }
 }
 
 class _ToolbarContent extends StatelessWidget {
-  const _ToolbarContent({required this.controller, this.onSave, this.onShare});
+  const _ToolbarContent({
+    required this.controller,
+    required this.compact,
+    this.onSave,
+    this.onShare,
+  });
 
   final DrawingController controller;
+  final bool compact;
   final VoidCallback? onSave;
   final VoidCallback? onShare;
 
@@ -49,7 +58,7 @@ class _ToolbarContent extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: compact ? 6 : 8),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         border: Border(
@@ -62,21 +71,21 @@ class _ToolbarContent extends StatelessWidget {
         children: [
           // Colour palette
           _SectionLabel(l10n.penColor),
-          const SizedBox(height: 6),
+          SizedBox(height: compact ? 4 : 6),
           _ColorPalette(controller: controller),
-          const SizedBox(height: 10),
+          SizedBox(height: compact ? 6 : 10),
 
           // Stroke width
           _SectionLabel(l10n.strokeWidth),
-          const SizedBox(height: 6),
-          _StrokeWidthRow(controller: controller, l10n: l10n),
-          const SizedBox(height: 10),
+          SizedBox(height: compact ? 4 : 6),
+          _StrokeWidthRow(controller: controller, l10n: l10n, compact: compact),
+          SizedBox(height: compact ? 6 : 10),
 
           // Symmetry
           _SectionLabel(l10n.symmetry),
-          const SizedBox(height: 6),
-          _SymmetryRow(controller: controller, l10n: l10n),
-          const SizedBox(height: 10),
+          SizedBox(height: compact ? 4 : 6),
+          _SymmetryRow(controller: controller, l10n: l10n, compact: compact),
+          SizedBox(height: compact ? 6 : 10),
 
           // Actions
           _ActionRow(
@@ -191,10 +200,15 @@ class _ColorSwatch extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _StrokeWidthRow extends StatelessWidget {
-  const _StrokeWidthRow({required this.controller, required this.l10n});
+  const _StrokeWidthRow({
+    required this.controller,
+    required this.l10n,
+    required this.compact,
+  });
 
   final DrawingController controller;
   final AppLocalizations l10n;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -212,6 +226,7 @@ class _StrokeWidthRow extends StatelessWidget {
               selected:
                   (controller.selectedStrokeWidth - widths[i]).abs() < 0.01,
               onTap: () => controller.setStrokeWidth(widths[i]),
+              compact: compact,
             ),
           ),
       ],
@@ -225,12 +240,14 @@ class _WidthButton extends StatelessWidget {
     required this.strokeWidth,
     required this.selected,
     required this.onTap,
+    required this.compact,
   });
 
   final String label;
   final double strokeWidth;
   final bool selected;
   final VoidCallback onTap;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -239,7 +256,10 @@ class _WidthButton extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: EdgeInsets.symmetric(
+          horizontal: compact ? 8 : 12,
+          vertical: compact ? 4 : 6,
+        ),
         decoration: BoxDecoration(
           color: selected
               ? colorScheme.primaryContainer
@@ -255,7 +275,7 @@ class _WidthButton extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
-              width: 24,
+              width: compact ? 20 : 24,
               child: Center(
                 child: Container(
                   height: strokeWidth.clamp(1.5, 7.0),
@@ -268,7 +288,7 @@ class _WidthButton extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 6),
+            SizedBox(width: compact ? 4 : 6),
             Text(
               label,
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
@@ -288,10 +308,15 @@ class _WidthButton extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _SymmetryRow extends StatelessWidget {
-  const _SymmetryRow({required this.controller, required this.l10n});
+  const _SymmetryRow({
+    required this.controller,
+    required this.l10n,
+    required this.compact,
+  });
 
   final DrawingController controller;
   final AppLocalizations l10n;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -303,18 +328,37 @@ class _SymmetryRow extends StatelessWidget {
       l10n.symmetryFourWay,
     ];
 
-    return Wrap(
-      spacing: 8,
-      runSpacing: 4,
-      children: [
-        for (var i = 0; i < modes.length; i++)
-          ChoiceChip(
-            label: Text(labels[i]),
-            selected: controller.selectedSymmetry == modes[i],
-            onSelected: (_) => controller.setSymmetry(modes[i]),
-          ),
-      ],
-    );
+    final chips = [
+      for (var i = 0; i < modes.length; i++)
+        ChoiceChip(
+          label: Text(labels[i]),
+          selected: controller.selectedSymmetry == modes[i],
+          visualDensity: compact
+              ? VisualDensity.compact
+              : VisualDensity.standard,
+          labelPadding: compact
+              ? const EdgeInsets.symmetric(horizontal: 6)
+              : null,
+          onSelected: (_) => controller.setSymmetry(modes[i]),
+        ),
+    ];
+
+    if (compact) {
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            for (var i = 0; i < chips.length; i++)
+              Padding(
+                padding: EdgeInsets.only(right: i == chips.length - 1 ? 0 : 8),
+                child: chips[i],
+              ),
+          ],
+        ),
+      );
+    }
+
+    return Wrap(spacing: 8, runSpacing: 4, children: chips);
   }
 }
 

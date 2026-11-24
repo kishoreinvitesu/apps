@@ -27,6 +27,7 @@ class AppShell extends ConsumerWidget {
     final selectedIndex = _selectedIndexForPath(currentPath);
     final currentLocale = ref.watch(localeProvider);
     final isNestedRoute = currentPath.startsWith('/design/');
+    final isPracticeRoute = currentPath.endsWith('/practice');
 
     return Scaffold(
       appBar: AppBar(
@@ -83,33 +84,35 @@ class AppShell extends ConsumerWidget {
         ],
       ),
       body: child,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: selectedIndex,
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-        onDestinationSelected: (index) => context.go(_paths[index]),
-        destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.home_outlined),
-            selectedIcon: const Icon(Icons.home_rounded),
-            label: l10n.home,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.grid_view_outlined),
-            selectedIcon: const Icon(Icons.grid_view_rounded),
-            label: l10n.explore,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.add_circle_outline_rounded),
-            selectedIcon: const Icon(Icons.add_circle_rounded),
-            label: l10n.create,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.bookmark_border_rounded),
-            selectedIcon: const Icon(Icons.bookmark_rounded),
-            label: l10n.saved,
-          ),
-        ],
-      ),
+      bottomNavigationBar: isPracticeRoute
+          ? null
+          : NavigationBar(
+              selectedIndex: selectedIndex,
+              labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+              onDestinationSelected: (index) => context.go(_paths[index]),
+              destinations: [
+                NavigationDestination(
+                  icon: const Icon(Icons.home_outlined),
+                  selectedIcon: const Icon(Icons.home_rounded),
+                  label: l10n.home,
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.grid_view_outlined),
+                  selectedIcon: const Icon(Icons.grid_view_rounded),
+                  label: l10n.explore,
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.add_circle_outline_rounded),
+                  selectedIcon: const Icon(Icons.add_circle_rounded),
+                  label: l10n.create,
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.bookmark_border_rounded),
+                  selectedIcon: const Icon(Icons.bookmark_rounded),
+                  label: l10n.saved,
+                ),
+              ],
+            ),
     );
   }
 

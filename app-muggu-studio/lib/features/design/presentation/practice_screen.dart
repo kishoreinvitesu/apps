@@ -56,10 +56,10 @@ class _PracticeScreenState extends ConsumerState<PracticeScreen> {
       children: [
         // Title
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 6),
           child: Text(
             design.nameFor(languageCode),
-            style: Theme.of(context).textTheme.headlineSmall,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
 
@@ -67,14 +67,15 @@ class _PracticeScreenState extends ConsumerState<PracticeScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Card(
+            margin: EdgeInsets.zero,
             color: Theme.of(context).colorScheme.secondaryContainer,
             child: Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(8),
               child: Row(
                 children: [
                   Icon(
                     Icons.info_outline_rounded,
-                    size: 18,
+                    size: 16,
                     color: Theme.of(context).colorScheme.onSecondaryContainer,
                   ),
                   const SizedBox(width: 8),
@@ -94,23 +95,28 @@ class _PracticeScreenState extends ConsumerState<PracticeScreen> {
           ),
         ),
 
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
 
         // Drawing canvas (tracing mode: guide paths shown faintly behind)
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: DrawingCanvas(
-              controller: _drawingController,
-              grid: design.grid,
-              guideDesignPaths: design.paths,
-              tracingMode: true,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Center(
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: DrawingCanvas(
+                  controller: _drawingController,
+                  grid: design.grid,
+                  guideDesignPaths: design.paths,
+                  tracingMode: true,
+                ),
+              ),
             ),
           ),
         ),
 
         // Toolbar
-        DrawingToolbar(controller: _drawingController),
+        DrawingToolbar(controller: _drawingController, compact: true),
       ],
     );
   }

@@ -1180,6 +1180,26 @@ generated catalogue examples until their evidence and approval are recorded.
 - Continue Phase 7 maintenance as features evolve. Physical-device
   performance/accessibility checks and Phase 8 release gates remain deferred.
 
+## 2026-11-24 — Resume validation and Practice navigation test
+
+### Implemented
+- Corrected the stale Practice-route widget assertion to verify that the
+  bottom navigation bar is hidden instead of expecting a selected tab.
+- Applied Dart formatting to the five modified worktree files, including
+  `app_shell.dart`, `design_renderer.dart`, `drawing_toolbar.dart`,
+  `practice_screen.dart`, and `widget_test.dart`.
+
+### Validation
+- `dart format --output=none --set-exit-if-changed lib test` — passed; 70
+  Dart files need no formatting changes.
+- `flutter analyze` — passed with no issues.
+- `flutter test` — passed; all 109 Flutter tests succeeded.
+- `python -m unittest discover -s tools -p 'test_*.py' -v` — passed.
+- `python tools/generate_sample_catalog.py --check` — passed.
+- Identified and addressed the latest GitHub Actions failure: its formatting
+  check reported modified Dart files before testing. The current local format
+  gate is clean.
+
 ## AI practice lessons and source research
 
 - Reviewed general Kolam references from [Sahapedia](https://www.sahapedia.org/significance-of-kolam-tamil-culture)
