@@ -66,6 +66,7 @@
   "learnDesign": "Learn design",
   "previewLesson": "Vector preview",
   "sampleLessonNotice": "This is an original vector preview, not a culturally verified lesson.",
+  "lessonDraftReviewNotice": "A step-by-step lesson draft is being reviewed. It will be available after the required content reviews are approved.",
   "step": "Step",
   "ofLabel": "of",
   "previous": "Previous",

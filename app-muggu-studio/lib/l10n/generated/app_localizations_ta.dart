@@ -219,6 +219,10 @@ class AppLocalizationsTa extends AppLocalizations {
       'இது கலாசார ரீதியாக சரிபார்க்கப்பட்ட பாடம் அல்ல; அசல் திசையன் முன்னோட்டம்.';
 
   @override
+  String get lessonDraftReviewNotice =>
+      'படிப்படியான பாட வரைவு மதிப்பாய்வில் உள்ளது. தேவையான உள்ளடக்க மதிப்பாய்வுகள் ஒப்புதல் பெற்ற பிறகு இது கிடைக்கும்.';
+
+  @override
   String get step => 'படி';
 
   @override

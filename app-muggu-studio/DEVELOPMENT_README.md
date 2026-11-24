@@ -1188,6 +1188,20 @@ generated catalogue examples until their evidence and approval are recorded.
 - Continue Phase 7 maintenance as features evolve. Physical-device
   performance/accessibility checks and Phase 8 release gates remain deferred.
 
+## Five initial lesson drafts
+
+- Added English step-by-step drafts for five dot-grid designs:
+  Chukkala Muggu, Pulli Kolam, Sikku Kolam, Padi Muggu and Deepam Muggu.
+- Every draft step references existing geometry groups. The app keeps the
+  lesson instructions hidden and shows a pending-review notice until required
+  content reviews are approved.
+- Rishika was named by the user as a prospective practitioner reviewer, and
+  "Home" was supplied as a source label. Neither practitioner feedback nor
+  supporting source evidence has been received; no review is recorded as
+  approved.
+- Lesson, rights, cultural and localization reviews remain pending. Step text
+  is English-only, so Telugu/Tamil translation and review are still required.
+
 ## 2026-11-24 — Added colorful mixed-construction art studies
 
 ### Implemented

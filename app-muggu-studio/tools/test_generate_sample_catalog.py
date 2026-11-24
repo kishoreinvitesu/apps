@@ -10,6 +10,39 @@ from tools import generate_sample_catalog as generator
 
 
 class GenerateSampleCatalogTests(unittest.TestCase):
+    def test_initial_kolam_lesson_drafts_are_pending_and_grouped(self):
+        catalog = generator.build_catalog()
+        expected_ids = {
+            "dot_grid_sample_001",
+            "dot_grid_sample_002",
+            "dot_grid_sample_003",
+            "dot_grid_sample_004",
+            "dot_grid_sample_005",
+        }
+        found_ids = set()
+
+        for design in catalog:
+            if design["id"] not in expected_ids:
+                self.assertEqual(design["lessonSteps"], [])
+                continue
+
+            found_ids.add(design["id"])
+            self.assertGreater(len(design["lessonSteps"]), 0)
+            self.assertEqual(design["lessonReview"]["status"], "pending")
+            self.assertEqual(design["lessonReview"]["reviewer"], "")
+            self.assertIn(
+                "prospective reviewer",
+                design["lessonReview"]["evidence"],
+            )
+            group_ids = {path["groupId"] for path in design["paths"]}
+            for step in design["lessonSteps"]:
+                self.assertTrue(step["groupIds"])
+                self.assertTrue(set(step["groupIds"]).issubset(group_ids))
+                self.assertEqual(set(step["instruction"]), {"en"})
+                self.assertTrue(step["instruction"]["en"].strip())
+
+        self.assertEqual(found_ids, expected_ids)
+
     def test_catalog_comparison_tolerates_only_cross_platform_float_noise(self):
         generated = {"point": [0.3, {"radius": 0.125}]}
         platform_variant = {

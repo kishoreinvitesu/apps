@@ -496,6 +496,12 @@ abstract class AppLocalizations {
   /// **'This is an original vector preview, not a culturally verified lesson.'**
   String get sampleLessonNotice;
 
+  /// No description provided for @lessonDraftReviewNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'A step-by-step lesson draft is being reviewed. It will be available after the required content reviews are approved.'**
+  String get lessonDraftReviewNotice;
+
   /// No description provided for @step.
   ///
   /// In en, this message translates to:

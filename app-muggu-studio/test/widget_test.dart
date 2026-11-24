@@ -272,6 +272,47 @@ void main() {
     expect(storage.languageCode, 'te');
   });
 
+  testWidgets('lesson drafts stay hidden until required reviews are approved', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          preferencesStorageProvider.overrideWithValue(
+            _CompletedOnboardingStorage(),
+          ),
+          localeStorageProvider.overrideWithValue(_MemoryLocaleStorage()),
+          initialLocaleProvider.overrideWithValue(const Locale('en')),
+          favoritesDaoProvider.overrideWithValue(_MemoryFavorites()),
+          catalogProvider.overrideWith(
+            (ref) async => _testCatalog(includeLessonDraft: true),
+          ),
+        ],
+        child: const MugguStudioApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('Learn this design'));
+    await tester.tap(find.text('Learn this design'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text(
+        'A step-by-step lesson draft is being reviewed. It will be available after the required content reviews are approved.',
+      ),
+      200,
+    );
+
+    expect(
+      find.text(
+        'A step-by-step lesson draft is being reviewed. It will be available after the required content reviews are approved.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Draft instruction hidden'), findsNothing);
+    expect(find.text('Next'), findsNothing);
+  });
+
   testWidgets('Explore clear empties the search field and restores results', (
     tester,
   ) async {
@@ -336,7 +377,8 @@ void main() {
   });
 }
 
-List<MugguDesign> _testCatalog() => DesignRepository.parseCatalog('''
+List<MugguDesign> _testCatalog({bool includeLessonDraft = false}) =>
+    DesignRepository.parseCatalog('''
   {
     "schemaVersion": 2,
     "designs": [
@@ -377,7 +419,7 @@ List<MugguDesign> _testCatalog() => DesignRepository.parseCatalog('''
           "reviewer": "",
           "evidence": ""
         },
-        "lessonSteps": []
+        "lessonSteps": ${includeLessonDraft ? '[{"id":"step_01","strokeIds":["stroke_01"],"instruction":{"en":"Draft instruction hidden"}}]' : '[]'}
       }
     ]
   }

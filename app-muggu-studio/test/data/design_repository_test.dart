@@ -10,66 +10,84 @@ import 'package:muggu_studio/data/repositories/design_repository.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test(
-    'bundled catalog has 67 unreviewed samples and decodable thumbnails',
-    () async {
-      final designs = await DesignRepository().loadCatalog();
+  test('bundled catalog has 67 samples, five pending lesson drafts, and decodable thumbnails', () async {
+    final designs = await DesignRepository().loadCatalog();
+    const lessonDraftIds = {
+      'dot_grid_sample_001',
+      'dot_grid_sample_002',
+      'dot_grid_sample_003',
+      'dot_grid_sample_004',
+      'dot_grid_sample_005',
+    };
+    final foundLessonDraftIds = <String>{};
 
-      expect(designs, hasLength(67));
-      for (final design in designs) {
-        if (design.construction == DesignConstruction.dotGuided) {
-          expect(design.grid, isNotNull);
-          final gridDots = design.grid!.dots;
-          for (final path in design.paths) {
-            for (final command in path.commands) {
-              if (command.type.name == 'close') {
-                continue;
-              }
-              expect(command.type.name, anyOf('moveTo', 'lineTo'));
-              expect(
-                gridDots.any((dot) => dot.x == command.x && dot.y == command.y),
-                isTrue,
-              );
+    expect(designs, hasLength(67));
+    for (final design in designs) {
+      if (design.construction == DesignConstruction.dotGuided) {
+        expect(design.grid, isNotNull);
+        final gridDots = design.grid!.dots;
+        for (final path in design.paths) {
+          for (final command in path.commands) {
+            if (command.type.name == 'close') {
+              continue;
             }
+            expect(command.type.name, anyOf('moveTo', 'lineTo'));
+            expect(
+              gridDots.any((dot) => dot.x == command.x && dot.y == command.y),
+              isTrue,
+            );
           }
-        } else {
-          expect(design.grid, isNull);
         }
-        expect(design.region, isNull);
-        expect(design.tradition, isNull);
-        expect(design.rightsReview.status, ReviewStatus.pending);
-        expect(design.culturalReview.status, ReviewStatus.pending);
-        expect(design.isPublicationReady, isFalse);
-        expect(design.hasReviewedLesson, isFalse);
-        expect(design.lessonSteps, isEmpty);
-
-        final bytes = await rootBundle.load(design.thumbnail);
-        final codec = await ui.instantiateImageCodec(
-          bytes.buffer.asUint8List(),
-        );
-        final frame = await codec.getNextFrame();
-        expect(frame.image.width, 320);
-        expect(frame.image.height, 320);
-        codec.dispose();
+      } else {
+        expect(design.grid, isNull);
       }
-      final radialDesign = designs.singleWhere(
-        (design) => design.id == 'generated_radial_001',
-      );
-      expect(radialDesign.grid?.dots, hasLength(169));
-      expect(radialDesign.recipe, isNull);
-      final dotGridDesign = designs.singleWhere(
-        (design) => design.id == 'generated_dot_grid_001',
-      );
-      expect(dotGridDesign.grid?.dots, hasLength(25));
-      expect(dotGridDesign.recipe?.generatorId, 'dot_grid_diamonds');
-      final pookalam = designs.singleWhere(
-        (design) => design.id == 'art_pookalam_lotus_dawn',
-      );
-      expect(pookalam.construction, DesignConstruction.illustrated);
-      expect(pookalam.paths.any((path) => path.fillColor != null), isTrue);
-      expect(pookalam.backgroundColor, '#FFF8EE');
-    },
-  );
+      expect(design.region, isNull);
+      expect(design.tradition, isNull);
+      expect(design.rightsReview.status, ReviewStatus.pending);
+      expect(design.culturalReview.status, ReviewStatus.pending);
+      expect(design.localizationReview.status, ReviewStatus.pending);
+      expect(design.lessonReview.status, ReviewStatus.pending);
+      expect(design.isPublicationReady, isFalse);
+      expect(design.hasReviewedLesson, isFalse);
+      if (lessonDraftIds.contains(design.id)) {
+        foundLessonDraftIds.add(design.id);
+        expect(design.lessonSteps, isNotEmpty);
+        expect(design.lessonReview.reviewer, isEmpty);
+        expect(design.lessonReview.evidence, contains('prospective reviewer'));
+        for (final step in design.lessonSteps) {
+          expect(step.groupIds, isNotEmpty);
+          expect(design.geometryGroupIds, containsAll(step.groupIds));
+          expect(step.instruction.values.keys.toSet(), {'en'});
+        }
+      } else {
+        expect(design.lessonSteps, isEmpty);
+      }
+
+      final bytes = await rootBundle.load(design.thumbnail);
+      final codec = await ui.instantiateImageCodec(bytes.buffer.asUint8List());
+      final frame = await codec.getNextFrame();
+      expect(frame.image.width, 320);
+      expect(frame.image.height, 320);
+      codec.dispose();
+    }
+    expect(foundLessonDraftIds, lessonDraftIds);
+    final radialDesign = designs.singleWhere(
+      (design) => design.id == 'generated_radial_001',
+    );
+    expect(radialDesign.grid?.dots, hasLength(169));
+    expect(radialDesign.recipe, isNull);
+    final dotGridDesign = designs.singleWhere(
+      (design) => design.id == 'generated_dot_grid_001',
+    );
+    expect(dotGridDesign.grid?.dots, hasLength(25));
+    expect(dotGridDesign.recipe?.generatorId, 'dot_grid_diamonds');
+    final pookalam = designs.singleWhere(
+      (design) => design.id == 'art_pookalam_lotus_dawn',
+    );
+    expect(pookalam.construction, DesignConstruction.illustrated);
+    expect(pookalam.paths.any((path) => path.fillColor != null), isTrue);
+    expect(pookalam.backgroundColor, '#FFF8EE');
+  });
 
   test(
     'dot-guided schema 4 requires every path endpoint to use a grid dot',

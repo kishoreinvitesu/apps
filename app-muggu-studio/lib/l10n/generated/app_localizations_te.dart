@@ -219,6 +219,10 @@ class AppLocalizationsTe extends AppLocalizations {
       'ఇది సాంస్కృతికంగా ధృవీకరించబడిన పాఠం కాదు, అసలు వెక్టర్ ప్రివ్యూ.';
 
   @override
+  String get lessonDraftReviewNotice =>
+      'దశలవారీ పాఠం ముసాయిదా సమీక్షలో ఉంది. అవసరమైన కంటెంట్ సమీక్షలు ఆమోదం పొందిన తర్వాత అందుబాటులో ఉంటుంది.';
+
+  @override
   String get step => 'అడుగు';
 
   @override

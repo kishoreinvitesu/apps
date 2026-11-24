@@ -861,6 +861,162 @@ def _base_design(
     }
 
 
+def _attach_initial_kolam_lesson_drafts(designs):
+    drafts = {
+        "dot_grid_sample_001": [
+            {
+                "id": "step_01",
+                "groupIds": ["group_center"],
+                "instruction": {
+                    "en": (
+                        "Set out a square 3 by 3 guide-dot grid. Join the four "
+                        "middle-edge dots to draw the central diamond."
+                    )
+                },
+            },
+            {
+                "id": "step_02",
+                "groupIds": ["group_corners"],
+                "instruction": {
+                    "en": (
+                        "Add the four corner strokes, connecting each outer "
+                        "corner dot to its neighboring edge dots."
+                    )
+                },
+            },
+        ],
+        "dot_grid_sample_002": [
+            {
+                "id": "step_01",
+                "groupIds": ["group_core"],
+                "instruction": {
+                    "en": (
+                        "Set out a square 5 by 5 guide-dot grid. Join the four "
+                        "dots around the center to make the small diamond."
+                    )
+                },
+            },
+            {
+                "id": "step_02",
+                "groupIds": ["group_petals"],
+                "instruction": {
+                    "en": (
+                        "Trace the four surrounding petal contours, following "
+                        "their guide dots toward the center and outer rows."
+                    )
+                },
+            },
+            {
+                "id": "step_03",
+                "groupIds": ["group_frame"],
+                "instruction": {
+                    "en": (
+                        "Connect the outer guide dots to complete the frame. "
+                        "Check that each side meets its corner cleanly."
+                    )
+                },
+            },
+        ],
+        "dot_grid_sample_003": [
+            {
+                "id": "step_01",
+                "groupIds": ["group_center"],
+                "instruction": {
+                    "en": (
+                        "Set out a square 5 by 5 guide-dot grid and draw the "
+                        "small diamond around its center."
+                    )
+                },
+            },
+            {
+                "id": "step_02",
+                "groupIds": ["group_loops"],
+                "instruction": {
+                    "en": (
+                        "Trace the four surrounding loop paths, keeping every "
+                        "turn aligned to the dots."
+                    )
+                },
+            },
+            {
+                "id": "step_03",
+                "groupIds": ["group_diags"],
+                "instruction": {
+                    "en": (
+                        "Finish with the two diagonal paths. Treat them as "
+                        "separate strokes; do not force a single continuous line."
+                    )
+                },
+            },
+        ],
+        "dot_grid_sample_004": [
+            {
+                "id": "step_01",
+                "groupIds": ["group_diamonds"],
+                "instruction": {
+                    "en": (
+                        "Set out a square 5 by 5 guide-dot grid. Trace the "
+                        "three nested diamonds from the smallest outward."
+                    )
+                },
+            },
+            {
+                "id": "step_02",
+                "groupIds": ["group_steps"],
+                "instruction": {
+                    "en": (
+                        "Add the four short corner steps, following the dots "
+                        "beside each diamond."
+                    )
+                },
+            },
+        ],
+        "dot_grid_sample_005": [
+            {
+                "id": "step_01",
+                "groupIds": ["group_center"],
+                "instruction": {
+                    "en": (
+                        "Set out a square 5 by 5 guide-dot grid and trace the "
+                        "small flower at the center."
+                    )
+                },
+            },
+            {
+                "id": "step_02",
+                "groupIds": ["group_lamps"],
+                "instruction": {
+                    "en": (
+                        "Draw the four lamp bases pointing north, east, south "
+                        "and west from the center."
+                    )
+                },
+            },
+            {
+                "id": "step_03",
+                "groupIds": ["group_flames"],
+                "instruction": {
+                    "en": (
+                        "Add the flame shapes above each base, keeping their "
+                        "tips aligned with the guide dots."
+                    )
+                },
+            },
+        ],
+    }
+    evidence = (
+        "Draft only; practitioner, cultural, source, and localization reviews "
+        "are still pending. The user named Rishika as a prospective reviewer "
+        "and supplied the source label 'Home'; no review or source evidence "
+        "has been received."
+    )
+    for design in designs:
+        if design["id"] in drafts:
+            design["lessonSteps"] = drafts[design["id"]]
+            design["lessonReview"]["evidence"] = evidence
+    return designs
+
+
 def build_catalog(radial_petals=8, grid_size=5, grid_layout="square"):
     difficulty = [
         "easy", "easy", "easy", "intermediate", "intermediate",
@@ -1076,10 +1232,11 @@ def build_catalog(radial_petals=8, grid_size=5, grid_layout="square"):
         design_item["grid"] = grid_obj
         designs.append(design_item)
 
-    return _original_artform_designs() + [
+    catalog = _original_artform_designs() + [
         _attach_dot_grid(design)
         for design in _original_geometric_designs() + designs
     ]
+    return _attach_initial_kolam_lesson_drafts(catalog)
 
 
 def _original_design(design_id, name, description, difficulty, paths, family):

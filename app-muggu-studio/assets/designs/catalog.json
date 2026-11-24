@@ -96348,7 +96348,26 @@
         }
       ],
       "recipe": null,
-      "lessonSteps": [],
+      "lessonSteps": [
+        {
+          "id": "step_01",
+          "groupIds": [
+            "group_center"
+          ],
+          "instruction": {
+            "en": "Set out a square 3 by 3 guide-dot grid. Join the four middle-edge dots to draw the central diamond."
+          }
+        },
+        {
+          "id": "step_02",
+          "groupIds": [
+            "group_corners"
+          ],
+          "instruction": {
+            "en": "Add the four corner strokes, connecting each outer corner dot to its neighboring edge dots."
+          }
+        }
+      ],
       "rightsReview": {
         "status": "pending",
         "reviewer": "",
@@ -96367,7 +96386,7 @@
       "lessonReview": {
         "status": "pending",
         "reviewer": "",
-        "evidence": ""
+        "evidence": "Draft only; practitioner, cultural, source, and localization reviews are still pending. The user named Rishika as a prospective reviewer and supplied the source label 'Home'; no review or source evidence has been received."
       }
     },
     {
@@ -96725,7 +96744,35 @@
         }
       ],
       "recipe": null,
-      "lessonSteps": [],
+      "lessonSteps": [
+        {
+          "id": "step_01",
+          "groupIds": [
+            "group_core"
+          ],
+          "instruction": {
+            "en": "Set out a square 5 by 5 guide-dot grid. Join the four dots around the center to make the small diamond."
+          }
+        },
+        {
+          "id": "step_02",
+          "groupIds": [
+            "group_petals"
+          ],
+          "instruction": {
+            "en": "Trace the four surrounding petal contours, following their guide dots toward the center and outer rows."
+          }
+        },
+        {
+          "id": "step_03",
+          "groupIds": [
+            "group_frame"
+          ],
+          "instruction": {
+            "en": "Connect the outer guide dots to complete the frame. Check that each side meets its corner cleanly."
+          }
+        }
+      ],
       "rightsReview": {
         "status": "pending",
         "reviewer": "",
@@ -96744,7 +96791,7 @@
       "lessonReview": {
         "status": "pending",
         "reviewer": "",
-        "evidence": ""
+        "evidence": "Draft only; practitioner, cultural, source, and localization reviews are still pending. The user named Rishika as a prospective reviewer and supplied the source label 'Home'; no review or source evidence has been received."
       }
     },
     {
@@ -97085,7 +97132,35 @@
         }
       ],
       "recipe": null,
-      "lessonSteps": [],
+      "lessonSteps": [
+        {
+          "id": "step_01",
+          "groupIds": [
+            "group_center"
+          ],
+          "instruction": {
+            "en": "Set out a square 5 by 5 guide-dot grid and draw the small diamond around its center."
+          }
+        },
+        {
+          "id": "step_02",
+          "groupIds": [
+            "group_loops"
+          ],
+          "instruction": {
+            "en": "Trace the four surrounding loop paths, keeping every turn aligned to the dots."
+          }
+        },
+        {
+          "id": "step_03",
+          "groupIds": [
+            "group_diags"
+          ],
+          "instruction": {
+            "en": "Finish with the two diagonal paths. Treat them as separate strokes; do not force a single continuous line."
+          }
+        }
+      ],
       "rightsReview": {
         "status": "pending",
         "reviewer": "",
@@ -97104,7 +97179,7 @@
       "lessonReview": {
         "status": "pending",
         "reviewer": "",
-        "evidence": ""
+        "evidence": "Draft only; practitioner, cultural, source, and localization reviews are still pending. The user named Rishika as a prospective reviewer and supplied the source label 'Home'; no review or source evidence has been received."
       }
     },
     {
@@ -97419,7 +97494,26 @@
         }
       ],
       "recipe": null,
-      "lessonSteps": [],
+      "lessonSteps": [
+        {
+          "id": "step_01",
+          "groupIds": [
+            "group_diamonds"
+          ],
+          "instruction": {
+            "en": "Set out a square 5 by 5 guide-dot grid. Trace the three nested diamonds from the smallest outward."
+          }
+        },
+        {
+          "id": "step_02",
+          "groupIds": [
+            "group_steps"
+          ],
+          "instruction": {
+            "en": "Add the four short corner steps, following the dots beside each diamond."
+          }
+        }
+      ],
       "rightsReview": {
         "status": "pending",
         "reviewer": "",
@@ -97438,7 +97532,7 @@
       "lessonReview": {
         "status": "pending",
         "reviewer": "",
-        "evidence": ""
+        "evidence": "Draft only; practitioner, cultural, source, and localization reviews are still pending. The user named Rishika as a prospective reviewer and supplied the source label 'Home'; no review or source evidence has been received."
       }
     },
     {
@@ -97823,7 +97917,35 @@
         }
       ],
       "recipe": null,
-      "lessonSteps": [],
+      "lessonSteps": [
+        {
+          "id": "step_01",
+          "groupIds": [
+            "group_center"
+          ],
+          "instruction": {
+            "en": "Set out a square 5 by 5 guide-dot grid and trace the small flower at the center."
+          }
+        },
+        {
+          "id": "step_02",
+          "groupIds": [
+            "group_lamps"
+          ],
+          "instruction": {
+            "en": "Draw the four lamp bases pointing north, east, south and west from the center."
+          }
+        },
+        {
+          "id": "step_03",
+          "groupIds": [
+            "group_flames"
+          ],
+          "instruction": {
+            "en": "Add the flame shapes above each base, keeping their tips aligned with the guide dots."
+          }
+        }
+      ],
       "rightsReview": {
         "status": "pending",
         "reviewer": "",
@@ -97842,7 +97964,7 @@
       "lessonReview": {
         "status": "pending",
         "reviewer": "",
-        "evidence": ""
+        "evidence": "Draft only; practitioner, cultural, source, and localization reviews are still pending. The user named Rishika as a prospective reviewer and supplied the source label 'Home'; no review or source evidence has been received."
       }
     },
     {

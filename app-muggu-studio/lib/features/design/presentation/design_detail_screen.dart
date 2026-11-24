@@ -100,6 +100,9 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
     }
     final design = matches.first;
     final hasReviewedLesson = design.hasReviewedLesson;
+    final lessonNotice = design.lessonSteps.isEmpty
+        ? l10n.sampleLessonNotice
+        : l10n.lessonDraftReviewNotice;
     _ensurePlayback(hasReviewedLesson ? design.lessonSteps.length : 0);
     final visibleGroupIds = hasReviewedLesson
         ? design.lessonSteps
@@ -152,7 +155,7 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
                 children: [
                   const Icon(Icons.info_outline_rounded),
                   const SizedBox(width: 10),
-                  Expanded(child: Text(l10n.sampleLessonNotice)),
+                  Expanded(child: Text(lessonNotice)),
                 ],
               ),
             ),

@@ -218,6 +218,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'This is an original vector preview, not a culturally verified lesson.';
 
   @override
+  String get lessonDraftReviewNotice =>
+      'A step-by-step lesson draft is being reviewed. It will be available after the required content reviews are approved.';
+
+  @override
   String get step => 'Step';
 
   @override
