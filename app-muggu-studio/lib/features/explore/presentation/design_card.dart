@@ -103,8 +103,17 @@ class DesignCard extends ConsumerWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
+                    design.techniqueFor(languageCode),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.tertiary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
                     design.descriptionFor(languageCode),
-                    maxLines: 3,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),

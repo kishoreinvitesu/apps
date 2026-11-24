@@ -9,6 +9,7 @@ import '../../../data/models/muggu_design.dart';
 import '../../../data/repositories/design_repository.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../creations/domain/user_creation.dart';
+import '../../design/application/design_renderer.dart';
 import '../../design/presentation/vector_preview.dart';
 import '../../export/application/design_exporter.dart';
 import '../../export/presentation/export_dialog.dart';
@@ -304,7 +305,11 @@ class _CreationCard extends ConsumerWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8),
-              child: VectorPreview(paths: creation.paths, grid: creation.grid),
+              child: VectorPreview(
+                paths: creation.paths,
+                grid: creation.grid,
+                backgroundColor: designColorFromHex(creation.backgroundColor),
+              ),
             ),
           ),
           Padding(

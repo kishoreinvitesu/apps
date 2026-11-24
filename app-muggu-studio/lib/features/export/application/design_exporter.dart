@@ -9,7 +9,7 @@ import '../../../data/models/design_geometry.dart';
 import '../../../data/models/dot_grid.dart';
 import '../../../data/models/muggu_design.dart';
 import '../../creations/domain/user_creation.dart';
-import '../../design/application/geometry_path_builder.dart';
+import '../../design/application/design_renderer.dart';
 
 /// Resolution preset for exporting Muggu and Kolam designs.
 enum ExportResolution {
@@ -52,48 +52,25 @@ class DesignExporter {
     );
 
     // --- Layer 0: Background Solid Fill ---
-    canvas.drawRect(
-      ui.Rect.fromLTWH(0, 0, size.width, size.height),
-      Paint()..color = backgroundColor,
+    paintDesignBackground(canvas, size, backgroundColor);
+
+    paintDotGrid(
+      canvas,
+      size,
+      grid,
+      color: strokeColor,
+      opacity: 0.35,
+      radiusFactor: 0.005,
     );
 
-    // --- Layer 1: Dot Grid Underlay ---
-    if (grid != null && grid.dots.isNotEmpty) {
-      final dotRadius = size.width * 0.005; // ~5.4px at 1080p, ~10.2px at 2048p
-      final dotPaint = Paint()
-        ..color = strokeColor.withValues(alpha: 0.35)
-        ..style = PaintingStyle.fill;
-
-      for (final dot in grid.dots) {
-        canvas.drawCircle(
-          Offset(dot.x * size.width, dot.y * size.height),
-          dotRadius,
-          dotPaint,
-        );
-      }
-    }
-
-    // --- Layer 2: Vector Paths ---
-    final baseStrokeWidth =
-        size.width * 0.0055; // ~6px at 1080p, ~11px at 2048p
     for (final designPath in paths) {
-      final path = buildDesignPath(designPath, size);
-
-      // Fill if the path specifies a fill colour
-      if (designPath.fillColor != null) {
-        final fillColor = _parseHexColor(designPath.fillColor!);
-        canvas.drawPath(path, Paint()..color = fillColor);
-      }
-
-      // Stroke — DesignPath has no per-path strokeColor, use caller-supplied default
-      final strokePaint = Paint()
-        ..color = strokeColor
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = baseStrokeWidth
-        ..strokeCap = StrokeCap.round
-        ..strokeJoin = StrokeJoin.round;
-
-      canvas.drawPath(path, strokePaint);
+      paintDesignPath(
+        canvas,
+        size,
+        designPath,
+        defaultStrokeColor: strokeColor,
+        defaultStrokeWidth: 0.0055,
+      );
     }
 
     // --- Layer 3: Cultural Branding / Attribution Footer ---
@@ -124,11 +101,15 @@ class DesignExporter {
 
     final picture = recorder.endRecording();
     final image = await picture.toImage(targetResolution, targetResolution);
-    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    if (byteData == null) {
-      throw StateError('Failed to encode raster canvas into PNG bytes');
+    try {
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      if (byteData == null) {
+        throw StateError('Failed to encode raster canvas into PNG bytes');
+      }
+      return byteData.buffer.asUint8List();
+    } finally {
+      image.dispose();
     }
-    return byteData.buffer.asUint8List();
   }
 
   /// Export a [UserCreation] to PNG bytes.
@@ -140,6 +121,7 @@ class DesignExporter {
     return exportToPngBytes(
       paths: creation.paths,
       grid: creation.grid,
+      backgroundColor: designColorFromHex(creation.backgroundColor),
       targetResolution: resolution.dimension,
       title: creation.title,
       includeBranding: includeBranding,
@@ -157,18 +139,10 @@ class DesignExporter {
       paths: design.paths,
       grid: design.grid,
       targetResolution: resolution.dimension,
+      backgroundColor: designColorFromHex(design.backgroundColor),
       title: design.nameFor(languageCode ?? 'en'),
       includeBranding: includeBranding,
     );
-  }
-
-  static Color _parseHexColor(String hex) {
-    var clean = hex.replaceFirst('#', '');
-    if (clean.length == 6) {
-      clean = 'FF$clean';
-    }
-    final val = int.tryParse(clean, radix: 16);
-    return val != null ? Color(val) : MugguColors.deepMaroon;
   }
 }
 

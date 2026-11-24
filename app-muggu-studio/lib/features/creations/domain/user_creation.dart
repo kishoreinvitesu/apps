@@ -26,6 +26,7 @@ class UserCreation {
     this.strokes,
     required List<DesignPath> paths,
     this.grid,
+    this.backgroundColor = '#FFF5E8',
   }) : paths = List.unmodifiable(paths);
 
   final String id;
@@ -37,6 +38,7 @@ class UserCreation {
   final List<DrawnStroke>? strokes;
   final List<DesignPath> paths;
   final DotGrid? grid;
+  final String backgroundColor;
 
   UserCreation copyWith({
     String? id,
@@ -48,6 +50,7 @@ class UserCreation {
     List<DrawnStroke>? strokes,
     List<DesignPath>? paths,
     DotGrid? grid,
+    String? backgroundColor,
   }) {
     return UserCreation(
       id: id ?? this.id,
@@ -59,6 +62,7 @@ class UserCreation {
       strokes: strokes ?? this.strokes,
       paths: paths ?? this.paths,
       grid: grid ?? this.grid,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
     );
   }
 
@@ -74,6 +78,7 @@ class UserCreation {
         : null,
     'paths_json': jsonEncode([for (final p in paths) p.toJson()]),
     'grid_json': grid != null ? jsonEncode(grid!.toJson()) : null,
+    'background_color': backgroundColor,
   };
 
   factory UserCreation.fromMap(Map<String, dynamic> map) {
@@ -88,6 +93,12 @@ class UserCreation {
       isUtc: true,
     );
     final type = CreationType.fromName(map['type'] as String);
+    final rawBackgroundColor = map['background_color'];
+    if (rawBackgroundColor != null &&
+        (rawBackgroundColor is! String ||
+            !RegExp(r'^#[0-9a-fA-F]{6}$').hasMatch(rawBackgroundColor))) {
+      throw FormatException('background_color must be a #RRGGBB value.');
+    }
 
     PatternRecipe? recipe;
     if (map['recipe_json'] != null) {
@@ -132,6 +143,9 @@ class UserCreation {
       strokes: strokes,
       paths: paths,
       grid: grid,
+      backgroundColor: rawBackgroundColor is String
+          ? rawBackgroundColor
+          : '#FFF5E8',
     );
   }
 
@@ -175,10 +189,15 @@ class UserCreation {
         DesignPath(
           id: 'stroke_path_$i',
           groupId: 'user_strokes',
+          strokeColor: _colorHex(stroke.color.toARGB32()),
+          strokeWidth: (stroke.strokeWidth / 320).clamp(0.001, 0.05).toDouble(),
           commands: List.unmodifiable(commands),
         ),
       );
     }
     return List.unmodifiable(result);
   }
+
+  static String _colorHex(int argb) =>
+      '#${(argb & 0x00FFFFFF).toRadixString(16).padLeft(6, '0')}';
 }

@@ -19,6 +19,8 @@ enum DesignDifficulty {
   }
 }
 
+enum DesignConstruction { dotGuided, illustrated }
+
 class MugguDesign {
   const MugguDesign({
     required this.id,
@@ -29,6 +31,8 @@ class MugguDesign {
     required this.localizedTradition,
     required this.region,
     required this.tradition,
+    required this.construction,
+    this.backgroundColor = '#FFF5E8',
     required this.technique,
     required this.difficulty,
     required this.grid,
@@ -51,6 +55,8 @@ class MugguDesign {
   final LocalizedText? localizedTradition;
   final String? region;
   final String? tradition;
+  final DesignConstruction construction;
+  final String backgroundColor;
   final String technique;
   final DesignDifficulty difficulty;
   final DotGrid? grid;
@@ -115,6 +121,24 @@ class MugguDesign {
       value['tradition'],
       '$fieldName.tradition',
     );
+    final rawBackgroundColor = value['backgroundColor'];
+    if (rawBackgroundColor != null &&
+        (rawBackgroundColor is! String ||
+            !RegExp(r'^#[0-9a-fA-F]{6}$').hasMatch(rawBackgroundColor))) {
+      throw FormatException(
+        '$fieldName.backgroundColor must be a #RRGGBB value.',
+      );
+    }
+    final backgroundColor = rawBackgroundColor is String
+        ? rawBackgroundColor
+        : '#FFF5E8';
+    final construction = switch (value['construction']) {
+      'dot_guided' => DesignConstruction.dotGuided,
+      'illustrated' => DesignConstruction.illustrated,
+      _ => throw FormatException(
+        '$fieldName.construction must be dot_guided or illustrated.',
+      ),
+    };
     final localizedRegionValue = value['localizedRegion'];
     final localizedTraditionValue = value['localizedTradition'];
     if (id is! String || !RegExp(r'^[a-z0-9_]+$').hasMatch(id)) {
@@ -259,6 +283,8 @@ class MugguDesign {
       localizedTradition: localizedTradition,
       region: region,
       tradition: tradition,
+      construction: construction,
+      backgroundColor: backgroundColor,
       technique: technique,
       difficulty: DesignDifficulty.parse(
         value['difficulty'],

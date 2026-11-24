@@ -123,6 +123,45 @@ void main() {
     );
   });
 
+  test('path visual styles round-trip and reject invalid values', () {
+    final path = DesignPath.fromJson({
+      'id': 'styled_path',
+      'groupId': 'flower',
+      'fillColor': '#F4CBD2',
+      'strokeColor': '#80535E',
+      'strokeWidth': 0.006,
+      'shadowColor': '#B48275',
+      'commands': [
+        {'type': 'moveTo', 'x': 0.2, 'y': 0.5},
+        {'type': 'lineTo', 'x': 0.8, 'y': 0.5},
+        {'type': 'close'},
+      ],
+    }, 'fixture.path');
+
+    expect(path.fillColor, '#F4CBD2');
+    expect(path.strokeColor, '#80535E');
+    expect(path.strokeWidth, 0.006);
+    expect(path.shadowColor, '#B48275');
+    expect(
+      DesignPath.fromJson(path.toJson(), 'fixture.path').toJson(),
+      path.toJson(),
+    );
+    expect(
+      () => DesignPath.fromJson({
+        ...path.toJson(),
+        'strokeWidth': 0.051,
+      }, 'fixture.path'),
+      throwsFormatException,
+    );
+    expect(
+      () => DesignPath.fromJson({
+        ...path.toJson(),
+        'shadowColor': 'not-a-color',
+      }, 'fixture.path'),
+      throwsFormatException,
+    );
+  });
+
   test('path command count is bounded', () {
     final commands = [
       {'type': 'moveTo', 'x': 0.1, 'y': 0.1},

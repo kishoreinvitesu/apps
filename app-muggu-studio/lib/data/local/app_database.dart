@@ -32,7 +32,7 @@ class AppDatabase {
     return _factory.openDatabase(
       path,
       options: OpenDatabaseOptions(
-        version: 2,
+        version: 3,
         onCreate: (database, version) async {
           await database.execute('''
             CREATE TABLE favorites (
@@ -45,6 +45,11 @@ class AppDatabase {
         onUpgrade: (database, oldVersion, newVersion) async {
           if (oldVersion < 2) {
             await _createCreationsTable(database);
+          }
+          if (oldVersion >= 2 && oldVersion < 3) {
+            await database.execute(
+              "ALTER TABLE creations ADD COLUMN background_color TEXT NOT NULL DEFAULT '#FFF5E8'",
+            );
           }
         },
       ),
@@ -62,7 +67,8 @@ class AppDatabase {
         recipe_json TEXT,
         strokes_json TEXT,
         paths_json TEXT NOT NULL,
-        grid_json TEXT
+        grid_json TEXT,
+        background_color TEXT NOT NULL DEFAULT '#FFF5E8'
       )
     ''');
     await database.execute('''

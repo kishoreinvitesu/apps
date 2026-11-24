@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:material_ui/material_ui.dart' show Color;
 import 'package:flutter_test/flutter_test.dart';
@@ -64,6 +65,54 @@ void main() {
         includeBranding: false,
       );
       _expectValidPng(bytes, 512);
+    });
+
+    test('export applies layered fills and the selected background', () async {
+      TestWidgetsFlutterBinding.ensureInitialized();
+      const background = Color(0xFF123456);
+      final path = DesignPath.fromJson({
+        'id': 'filled_triangle',
+        'groupId': 'flower',
+        'fillColor': '#F4CBD2',
+        'strokeColor': '#80535E',
+        'strokeWidth': 0.02,
+        'shadowColor': '#B48275',
+        'commands': [
+          {'type': 'moveTo', 'x': 0.25, 'y': 0.25},
+          {'type': 'lineTo', 'x': 0.75, 'y': 0.25},
+          {'type': 'lineTo', 'x': 0.5, 'y': 0.75},
+          {'type': 'close'},
+        ],
+      }, 'fixture.path');
+      final png = await exporter.exportToPngBytes(
+        paths: [path],
+        targetResolution: 64,
+        backgroundColor: background,
+        includeBranding: false,
+      );
+      final codec = await ui.instantiateImageCodec(png);
+      final image = (await codec.getNextFrame()).image;
+      final pixels = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+      expect(pixels, isNotNull);
+      final pixelData = pixels!;
+
+      List<int> pixelAt(int x, int y) {
+        final offset = (y * 64 + x) * 4;
+        return [
+          pixelData.getUint8(offset),
+          pixelData.getUint8(offset + 1),
+          pixelData.getUint8(offset + 2),
+          pixelData.getUint8(offset + 3),
+        ];
+      }
+
+      try {
+        expect(pixelAt(2, 2), [0x12, 0x34, 0x56, 0xFF]);
+        expect(pixelAt(32, 32), [0xF4, 0xCB, 0xD2, 0xFF]);
+      } finally {
+        image.dispose();
+        codec.dispose();
+      }
     });
 
     test('exportCreation encodes a freehand UserCreation', () async {

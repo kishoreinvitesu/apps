@@ -324,6 +324,7 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
         recipe: pattern.recipe,
         paths: pattern.paths,
         grid: pattern.grid,
+        backgroundColor: widget.initialCreation?.backgroundColor ?? '#FFF5E8',
       );
 
       await ref.read(creationsDaoProvider).saveCreation(creation);
@@ -393,6 +394,7 @@ class _CreateScreenState extends ConsumerState<CreateScreen>
         strokes: strokes,
         paths: paths,
         grid: freehandGrid,
+        backgroundColor: widget.initialCreation?.backgroundColor ?? '#FFF5E8',
       );
 
       await ref.read(creationsDaoProvider).saveCreation(creation);

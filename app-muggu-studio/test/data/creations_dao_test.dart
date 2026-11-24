@@ -36,6 +36,9 @@ void main() {
         DesignPath(
           id: 'path_1',
           groupId: 'group_1',
+          strokeColor: '#80535E',
+          strokeWidth: 0.006,
+          shadowColor: '#B48275',
           commands: [
             PathCommand(type: PathCommandType.moveTo, x: 0.1, y: 0.1),
             PathCommand(type: PathCommandType.lineTo, x: 0.9, y: 0.9),
@@ -43,6 +46,7 @@ void main() {
         ),
       ],
       grid: DotGrid.rectangular(rows: 5, columns: 5),
+      backgroundColor: '#FFF8EE',
     );
   }
 
@@ -79,7 +83,11 @@ void main() {
       expect(list.first.type, CreationType.template);
       expect(list.first.recipe?.generatorId, 'radial_flower');
       expect(list.first.paths.length, 1);
+      expect(list.first.paths.first.strokeColor, '#80535E');
+      expect(list.first.paths.first.strokeWidth, 0.006);
+      expect(list.first.paths.first.shadowColor, '#B48275');
       expect(list.first.grid?.rows, 5);
+      expect(list.first.backgroundColor, '#FFF8EE');
 
       // Load by ID
       final loaded = await dao.loadCreation('c1');
@@ -372,6 +380,8 @@ void main() {
         expect(paths.length, 1);
         expect(paths.first.id, 'stroke_path_0');
         expect(paths.first.groupId, 'user_strokes');
+        expect(paths.first.strokeColor, '#d8a13b');
+        expect(paths.first.strokeWidth, 0.0125);
         expect(paths.first.commands.length, 2);
         expect(paths.first.commands[0].type, PathCommandType.moveTo);
         expect(paths.first.commands[1].type, PathCommandType.lineTo);
@@ -387,7 +397,7 @@ void main() {
       },
     );
 
-    test('database migration from v1 to v2 preserves favorites and enables creations', () async {
+    test('database migration from v1 to v3 preserves favorites and enables creations', () async {
       final directory = await Directory.systemTemp.createTemp(
         'muggu_migration_test_',
       );
@@ -416,7 +426,7 @@ void main() {
       });
       await rawDb.close();
 
-      // 2. Open with modern AppDatabase (version 2)
+      // 2. Open with modern AppDatabase (version 3)
       final appDb = AppDatabase(
         factory: databaseFactoryFfi,
         databasePath: databasePath,
@@ -441,9 +451,78 @@ void main() {
       await creationsDao.saveCreation(creation);
       expect(await creationsDao.listCreations(), hasLength(1));
 
-      // Verify SQLite schema version is 2
+      // Verify SQLite schema version is 3
       final rawUpgradedDb = await appDb.database;
-      expect(await rawUpgradedDb.getVersion(), 2);
+      expect(await rawUpgradedDb.getVersion(), 3);
     });
+
+    test(
+      'database migration from v2 adds background color without data loss',
+      () async {
+        final directory = await Directory.systemTemp.createTemp(
+          'muggu_v2_migration_test_',
+        );
+        final databasePath =
+            '${directory.path}${Platform.pathSeparator}migration.db';
+        final creation = createSampleCreation(id: 'v2_creation');
+        final oldCreationValues = creation.toMap()..remove('background_color');
+
+        final oldDb = await databaseFactoryFfi.openDatabase(
+          databasePath,
+          options: OpenDatabaseOptions(
+            version: 2,
+            onCreate: (db, version) async {
+              await db.execute('''
+              CREATE TABLE favorites (
+                design_id TEXT PRIMARY KEY NOT NULL,
+                added_at INTEGER NOT NULL
+              )
+            ''');
+              await db.execute('''
+              CREATE TABLE creations (
+                id TEXT PRIMARY KEY NOT NULL,
+                title TEXT NOT NULL,
+                created_at INTEGER NOT NULL,
+                updated_at INTEGER NOT NULL,
+                type TEXT NOT NULL,
+                recipe_json TEXT,
+                strokes_json TEXT,
+                paths_json TEXT NOT NULL,
+                grid_json TEXT
+              )
+            ''');
+              await db.execute(
+                'CREATE INDEX idx_creations_updated_at ON creations(updated_at DESC)',
+              );
+            },
+          ),
+        );
+        await oldDb.insert('favorites', {
+          'design_id': 'design_before_migration',
+          'added_at': 1000000,
+        });
+        await oldDb.insert('creations', oldCreationValues);
+        await oldDb.close();
+
+        final appDb = AppDatabase(
+          factory: databaseFactoryFfi,
+          databasePath: databasePath,
+        );
+        addTearDown(() async {
+          await appDb.close();
+          await directory.delete(recursive: true);
+        });
+
+        final creationsDao = CreationsDao(appDb);
+        final restored = await creationsDao.loadCreation(creation.id);
+        expect(restored, isNotNull);
+        expect(restored!.backgroundColor, '#FFF5E8');
+        expect(restored.paths.single.strokeColor, '#80535E');
+        expect(await FavoritesDao(appDb).favoriteDesignIds(), [
+          'design_before_migration',
+        ]);
+        expect(await (await appDb.database).getVersion(), 3);
+      },
+    );
   });
 }

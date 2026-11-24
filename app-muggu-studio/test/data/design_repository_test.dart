@@ -11,25 +11,29 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test(
-    'bundled catalog has sixty unreviewed samples and decodable thumbnails',
+    'bundled catalog has 67 unreviewed samples and decodable thumbnails',
     () async {
       final designs = await DesignRepository().loadCatalog();
 
-      expect(designs, hasLength(60));
+      expect(designs, hasLength(67));
       for (final design in designs) {
-        expect(design.grid, isNotNull);
-        final gridDots = design.grid!.dots;
-        for (final path in design.paths) {
-          for (final command in path.commands) {
-            if (command.type.name == 'close') {
-              continue;
+        if (design.construction == DesignConstruction.dotGuided) {
+          expect(design.grid, isNotNull);
+          final gridDots = design.grid!.dots;
+          for (final path in design.paths) {
+            for (final command in path.commands) {
+              if (command.type.name == 'close') {
+                continue;
+              }
+              expect(command.type.name, anyOf('moveTo', 'lineTo'));
+              expect(
+                gridDots.any((dot) => dot.x == command.x && dot.y == command.y),
+                isTrue,
+              );
             }
-            expect(command.type.name, anyOf('moveTo', 'lineTo'));
-            expect(
-              gridDots.any((dot) => dot.x == command.x && dot.y == command.y),
-              isTrue,
-            );
           }
+        } else {
+          expect(design.grid, isNull);
         }
         expect(design.region, isNull);
         expect(design.tradition, isNull);
@@ -58,50 +62,88 @@ void main() {
       );
       expect(dotGridDesign.grid?.dots, hasLength(25));
       expect(dotGridDesign.recipe?.generatorId, 'dot_grid_diamonds');
+      final pookalam = designs.singleWhere(
+        (design) => design.id == 'art_pookalam_lotus_dawn',
+      );
+      expect(pookalam.construction, DesignConstruction.illustrated);
+      expect(pookalam.paths.any((path) => path.fillColor != null), isTrue);
+      expect(pookalam.backgroundColor, '#FFF8EE');
     },
   );
 
-  test('schema 3 requires every path endpoint to use a grid dot', () async {
-    final catalog = jsonDecode(
-      await rootBundle.loadString(catalogAssetPath),
-    ) as Map<String, dynamic>;
-    final firstDesign = Map<String, dynamic>.from(
-      (catalog['designs'] as List).first as Map,
-    );
+  test(
+    'dot-guided schema 4 requires every path endpoint to use a grid dot',
+    () async {
+      final catalog = jsonDecode(
+        await rootBundle.loadString(catalogAssetPath),
+      ) as Map<String, dynamic>;
+      final catalogDesigns = catalog['designs'] as List;
+      final firstDesign = Map<String, dynamic>.from(
+        catalogDesigns.cast<Map<String, dynamic>>().firstWhere(
+          (design) => design['construction'] == 'dot_guided',
+        ),
+      );
 
-    expect(
-      () => DesignRepository.parseCatalog(
+      expect(
+        () => DesignRepository.parseCatalog(
+          jsonEncode({
+            ...catalog,
+            'designs': [
+              {...firstDesign, 'grid': null},
+            ],
+          }),
+        ),
+        throwsFormatException,
+      );
+
+      final firstPath = Map<String, dynamic>.from(
+        (firstDesign['paths'] as List).first as Map,
+      );
+      final commands = [
+        for (final command in firstPath['commands'] as List)
+          Map<String, dynamic>.from(command as Map),
+      ];
+      commands[0] = {...commands[0], 'x': 0.123, 'y': 0.123};
+      firstPath['commands'] = commands;
+      firstDesign['paths'] = [firstPath];
+
+      expect(
+        () => DesignRepository.parseCatalog(
+          jsonEncode({
+            ...catalog,
+            'designs': [firstDesign],
+          }),
+        ),
+        throwsFormatException,
+      );
+    },
+  );
+
+  test(
+    'schema 3 infers illustrated construction when a design has no grid',
+    () async {
+      final catalog = jsonDecode(
+        await rootBundle.loadString(catalogAssetPath),
+      ) as Map<String, dynamic>;
+      final rawDesigns = catalog['designs'] as List;
+      final illustrated = Map<String, dynamic>.from(
+        rawDesigns.cast<Map<String, dynamic>>().firstWhere(
+          (design) => design['construction'] == 'illustrated',
+        ),
+      )..remove('construction');
+
+      final migrated = DesignRepository.parseCatalog(
         jsonEncode({
           ...catalog,
-          'designs': [
-            {...firstDesign, 'grid': null},
-          ],
+          'schemaVersion': 3,
+          'designs': [illustrated],
         }),
-      ),
-      throwsFormatException,
-    );
+      ).single;
 
-    final firstPath = Map<String, dynamic>.from(
-      (firstDesign['paths'] as List).first as Map,
-    );
-    final commands = [
-      for (final command in firstPath['commands'] as List)
-        Map<String, dynamic>.from(command as Map),
-    ];
-    commands[0] = {...commands[0], 'x': 0.123, 'y': 0.123};
-    firstPath['commands'] = commands;
-    firstDesign['paths'] = [firstPath];
-
-    expect(
-      () => DesignRepository.parseCatalog(
-        jsonEncode({
-          ...catalog,
-          'designs': [firstDesign],
-        }),
-      ),
-      throwsFormatException,
-    );
-  });
+      expect(migrated.construction, DesignConstruction.illustrated);
+      expect(migrated.grid, isNull);
+    },
+  );
 
   test('search matches synonym tags and combined filters', () async {
     final designs = await DesignRepository().loadCatalog();
@@ -146,7 +188,7 @@ void main() {
       'technique': 'geometric_lines',
       'localizedTechnique': {'en': 'Geometric lines'},
       'difficulty': 'easy',
-      'grid': {'rows': 5, 'columns': 5},
+      'grid': null,
       'searchTags': ['fixture'],
       'thumbnail': 'assets/designs/thumbnails/fixture.webp',
       'strokes': [
@@ -223,11 +265,11 @@ void main() {
             "technique": "geometric_lines",
             "localizedTechnique": {"en": "Geometric lines"},
             "difficulty": "easy",
-            "grid": {"rows": 5, "columns": 5},
+            "grid": {"rows": 1, "columns": 2},
             "searchTags": ["fixture"],
             "thumbnail": "assets/designs/thumbnails/fixture.webp",
             "strokes": [
-              {"id": "stroke_01", "points": [[0, 0], [1, 1]]}
+              {"id": "stroke_01", "points": [[0.12, 0.5], [0.88, 0.5]]}
             ],
             "rightsReview": {
               "status": "approved",

@@ -6,7 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../data/models/design_geometry.dart';
 import '../../../data/models/dot_grid.dart';
-import '../../design/application/geometry_path_builder.dart';
+import '../../design/application/design_renderer.dart';
 import '../application/drawing_controller.dart';
 import '../domain/drawn_stroke.dart';
 import '../domain/symmetry_transform.dart';
@@ -177,8 +177,6 @@ class _DrawingCanvasPainter extends CustomPainter {
   final List<DesignPath> guideDesignPaths;
   final bool tracingMode;
 
-  static const _dotRadius = 3.0;
-  static const _dotColor = Color(0x55862B37); // deep maroon at 33% alpha
   static const _guideAlpha = 0.28;
   static const _borderRadius = 16.0;
 
@@ -203,35 +201,27 @@ class _DrawingCanvasPainter extends CustomPainter {
     canvas.clipRRect(rrect);
 
     // --- Layer 1: Dot grid ---
-    final localGrid = grid;
-    if (localGrid != null) {
-      final dotPaint = Paint()..color = _dotColor;
-      for (final dot in localGrid.dots) {
-        canvas.drawCircle(
-          Offset(dot.x * size.width, dot.y * size.height),
-          _dotRadius,
-          dotPaint,
-        );
-      }
-    }
+    paintDotGrid(
+      canvas,
+      size,
+      grid,
+      color: MugguColors.deepMaroon,
+      opacity: 0.33,
+      radiusFactor: 0.008,
+    );
 
     // --- Layer 2: Ghost guide paths ---
     if (tracingMode && guideDesignPaths.isNotEmpty) {
       for (final designPath in guideDesignPaths) {
-        final guidePath = buildDesignPath(designPath, size);
-        final fillHex = designPath.fillColor;
-        if (fillHex != null) {
-          final fillColor = _hexToColor(fillHex).withValues(alpha: _guideAlpha);
-          canvas.drawPath(guidePath, Paint()..color = fillColor);
-        }
-        canvas.drawPath(
-          guidePath,
-          Paint()
-            ..color = MugguColors.deepMaroon.withValues(alpha: _guideAlpha)
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 2.0
-            ..strokeCap = StrokeCap.round
-            ..strokeJoin = StrokeJoin.round,
+        paintDesignPath(
+          canvas,
+          size,
+          designPath,
+          defaultStrokeColor: MugguColors.deepMaroon,
+          defaultStrokeWidth: 2 / size.width,
+          strokeOverride: MugguColors.deepMaroon,
+          opacity: _guideAlpha,
+          drawShadow: false,
         );
       }
     }
@@ -304,11 +294,6 @@ class _DrawingCanvasPainter extends CustomPainter {
     canvas.drawPath(path, paint);
   }
 
-  static Color _hexToColor(String hex) {
-    final value = int.tryParse(hex.replaceFirst('#', 'FF'), radix: 16);
-    return value != null ? Color(value) : MugguColors.deepMaroon;
-  }
-
   @override
   bool shouldRepaint(_DrawingCanvasPainter oldDelegate) {
     return oldDelegate.strokes.length != strokes.length ||
@@ -316,6 +301,8 @@ class _DrawingCanvasPainter extends CustomPainter {
         oldDelegate.symmetryMode != symmetryMode ||
         oldDelegate.activeColor != activeColor ||
         oldDelegate.activeWidth != activeWidth ||
-        oldDelegate.tracingMode != tracingMode;
+        oldDelegate.tracingMode != tracingMode ||
+        oldDelegate.grid != grid ||
+        oldDelegate.guideDesignPaths != guideDesignPaths;
   }
 }

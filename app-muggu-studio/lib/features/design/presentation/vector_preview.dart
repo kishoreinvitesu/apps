@@ -1,8 +1,9 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../../../core/theme/app_theme.dart';
 import '../../../data/models/design_geometry.dart';
 import '../../../data/models/dot_grid.dart';
-import '../application/geometry_path_builder.dart';
+import '../application/design_renderer.dart';
 
 class VectorPreview extends StatelessWidget {
   const VectorPreview({
@@ -10,6 +11,7 @@ class VectorPreview extends StatelessWidget {
     required this.grid,
     this.visibleGroupIds,
     this.showAllPaths = true,
+    this.backgroundColor = MugguColors.warmCream,
     super.key,
   });
 
@@ -17,6 +19,7 @@ class VectorPreview extends StatelessWidget {
   final DotGrid? grid;
   final Set<String>? visibleGroupIds;
   final bool showAllPaths;
+  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +39,7 @@ class VectorPreview extends StatelessWidget {
             grid: grid,
             visibleGroupIds: visibleGroupIds,
             showAllPaths: showAllPaths,
+            backgroundColor: backgroundColor,
             color: Theme.of(context).colorScheme.primary,
             guideColor: Theme.of(context).colorScheme.outlineVariant,
           ),
@@ -51,6 +55,7 @@ class _VectorPreviewPainter extends CustomPainter {
     required this.grid,
     required this.visibleGroupIds,
     required this.showAllPaths,
+    required this.backgroundColor,
     required this.color,
     required this.guideColor,
   });
@@ -59,61 +64,31 @@ class _VectorPreviewPainter extends CustomPainter {
   final DotGrid? grid;
   final Set<String>? visibleGroupIds;
   final bool showAllPaths;
+  final Color backgroundColor;
   final Color color;
   final Color guideColor;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final guidePaint = Paint()
-      ..color = guideColor
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
-
-    canvas.drawRect(
-      Offset.zero & size,
-      Paint()
-        ..color = guideColor.withValues(alpha: 0.08)
-        ..style = PaintingStyle.fill,
-    );
-
-    final dots = grid?.dots ?? const <DesignPoint>[];
-    final dotPaint = Paint()
-      ..color = color.withValues(alpha: 0.48)
-      ..style = PaintingStyle.fill;
-    for (final dot in dots) {
-      canvas.drawCircle(
-        Offset(dot.x * size.width, dot.y * size.height),
-        3,
-        dotPaint,
-      );
-    }
+    paintDesignBackground(canvas, size, backgroundColor);
+    paintDotGrid(canvas, size, grid);
 
     for (final designPath in paths) {
-      final path = buildDesignPath(designPath, size);
-      canvas.drawPath(path, guidePaint);
       final isVisible =
           showAllPaths ||
           (visibleGroupIds?.contains(designPath.groupId) ?? false);
-      if (isVisible) {
-        final fillColor = designPath.fillColor;
-        if (fillColor != null) {
-          canvas.drawPath(path, Paint()..color = _parseColor(fillColor));
-        }
-        canvas.drawPath(
-          path,
-          Paint()
-            ..color = color
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 3
-            ..strokeCap = StrokeCap.round
-            ..strokeJoin = StrokeJoin.round,
-        );
-      }
+      paintDesignPath(
+        canvas,
+        size,
+        designPath,
+        defaultStrokeColor: color,
+        strokeOverride: isVisible ? null : guideColor,
+        opacity: isVisible ? 1 : 0.42,
+        drawFill: isVisible,
+        drawShadow: isVisible,
+      );
     }
   }
-
-  Color _parseColor(String value) =>
-      Color(int.parse(value.substring(1), radix: 16) | 0xFF000000);
 
   @override
   bool shouldRepaint(covariant _VectorPreviewPainter oldDelegate) =>
@@ -121,6 +96,7 @@ class _VectorPreviewPainter extends CustomPainter {
       oldDelegate.showAllPaths != showAllPaths ||
       oldDelegate.paths != paths ||
       oldDelegate.grid != grid ||
+      oldDelegate.backgroundColor != backgroundColor ||
       oldDelegate.color != color ||
       oldDelegate.guideColor != guideColor;
 }

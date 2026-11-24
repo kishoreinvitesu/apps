@@ -9,6 +9,7 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../export/application/design_exporter.dart';
 import '../../export/presentation/export_dialog.dart';
 import '../application/lesson_playback.dart';
+import '../application/design_renderer.dart';
 import 'vector_preview.dart';
 
 class DesignDetailScreen extends ConsumerStatefulWidget {
@@ -120,6 +121,7 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
         VectorPreview(
           paths: design.paths,
           grid: design.grid,
+          backgroundColor: designColorFromHex(design.backgroundColor),
           visibleGroupIds: visibleGroupIds,
           showAllPaths: !hasReviewedLesson,
         ),

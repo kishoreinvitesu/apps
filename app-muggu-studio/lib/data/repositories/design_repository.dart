@@ -9,8 +9,8 @@ import '../models/dot_grid.dart';
 import '../models/muggu_design.dart';
 
 const catalogAssetPath = 'assets/designs/catalog.json';
-const catalogSchemaVersion = 3;
-const supportedCatalogSchemaVersions = {2, catalogSchemaVersion};
+const catalogSchemaVersion = 4;
+const supportedCatalogSchemaVersions = {2, 3, catalogSchemaVersion};
 
 enum DesignSort { recommended, name, difficulty }
 
@@ -86,11 +86,13 @@ class DesignRepository {
     final ids = <String>{};
     for (var index = 0; index < rawDesigns.length; index++) {
       final rawDesign = rawDesigns[index];
-      final normalizedDesign = schemaVersion == 2
-          ? _migrateV2Design(rawDesign, 'designs[$index]')
-          : rawDesign;
+      final normalizedDesign = switch (schemaVersion) {
+        2 => _migrateV3Design(_migrateV2Design(rawDesign, 'designs[$index]')),
+        3 => _migrateV3Design(rawDesign),
+        _ => rawDesign,
+      };
       final design = MugguDesign.fromJson(normalizedDesign, 'designs[$index]');
-      if (schemaVersion == catalogSchemaVersion) {
+      if (design.construction == DesignConstruction.dotGuided) {
         _validateDotConnectivity(design, 'designs[$index]');
       }
       if (!ids.add(design.id)) {
@@ -99,6 +101,16 @@ class DesignRepository {
       designs.add(design);
     }
     return List.unmodifiable(designs);
+  }
+
+  static Object? _migrateV3Design(Object? value) {
+    if (value is! Map<String, dynamic>) {
+      return value;
+    }
+    return {
+      ...value,
+      'construction': value['grid'] == null ? 'illustrated' : 'dot_guided',
+    };
   }
 
   static void _validateDotConnectivity(MugguDesign design, String fieldName) {

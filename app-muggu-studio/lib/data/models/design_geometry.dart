@@ -25,6 +25,17 @@ class DesignPoint {
 enum PathCommandType { moveTo, lineTo, quadraticTo, cubicTo, arcTo, close }
 
 const maxPathCommandCount = 4096;
+const _hexColorPattern = r'^#[0-9a-fA-F]{6}$';
+
+String? _optionalHexColor(Object? value, String fieldName) {
+  if (value == null) {
+    return null;
+  }
+  if (value is! String || !RegExp(_hexColorPattern).hasMatch(value)) {
+    throw FormatException('$fieldName must be a #RRGGBB value.');
+  }
+  return value;
+}
 
 class PathCommand {
   const PathCommand({
@@ -159,12 +170,18 @@ class DesignPath {
     required this.groupId,
     required this.commands,
     this.fillColor,
+    this.strokeColor,
+    this.strokeWidth,
+    this.shadowColor,
   });
 
   final String id;
   final String groupId;
   final List<PathCommand> commands;
   final String? fillColor;
+  final String? strokeColor;
+  final double? strokeWidth;
+  final String? shadowColor;
 
   factory DesignPath.fromJson(Object? value, String fieldName) {
     if (value is! Map<String, dynamic>) {
@@ -173,7 +190,32 @@ class DesignPath {
     final id = value['id'];
     final groupId = value['groupId'];
     final rawCommands = value['commands'];
-    final fillColor = value['fillColor'];
+    final fillColor = _optionalHexColor(
+      value['fillColor'],
+      '$fieldName.fillColor',
+    );
+    final strokeColor = _optionalHexColor(
+      value['strokeColor'],
+      '$fieldName.strokeColor',
+    );
+    final shadowColor = _optionalHexColor(
+      value['shadowColor'],
+      '$fieldName.shadowColor',
+    );
+    final rawStrokeWidth = value['strokeWidth'];
+    final double? strokeWidth;
+    if (rawStrokeWidth == null) {
+      strokeWidth = null;
+    } else if (rawStrokeWidth is num &&
+        rawStrokeWidth.isFinite &&
+        rawStrokeWidth > 0 &&
+        rawStrokeWidth <= 0.05) {
+      strokeWidth = rawStrokeWidth.toDouble();
+    } else {
+      throw FormatException(
+        '$fieldName.strokeWidth must be greater than 0 and at most 0.05.',
+      );
+    }
     if (id is! String ||
         !RegExp(r'^[a-z0-9_]+$').hasMatch(id) ||
         groupId is! String ||
@@ -186,11 +228,6 @@ class DesignPath {
         rawCommands.length < 2 ||
         rawCommands.length > maxPathCommandCount) {
       throw FormatException('$fieldName.commands must contain path commands.');
-    }
-    if (fillColor != null &&
-        (fillColor is! String ||
-            !RegExp(r'^#[0-9a-fA-F]{6}$').hasMatch(fillColor))) {
-      throw FormatException('$fieldName.fillColor must be a #RRGGBB value.');
     }
     final commands = List<PathCommand>.unmodifiable([
       for (var index = 0; index < rawCommands.length; index++)
@@ -245,7 +282,10 @@ class DesignPath {
       id: id,
       groupId: groupId,
       commands: commands,
-      fillColor: fillColor as String?,
+      fillColor: fillColor,
+      strokeColor: strokeColor,
+      strokeWidth: strokeWidth,
+      shadowColor: shadowColor,
     );
   }
 
@@ -254,6 +294,9 @@ class DesignPath {
     'groupId': groupId,
     'commands': [for (final c in commands) c.toJson()],
     if (fillColor != null) 'fillColor': fillColor,
+    if (strokeColor != null) 'strokeColor': strokeColor,
+    if (strokeWidth != null) 'strokeWidth': strokeWidth,
+    if (shadowColor != null) 'shadowColor': shadowColor,
   };
 }
 

@@ -4,7 +4,7 @@ import math
 import tempfile
 from pathlib import Path
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -12,7 +12,17 @@ CATALOG_PATH = ROOT / "assets" / "designs" / "catalog.json"
 THUMBNAIL_DIR = ROOT / "assets" / "designs" / "thumbnails"
 SIZE = 320
 MARGIN = 28
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
+IVORY = "#FFF8EE"
+OUTLINE = "#80535E"
+PALETTE = (
+    "#F4CBD2",
+    "#F4A99B",
+    "#FFD991",
+    "#C7DEB8",
+    "#A9D7D1",
+    "#D8C9EC",
+)
 
 
 def polar(radius, angle, center=(0.5, 0.5)):
@@ -154,6 +164,517 @@ def _polyline_path(path_id, group_id, points, closed):
     return {"id": path_id, "groupId": group_id, "commands": commands}
 
 
+def _styled_path(
+    path_id,
+    group_id,
+    points,
+    *,
+    closed=True,
+    fill_color=None,
+    stroke_color=OUTLINE,
+    stroke_width=0.006,
+    shadow_color=None,
+):
+    path = _polyline_path(path_id, group_id, points, closed)
+    if fill_color is not None:
+        path["fillColor"] = fill_color
+    if stroke_color is not None:
+        path["strokeColor"] = stroke_color
+    if stroke_width is not None:
+        path["strokeWidth"] = stroke_width
+    if shadow_color is not None:
+        path["shadowColor"] = shadow_color
+    return path
+
+
+def _ellipse_points(center, radius_x, radius_y, rotation=0, count=36):
+    return [
+        [
+            center[0] + radius_x * math.cos(angle) * math.cos(rotation)
+            - radius_y * math.sin(angle) * math.sin(rotation),
+            center[1] + radius_x * math.cos(angle) * math.sin(rotation)
+            + radius_y * math.sin(angle) * math.cos(rotation),
+        ]
+        for angle in (2 * math.pi * index / count for index in range(count))
+    ]
+
+
+def _circle_path(path_id, group_id, center, radius, fill_color, shadow_color=None):
+    return _styled_path(
+        path_id,
+        group_id,
+        circle(radius, center=center),
+        fill_color=fill_color,
+        shadow_color=shadow_color,
+    )
+
+
+def _flower_ring(
+    prefix,
+    group_id,
+    center,
+    petal_count,
+    ring_radius,
+    petal_length,
+    petal_width,
+    colors=PALETTE,
+):
+    paths = []
+    for index in range(petal_count):
+        angle = -math.pi / 2 + index * 2 * math.pi / petal_count
+        petal_center = [
+            center[0] + ring_radius * math.cos(angle),
+            center[1] + ring_radius * math.sin(angle),
+        ]
+        paths.append(
+            _styled_path(
+                f"{prefix}_petal_{index + 1:02}",
+                group_id,
+                _ellipse_points(
+                    petal_center,
+                    petal_length,
+                    petal_width,
+                    rotation=angle,
+                ),
+                fill_color=colors[index % len(colors)],
+                shadow_color="#B48275",
+            )
+        )
+    return paths
+
+
+def _original_artform_designs():
+    designs = []
+
+    pookalam_paths = []
+    for ring, (count, radius, length, width, colors) in enumerate(
+        (
+            (18, 0.30, 0.105, 0.047, ("#F4A99B", "#FFD991", "#C7DEB8")),
+            (14, 0.205, 0.085, 0.052, ("#F4CBD2", "#A9D7D1", "#D8C9EC")),
+            (10, 0.115, 0.065, 0.044, ("#FFD991", "#F4A99B", "#F4CBD2")),
+        ),
+        start=1,
+    ):
+        pookalam_paths.extend(
+            _flower_ring(
+                f"pookalam_ring_{ring}",
+                f"ring_{ring}",
+                (0.5, 0.5),
+                count,
+                radius,
+                length,
+                width,
+                colors,
+            )
+        )
+    pookalam_paths.extend(
+        [
+            _circle_path(
+                "pookalam_center_outer",
+                "center",
+                (0.5, 0.5),
+                0.085,
+                "#D8C9EC",
+                "#A88C9D",
+            ),
+            _circle_path(
+                "pookalam_center_inner",
+                "center",
+                (0.5, 0.5),
+                0.045,
+                "#FFD991",
+            ),
+        ]
+    )
+    designs.append(
+        _base_design(
+            "art_pookalam_lotus_dawn",
+            "Lotus Dawn",
+            "An original, app-created floral carpet study inspired by layered Pookalam colors; cultural review is pending.",
+            "intermediate",
+            pookalam_paths,
+            ["original", "pookalam-inspired", "floral", "layered", "featured"],
+            technique="pookalam_inspired",
+            localized_technique={"en": "Pookalam-inspired floral layers"},
+            construction="illustrated",
+            background_color=IVORY,
+        )
+    )
+
+    mandala_paths = _flower_ring(
+        "mandala_outer",
+        "outer_bloom",
+        (0.5, 0.5),
+        16,
+        0.285,
+        0.105,
+        0.045,
+        ("#D8C9EC", "#F4CBD2", "#A9D7D1", "#FFD991"),
+    )
+    mandala_paths.extend(
+        _flower_ring(
+            "mandala_inner",
+            "inner_bloom",
+            (0.5, 0.5),
+            12,
+            0.155,
+            0.075,
+            0.047,
+            ("#F4A99B", "#FFD991", "#C7DEB8"),
+        )
+    )
+    mandala_paths.extend(
+        [
+            _circle_path(
+                "mandala_halo",
+                "halo",
+                (0.5, 0.5),
+                0.09,
+                "#A9D7D1",
+                "#8BB8AD",
+            ),
+            _circle_path(
+                "mandala_jewel",
+                "halo",
+                (0.5, 0.5),
+                0.044,
+                "#F4CBD2",
+            ),
+        ]
+    )
+    designs.append(
+        _base_design(
+            "art_mandala_malli_light",
+            "Malli Light Mandala",
+            "An original layered floral mandala illustration with soft painted fills; this is an app-created art study, not a documented ritual design.",
+            "intermediate",
+            mandala_paths,
+            ["original", "mandala", "floral", "radial", "featured"],
+            technique="floral_mandala",
+            localized_technique={"en": "Layered floral mandala"},
+            construction="illustrated",
+        )
+    )
+
+    border_paths = []
+    for index, center_x in enumerate((0.16, 0.39, 0.62, 0.85)):
+        flower_center = (center_x, 0.5)
+        border_paths.extend(
+            _flower_ring(
+                f"border_flower_{index + 1}",
+                f"flower_{index + 1}",
+                flower_center,
+                8,
+                0.035,
+                0.065,
+                0.025,
+                ("#F4CBD2", "#FFD991", "#A9D7D1"),
+            )
+        )
+        border_paths.append(
+            _circle_path(
+                f"border_center_{index + 1}",
+                f"flower_{index + 1}",
+                flower_center,
+                0.025,
+                "#F4A99B",
+            )
+        )
+        for side in (-1, 1):
+            side_name = "left" if side < 0 else "right"
+            leaf_center = (center_x + side * 0.075, 0.5 + side * 0.065)
+            border_paths.append(
+                _styled_path(
+                    f"border_leaf_{index + 1}_{side_name}",
+                    f"vine_{index + 1}",
+                    _ellipse_points(leaf_center, 0.052, 0.022, rotation=side * 0.65),
+                    fill_color="#C7DEB8",
+                )
+            )
+    for y in (0.30, 0.70):
+        border_paths.append(
+            _styled_path(
+                f"border_vine_{int(y * 100)}",
+                "vine",
+                [[0.08, y], [0.92, y]],
+                closed=False,
+                stroke_color="#83A98B",
+                stroke_width=0.007,
+            )
+        )
+    designs.append(
+        _base_design(
+            "art_border_jasmine_vine",
+            "Jasmine Vine Border",
+            "An original repeating floral border illustration for decorative edges; app-created and awaiting cultural review.",
+            "easy",
+            border_paths,
+            ["original", "border", "jasmine", "floral", "repeat", "featured"],
+            technique="decorative_border",
+            localized_technique={"en": "Decorative floral border"},
+            construction="illustrated",
+        )
+    )
+
+    corner_paths = [
+        _styled_path(
+            "corner_top_vine",
+            "corner_vine",
+            [[0.27, 0.13], [0.42, 0.13], [0.58, 0.13], [0.74, 0.13], [0.87, 0.13]],
+            closed=False,
+            stroke_color="#83A98B",
+            stroke_width=0.008,
+        ),
+        _styled_path(
+            "corner_left_vine",
+            "corner_vine",
+            [[0.13, 0.27], [0.13, 0.42], [0.13, 0.58], [0.13, 0.74], [0.13, 0.87]],
+            closed=False,
+            stroke_color="#83A98B",
+            stroke_width=0.008,
+        ),
+    ]
+    for index, center in enumerate(
+        (
+            (0.41, 0.13),
+            (0.57, 0.13),
+            (0.73, 0.13),
+            (0.13, 0.41),
+            (0.13, 0.57),
+            (0.13, 0.73),
+        ),
+        start=1,
+    ):
+        corner_paths.append(
+            _styled_path(
+                f"corner_leaf_{index}",
+                f"corner_vine_{index}",
+                _ellipse_points(center, 0.055, 0.023, rotation=math.pi / 4),
+                fill_color="#C7DEB8",
+                shadow_color="#91AD83",
+            )
+        )
+    corner_paths.extend(
+        _flower_ring(
+            "corner_bloom",
+            "corner_flower",
+            (0.19, 0.19),
+            10,
+            0.11,
+            0.075,
+            0.036,
+            ("#F4A99B", "#FFD991", "#D8C9EC", "#A9D7D1"),
+        )
+    )
+    corner_paths.append(
+        _circle_path(
+            "corner_center",
+            "corner_flower",
+            (0.19, 0.19),
+            0.04,
+            "#FFD991",
+        )
+    )
+    designs.append(
+        _base_design(
+            "art_corner_lotus_flourish",
+            "Lotus Corner Flourish",
+            "An original pastel corner ornament that can be mirrored for a pair; it is a decorative study, not a sourced traditional motif.",
+            "easy",
+            corner_paths,
+            ["original", "corner", "lotus", "floral", "mirrorable", "featured"],
+            technique="corner_motif",
+            localized_technique={"en": "Decorative corner motif"},
+            construction="illustrated",
+        )
+    )
+
+    cube_paths = []
+    cube_centers = ((0.32, 0.33), (0.60, 0.33), (0.46, 0.59), (0.74, 0.59))
+    for index, (center_x, center_y) in enumerate(cube_centers, start=1):
+        top = [
+            [center_x, center_y - 0.11],
+            [center_x + 0.105, center_y - 0.055],
+            [center_x, center_y],
+            [center_x - 0.105, center_y - 0.055],
+        ]
+        left = [
+            [center_x - 0.105, center_y - 0.055],
+            [center_x, center_y],
+            [center_x, center_y + 0.12],
+            [center_x - 0.105, center_y + 0.06],
+        ]
+        right = [
+            [center_x, center_y],
+            [center_x + 0.105, center_y - 0.055],
+            [center_x + 0.105, center_y + 0.06],
+            [center_x, center_y + 0.12],
+        ]
+        cube_paths.extend(
+            [
+                _styled_path(
+                    f"cube_{index}_top",
+                    f"cube_{index}",
+                    top,
+                    fill_color="#F4CBD2",
+                    shadow_color="#B48275",
+                ),
+                _styled_path(
+                    f"cube_{index}_left",
+                    f"cube_{index}",
+                    left,
+                    fill_color="#A9D7D1",
+                    shadow_color="#719F96",
+                ),
+                _styled_path(
+                    f"cube_{index}_right",
+                    f"cube_{index}",
+                    right,
+                    fill_color="#D8C9EC",
+                    shadow_color="#9F8CB8",
+                ),
+            ]
+        )
+    designs.append(
+        _base_design(
+            "art_optical_floating_cubes",
+            "Floating Pastel Cubes",
+            "An original 2D optical-depth study using three softly shaded faces per tile; it creates a raised illusion without true 3D.",
+            "intermediate",
+            cube_paths,
+            ["original", "optical", "3d-effect", "perspective", "featured"],
+            technique="optical_depth",
+            localized_technique={"en": "2D optical-depth illusion"},
+            construction="illustrated",
+        )
+    )
+
+    warli_paths = [
+        _circle_path(
+            "warli_sun",
+            "sky",
+            (0.80, 0.19),
+            0.075,
+            "#F9E2B1",
+        ),
+        _styled_path(
+            "warli_ground",
+            "land",
+            [[0.08, 0.78], [0.92, 0.78]],
+            closed=False,
+            stroke_color="#F8EBD6",
+            stroke_width=0.008,
+        ),
+    ]
+    for index, center_x in enumerate((0.28, 0.50, 0.72), start=1):
+        head = (center_x, 0.40 + (index % 2) * 0.025)
+        body_top = [center_x, head[1] + 0.045]
+        body_bottom = [center_x, 0.63]
+        warli_paths.append(
+            _circle_path(
+                f"warli_figure_{index}_head",
+                f"figure_{index}",
+                head,
+                0.025,
+                "#F8EBD6",
+            )
+        )
+        warli_paths.extend(
+            [
+                _styled_path(
+                    f"warli_figure_{index}_body",
+                    f"figure_{index}",
+                    [
+                        [center_x - 0.055, 0.49],
+                        [center_x, body_top[1]],
+                        [center_x + 0.055, 0.49],
+                        body_bottom,
+                    ],
+                    closed=False,
+                    stroke_color="#F8EBD6",
+                    stroke_width=0.008,
+                ),
+                _styled_path(
+                    f"warli_figure_{index}_arms",
+                    f"figure_{index}",
+                    [[center_x - 0.105, 0.52], body_top, [center_x + 0.105, 0.52]],
+                    closed=False,
+                    stroke_color="#F8EBD6",
+                    stroke_width=0.008,
+                ),
+                _styled_path(
+                    f"warli_figure_{index}_legs",
+                    f"figure_{index}",
+                    [[center_x - 0.05, 0.74], body_bottom, [center_x + 0.05, 0.74]],
+                    closed=False,
+                    stroke_color="#F8EBD6",
+                    stroke_width=0.008,
+                ),
+            ]
+        )
+    for index, center_x in enumerate((0.12, 0.88), start=1):
+        warli_paths.extend(
+            [
+                _styled_path(
+                    f"warli_tree_{index}_trunk",
+                    f"tree_{index}",
+                    [[center_x, 0.76], [center_x, 0.43]],
+                    closed=False,
+                    stroke_color="#F8EBD6",
+                    stroke_width=0.009,
+                ),
+                _styled_path(
+                    f"warli_tree_{index}_crown",
+                    f"tree_{index}",
+                    [
+                        [center_x - 0.08, 0.46],
+                        [center_x, 0.30],
+                        [center_x + 0.08, 0.46],
+                    ],
+                    closed=False,
+                    stroke_color="#F8EBD6",
+                    stroke_width=0.009,
+                ),
+            ]
+        )
+    designs.append(
+        _base_design(
+            "art_warli_rhythm_panel",
+            "Warli-inspired Rhythm Panel",
+            "An original folk-art-inspired illustration study. Warli is presented separately from rangoli and this artwork is not a documented traditional composition.",
+            "intermediate",
+            warli_paths,
+            ["original", "warli-inspired", "folk-art", "story-panel", "featured"],
+            technique="warli_inspired_panel",
+            localized_technique={"en": "Warli-inspired illustration (not rangoli)"},
+            construction="illustrated",
+            background_color="#9C5C48",
+        )
+    )
+
+    kolam_grid = dot_grid(5, 5, "square", margin=0.12)
+    kolam_paths = dot_grid_brahma_mudi(kolam_grid)
+    for index, path in enumerate(kolam_paths):
+        path["strokeColor"] = PALETTE[index % len(PALETTE)]
+        path["strokeWidth"] = 0.008
+    designs.append(
+        _base_design(
+            "art_kolam_sikku_study",
+            "Sikku Loop Study",
+            "An original app-created loop study whose path endpoints follow the visible 5 by 5 dot grid; cultural review is pending.",
+            "intermediate",
+            kolam_paths,
+            ["original", "kolam", "sikku-inspired", "dot-connected", "loop", "featured"],
+            technique="dot_connected_kolam",
+            localized_technique={"en": "Dot-connected Kolam study"},
+            construction="dot_guided",
+        )
+    )
+    designs[-1]["grid"] = kolam_grid
+
+    return designs
+
+
 def radial_flower(petal_count, outer_radius=0.36, petal_width=0.095):
     if not 3 <= petal_count <= 24:
         raise ValueError("petal_count must be between 3 and 24.")
@@ -199,6 +720,10 @@ def radial_flower(petal_count, outer_radius=0.36, petal_width=0.095):
         paths.append({
             "id": f"petal_path_{index + 1:02}",
             "groupId": f"petal_{index + 1:02}",
+            "fillColor": PALETTE[index % len(PALETTE)],
+            "strokeColor": OUTLINE,
+            "strokeWidth": 0.006,
+            "shadowColor": "#B48275",
             "commands": [
                 _point_command(center, "moveTo"),
                 {
@@ -275,7 +800,14 @@ def dot_grid_diamonds(grid):
         ]
         group_id = f"ring_{depth:02}"
         paths.append(
-            _polyline_path(f"{group_id}_path", group_id, points, True)
+            _styled_path(
+                f"{group_id}_path",
+                group_id,
+                points,
+                stroke_color=OUTLINE,
+                stroke_width=0.006,
+                shadow_color="#B48275",
+            )
         )
     return paths
 
@@ -291,6 +823,8 @@ def _base_design(
     localized_description=None,
     technique="geometric_lines",
     localized_technique=None,
+    construction="dot_guided",
+    background_color=IVORY,
 ):
     return {
         "id": design_id,
@@ -298,6 +832,8 @@ def _base_design(
         "localizedDescription": localized_description or {"en": description},
         "region": None,
         "tradition": None,
+        "construction": construction,
+        "backgroundColor": background_color,
         "technique": technique,
         "localizedTechnique": localized_technique or {"en": "Geometric lines"},
         "difficulty": difficulty,
@@ -311,8 +847,8 @@ def _base_design(
             "status": "pending",
             "reviewer": "",
             "evidence": (
-                "Original app-generated geometric vector; provenance and "
-                "rights documentation pending."
+                "Original app-created vector artwork; provenance and rights "
+                "documentation pending."
             ),
         },
         "culturalReview": {"status": "pending", "reviewer": "", "evidence": ""},
@@ -540,7 +1076,7 @@ def build_catalog(radial_petals=8, grid_size=5, grid_layout="square"):
         design_item["grid"] = grid_obj
         designs.append(design_item)
 
-    return [
+    return _original_artform_designs() + [
         _attach_dot_grid(design)
         for design in _original_geometric_designs() + designs
     ]
@@ -859,22 +1395,29 @@ def _attach_dot_grid(design):
             raise ValueError(
                 f"{design['id']}.{path['id']} collapsed when snapped to dots."
             )
-        snapped_paths.append(
-            _polyline_path(
-                path["id"],
-                path["groupId"],
-                snapped_points,
-                closed,
-            )
+        snapped_path = _polyline_path(
+            path["id"],
+            path["groupId"],
+            snapped_points,
+            closed,
         )
+        for style_key in (
+            "fillColor",
+            "strokeColor",
+            "strokeWidth",
+            "shadowColor",
+        ):
+            if style_key in path:
+                snapped_path[style_key] = path[style_key]
+        snapped_paths.append(snapped_path)
 
     design["grid"] = grid
     design["paths"] = snapped_paths
     design["recipe"] = None
     description = design["localizedDescription"]["en"]
-    design["localizedDescription"]["en"] = (
-        f"{description} Lines connect visible guide dots."
-    )
+    dot_sentence = "Lines connect visible guide dots."
+    if dot_sentence not in description:
+        design["localizedDescription"]["en"] = f"{description} {dot_sentence}"
     return design
 
 
@@ -1348,14 +1891,14 @@ def _flatten_path(commands, curve_steps=16):
     return points
 
 
-def draw_thumbnail(paths, destination, grid=None):
-    image = Image.new("RGB", (SIZE, SIZE), "#FFF5E8")
+def draw_thumbnail(paths, destination, grid=None, background_color=IVORY):
+    image = Image.new("RGBA", (SIZE, SIZE), background_color)
     draw = ImageDraw.Draw(image)
     scale = SIZE - 2 * MARGIN
     if grid is not None:
         for x, y in grid["dots"]:
             point = (MARGIN + x * scale, MARGIN + y * scale)
-            radius = 3
+            radius = 2
             draw.ellipse(
                 (
                     point[0] - radius,
@@ -1363,19 +1906,56 @@ def draw_thumbnail(paths, destination, grid=None):
                     point[0] + radius,
                     point[1] + radius,
                 ),
-                fill="#55775D",
+                fill="#779A83",
             )
-    for index, design_path in enumerate(paths):
-        points = [
-            (MARGIN + x * scale, MARGIN + y * scale)
-            for x, y in _flatten_path(design_path["commands"])
-        ]
+
+    flattened_paths = [
+        (
+            design_path,
+            [
+                (MARGIN + x * scale, MARGIN + y * scale)
+                for x, y in _flatten_path(design_path["commands"])
+            ],
+        )
+        for design_path in paths
+    ]
+    shadow_layer = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+    shadow_draw = ImageDraw.Draw(shadow_layer)
+    for design_path, points in flattened_paths:
+        shadow_color = design_path.get("shadowColor")
+        if shadow_color is None or len(points) < 2:
+            continue
+        shadow_points = [(x + 3, y + 4) for x, y in points]
+        if design_path.get("fillColor") is not None:
+            shadow_draw.polygon(shadow_points, fill=f"{shadow_color}55")
+        shadow_width = max(2, round(design_path.get("strokeWidth", 0.008) * scale))
+        shadow_draw.line(
+            shadow_points,
+            fill=f"{shadow_color}88",
+            width=shadow_width + 2,
+            joint="curve",
+        )
+    shadow_layer = shadow_layer.filter(ImageFilter.GaussianBlur(radius=2))
+    image = Image.alpha_composite(image, shadow_layer)
+    draw = ImageDraw.Draw(image)
+
+    for design_path, points in flattened_paths:
         if len(points) < 2:
             continue
+        if design_path.get("fillColor") is not None:
+            draw.polygon(points, fill=design_path["fillColor"])
+        stroke_color = design_path.get(
+            "strokeColor",
+            "#862B37",
+        )
+        stroke_width = max(
+            1,
+            round(design_path.get("strokeWidth", 0.008) * scale),
+        )
         draw.line(
             points,
-            fill="#862B37" if index % 2 == 0 else "#D8A13B",
-            width=4,
+            fill=stroke_color,
+            width=stroke_width,
             joint="curve",
         )
     image.save(
@@ -1428,6 +2008,7 @@ def write_catalog(catalog_path=CATALOG_PATH, thumbnail_dir=THUMBNAIL_DIR):
             design["paths"],
             thumbnail_dir / f"{design['id']}.webp",
             design["grid"],
+            design["backgroundColor"],
         )
     catalog_path.parent.mkdir(parents=True, exist_ok=True)
     catalog_path.write_text(_catalog_json(designs), encoding="utf-8")

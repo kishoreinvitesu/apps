@@ -38,7 +38,7 @@ class GenerateSampleCatalogTests(unittest.TestCase):
             grid_layout="staggered",
         )
 
-        self.assertEqual(len(catalog), 60)
+        self.assertEqual(len(catalog), 67)
         ids = [design["id"] for design in catalog]
         names = [
             design["localizedName"]["en"]
@@ -83,17 +83,23 @@ class GenerateSampleCatalogTests(unittest.TestCase):
             )
         )
         for design in catalog:
-            self.assertIsNotNone(design["grid"])
-            grid_dots = {
-                tuple(point)
-                for point in design["grid"]["dots"]
-            }
+            if design["construction"] == "illustrated":
+                self.assertIsNone(design["grid"])
+            else:
+                self.assertEqual(design["construction"], "dot_guided")
+                self.assertIsNotNone(design["grid"])
+                grid_dots = {
+                    tuple(point)
+                    for point in design["grid"]["dots"]
+                }
+                for path in design["paths"]:
+                    for command in path["commands"]:
+                        if command["type"] == "close":
+                            continue
+                        self.assertIn(command["type"], ("moveTo", "lineTo"))
+                        self.assertIn((command["x"], command["y"]), grid_dots)
             for path in design["paths"]:
                 for command in path["commands"]:
-                    if command["type"] == "close":
-                        continue
-                    self.assertIn(command["type"], ("moveTo", "lineTo"))
-                    self.assertIn((command["x"], command["y"]), grid_dots)
                     for key in (
                         "x",
                         "y",
@@ -117,6 +123,69 @@ class GenerateSampleCatalogTests(unittest.TestCase):
         for x, y in grid["dots"]:
             self.assertTrue(0 <= x <= 1)
             self.assertTrue(0 <= y <= 1)
+
+    def test_featured_studies_use_mixed_construction_and_layered_color(self):
+        catalog = generator.build_catalog()
+        featured = {
+            design["id"]: design
+            for design in catalog
+            if design["id"].startswith("art_")
+        }
+
+        self.assertEqual(
+            set(featured),
+            {
+                "art_pookalam_lotus_dawn",
+                "art_mandala_malli_light",
+                "art_border_jasmine_vine",
+                "art_corner_lotus_flourish",
+                "art_optical_floating_cubes",
+                "art_warli_rhythm_panel",
+                "art_kolam_sikku_study",
+            },
+        )
+        for design_id, design in featured.items():
+            self.assertEqual(design["rightsReview"]["status"], "pending")
+            self.assertEqual(design["culturalReview"]["status"], "pending")
+            self.assertIsNone(design["region"])
+            self.assertIsNone(design["tradition"])
+            if design_id == "art_kolam_sikku_study":
+                self.assertEqual(design["construction"], "dot_guided")
+                self.assertIsNotNone(design["grid"])
+            else:
+                self.assertEqual(design["construction"], "illustrated")
+                self.assertIsNone(design["grid"])
+                self.assertTrue(
+                    any("fillColor" in path for path in design["paths"])
+                )
+        self.assertTrue(
+            any(
+                "shadowColor" in path
+                for design in featured.values()
+                for path in design["paths"]
+            )
+        )
+        radial = next(
+            design for design in catalog
+            if design["id"] == "generated_radial_001"
+        )
+        self.assertTrue(
+            all(
+                {"fillColor", "strokeColor", "shadowColor"} <= path.keys()
+                for path in radial["paths"]
+            )
+        )
+        diamonds = next(
+            design for design in catalog
+            if design["id"] == "generated_dot_grid_001"
+        )
+        self.assertTrue(
+            all(
+                "fillColor" not in path
+                and path.get("strokeColor") == generator.OUTLINE
+                for path in diamonds["paths"]
+            )
+        )
 
     def test_generator_rejects_out_of_range_parameters(self):
         with self.assertRaises(ValueError):
@@ -172,7 +241,7 @@ class GenerateSampleCatalogTests(unittest.TestCase):
 
             decoded = json.loads(catalog_path.read_text(encoding="utf-8"))
             self.assertEqual(decoded["schemaVersion"], generator.SCHEMA_VERSION)
-            self.assertEqual(len(decoded["designs"]), 60)
+            self.assertEqual(len(decoded["designs"]), 67)
             self.assertEqual(len(list(thumbnail_directory.glob("*.webp"))), len(catalog))
             original_artwork = {
                 generator._decoded_thumbnail(

@@ -3,6 +3,16 @@ import 'dart:math' as math;
 import '../../../data/models/design_geometry.dart';
 import '../../../data/models/dot_grid.dart';
 
+const _pastelPalette = [
+  '#F4CBD2',
+  '#F4A99B',
+  '#FFD991',
+  '#C7DEB8',
+  '#A9D7D1',
+  '#D8C9EC',
+];
+const _softOutline = '#80535E';
+
 class GeneratedPattern {
   const GeneratedPattern({
     required this.recipe,
@@ -128,6 +138,9 @@ class PatternGeneratorRegistry {
               ),
             const PathCommand(type: PathCommandType.close),
           ]),
+          strokeColor: _softOutline,
+          strokeWidth: 0.006,
+          shadowColor: '#B48275',
         ),
       );
     }
@@ -194,6 +207,8 @@ class PatternGeneratorRegistry {
             ),
             const PathCommand(type: PathCommandType.close),
           ]),
+          strokeColor: _pastelPalette[index % _pastelPalette.length],
+          strokeWidth: 0.007,
         ),
       );
     }
@@ -239,6 +254,8 @@ class PatternGeneratorRegistry {
           id: 'sikku_row_$suffix',
           groupId: 'sikku_row_$suffix',
           commands: List.unmodifiable(commands),
+          strokeColor: _pastelPalette[row % _pastelPalette.length],
+          strokeWidth: 0.007,
         ),
       );
     }
@@ -413,6 +430,10 @@ class PatternGeneratorRegistry {
             _cubicCommand(thirdControl, fourthControl, center),
             const PathCommand(type: PathCommandType.close),
           ]),
+          fillColor: _pastelPalette[index % _pastelPalette.length],
+          strokeColor: _softOutline,
+          strokeWidth: 0.006,
+          shadowColor: '#B48275',
         ),
       );
     }
@@ -466,6 +487,10 @@ class PatternGeneratorRegistry {
           ),
           const PathCommand(type: PathCommandType.close),
         ]),
+        fillColor: '#A9D7D1',
+        strokeColor: _softOutline,
+        strokeWidth: 0.006,
+        shadowColor: '#719F96',
       ),
     ];
 
@@ -512,6 +537,10 @@ class PatternGeneratorRegistry {
             ),
             const PathCommand(type: PathCommandType.close),
           ]),
+          fillColor: _pastelPalette[index % _pastelPalette.length],
+          strokeColor: _softOutline,
+          strokeWidth: 0.0055,
+          shadowColor: '#B48275',
         ),
       );
     }
@@ -564,6 +593,10 @@ class PatternGeneratorRegistry {
         ),
         const PathCommand(type: PathCommandType.close),
       ]),
+      fillColor: '#F4CBD2',
+      strokeColor: _softOutline,
+      strokeWidth: 0.006,
+      shadowColor: '#B48275',
     ),
     DesignPath(
       id: 'paisley_inner_swirl',
@@ -589,6 +622,8 @@ class PatternGeneratorRegistry {
           const DesignPoint(x: 0.5, y: 0.66),
         ),
       ]),
+      strokeColor: '#B7884E',
+      strokeWidth: 0.007,
     ),
   ];
 

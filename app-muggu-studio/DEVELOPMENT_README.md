@@ -1188,6 +1188,36 @@ generated catalogue examples until their evidence and approval are recorded.
 - Continue Phase 7 maintenance as features evolve. Physical-device
   performance/accessibility checks and Phase 8 release gates remain deferred.
 
+## 2026-11-24 — Added colorful mixed-construction art studies
+
+### Implemented
+- Upgraded the catalogue to schema 4 and 67 entries. Seven original featured
+  studies add layered floral art, a mandala, border and corner motifs, a 2D
+  raised-cube illusion, a Warli-inspired panel labeled separately from rangoli,
+  and a dot-connected Sikku Kolam study.
+- Added illustrated construction for non-dot forms while retaining strict
+  visible-dot endpoint validation for dot-guided designs.
+- Added shared pastel fills, fine outlines, soft shadows and per-design
+  backgrounds across previews, detail screens, saved creations and PNG export.
+  Creator templates now use styled paths, and saved freehand geometry retains
+  its selected stroke colors.
+- Upgraded local SQLite to version 3 to persist creation backgrounds, including
+  a tested version-2 migration that preserves existing creations and favourites.
+- Added technique labels to Explore cards. All new studies remain app-created
+  and unreviewed; none is presented as culturally verified or publication-ready.
+
+### Validation
+- `python -m unittest tools.test_generate_sample_catalog` — passed; all 7
+  generator tests, including mixed construction, style and coordinate checks.
+- `python tools/generate_sample_catalog.py --check` — passed; catalogue and
+  decoded thumbnail artwork match generated output.
+- `flutter test` — passed; all 106 tests.
+- `flutter analyze` — passed with no issues.
+- `flutter build apk --debug` — passed.
+- Generated thumbnails visually checked for the featured designs.
+- Rebooted `emulator-5554` after its package service became unavailable,
+  installed the debug APK, and confirmed the app process launched.
+
 ## 2026-11-24 — Corrected Practice guidance
 
 ### Implemented

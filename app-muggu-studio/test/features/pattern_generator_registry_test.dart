@@ -18,6 +18,9 @@ void main() {
     expect(generated.paths, hasLength(24));
     expect(generated.paths.first.id, 'petal_path_01');
     expect(generated.paths.first.commands.last.type, PathCommandType.close);
+    expect(generated.paths.first.fillColor, '#F4CBD2');
+    expect(generated.paths.first.strokeColor, '#80535E');
+    expect(generated.paths.first.shadowColor, '#B48275');
     for (final path in generated.paths) {
       expect(path.commands, hasLength(4));
       for (final command in path.commands) {
@@ -58,6 +61,11 @@ void main() {
       generated.paths.every(
         (path) => path.commands.last.type == PathCommandType.close,
       ),
+      isTrue,
+    );
+    expect(generated.paths.every((path) => path.fillColor == null), isTrue);
+    expect(
+      generated.paths.every((path) => path.strokeColor == '#80535E'),
       isTrue,
     );
   });
