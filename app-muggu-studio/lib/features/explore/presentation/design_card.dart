@@ -117,12 +117,6 @@ class DesignCard extends ConsumerWidget {
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
-                  const SizedBox(height: 8),
-                  Chip(
-                    label: Text(l10n.pendingReview),
-                    visualDensity: VisualDensity.compact,
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
                 ],
               ),
             ),

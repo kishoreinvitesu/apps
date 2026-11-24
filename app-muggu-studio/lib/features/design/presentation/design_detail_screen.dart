@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../app/app_tab.dart';
 import '../../../data/models/muggu_design.dart';
@@ -80,6 +81,18 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
     );
   }
 
+  Future<void> _openSource(String source) async {
+    final opened = await launchUrl(
+      Uri.parse(source),
+      mode: LaunchMode.externalApplication,
+    );
+    if (!opened && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.sourceOpenError)),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final catalog = ref.watch(catalogProvider);
@@ -99,12 +112,9 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
       return Center(child: Text(l10n.exploreNoResultsTitle));
     }
     final design = matches.first;
-    final hasReviewedLesson = design.hasReviewedLesson;
-    final lessonNotice = design.lessonSteps.isEmpty
-        ? l10n.sampleLessonNotice
-        : l10n.lessonDraftReviewNotice;
-    _ensurePlayback(hasReviewedLesson ? design.lessonSteps.length : 0);
-    final visibleGroupIds = hasReviewedLesson
+    final canPlayLesson = design.isLessonPlayable;
+    _ensurePlayback(canPlayLesson ? design.lessonSteps.length : 0);
+    final visibleGroupIds = canPlayLesson
         ? design.lessonSteps
               .take(_state.displayedStepCount)
               .expand((step) => step.groupIds)
@@ -126,9 +136,9 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
           grid: design.grid,
           backgroundColor: designColorFromHex(design.backgroundColor),
           visibleGroupIds: visibleGroupIds,
-          showAllPaths: !hasReviewedLesson,
+          showAllPaths: !canPlayLesson,
         ),
-        if (hasReviewedLesson) ...[
+        if (canPlayLesson) ...[
           const SizedBox(height: 12),
           Text(
             _state.isComplete
@@ -143,22 +153,6 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
                 : design.lessonSteps[_state.step].instruction.forLanguage(
                     languageCode,
                   ),
-          ),
-        ] else ...[
-          const SizedBox(height: 12),
-          Card(
-            color: Theme.of(context).colorScheme.secondaryContainer,
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(Icons.info_outline_rounded),
-                  const SizedBox(width: 10),
-                  Expanded(child: Text(lessonNotice)),
-                ],
-              ),
-            ),
           ),
         ],
         const SizedBox(height: 16),
@@ -179,13 +173,35 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
           },
         ),
         _DetailRow(
-          title: l10n.region,
-          value: design.regionFor(languageCode) ?? l10n.metadataUnassigned,
+          title: l10n.artworkSource,
+          value: design.provenance.isSystemGenerated
+              ? l10n.systemGeneratedArtwork
+              : l10n.referenceBasedArtwork,
         ),
-        _DetailRow(
-          title: l10n.tradition,
-          value: design.traditionFor(languageCode) ?? l10n.metadataUnassigned,
-        ),
+        if (design.provenance.note case final note?) ...[
+          const SizedBox(height: 4),
+          Text(note, style: Theme.of(context).textTheme.bodySmall),
+        ],
+        if (design.provenance.sources.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          Text(
+            l10n.styleReferences,
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
+          for (final source in design.provenance.sources)
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: TextButton.icon(
+                onPressed: () => _openSource(source),
+                icon: const Icon(Icons.open_in_new_rounded),
+                label: Text(Uri.parse(source).host),
+                style: TextButton.styleFrom(
+                  visualDensity: VisualDensity.compact,
+                  padding: EdgeInsets.zero,
+                ),
+              ),
+            ),
+        ],
         const SizedBox(height: 16),
         Row(
           children: [
@@ -208,7 +224,7 @@ class _DesignDetailScreenState extends ConsumerState<DesignDetailScreen> {
             ),
           ],
         ),
-        if (hasReviewedLesson) ...[
+        if (canPlayLesson) ...[
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,

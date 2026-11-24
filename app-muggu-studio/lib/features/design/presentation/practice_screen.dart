@@ -63,7 +63,7 @@ class _PracticeScreenState extends ConsumerState<PracticeScreen> {
           ),
         ),
 
-        // Cultural disclaimer
+        // Practice guidance
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Card(

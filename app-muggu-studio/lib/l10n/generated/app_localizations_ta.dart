@@ -99,27 +99,7 @@ class AppLocalizationsTa extends AppLocalizations {
       'தேடல் அல்லது வடிகட்டிகளை மாற்றி மீண்டும் முயற்சிக்கவும்.';
 
   @override
-  String get sampleContentNotice =>
-      'இவை அசல் வடிவியல் மாதிரிகள். மதிப்பாய்வு முடியும் வரை பகுதி மற்றும் மரபு குறிப்பிடப்படவில்லை.';
-
-  @override
-  String get pendingReview => 'மதிப்பாய்வு நிலுவையில் உள்ளது';
-
-  @override
-  String get unassigned => 'குறிப்பிடப்படவில்லை';
-
-  @override
-  String get noReviewedCategories =>
-      'மதிப்பாய்வு செய்யப்பட்ட பகுதி அல்லது மரபு வகைகள் இன்னும் இல்லை.';
-
-  @override
-  String get noDotGridCategories => 'புள்ளிக் கட்ட வகைகள் இன்னும் இல்லை.';
-
-  @override
-  String get region => 'பகுதி';
-
-  @override
-  String get tradition => 'மரபு';
+  String get noCategoriesAvailable => 'விருப்பங்கள் எதுவும் இல்லை.';
 
   @override
   String get technique => 'நுட்பம்';
@@ -215,12 +195,21 @@ class AppLocalizationsTa extends AppLocalizations {
   String get previewLesson => 'திசையன் முன்னோட்டம்';
 
   @override
-  String get sampleLessonNotice =>
-      'இது கலாசார ரீதியாக சரிபார்க்கப்பட்ட பாடம் அல்ல; அசல் திசையன் முன்னோட்டம்.';
+  String get artworkSource => 'வடிவத்தின் மூலம்';
 
   @override
-  String get lessonDraftReviewNotice =>
-      'படிப்படியான பாட வரைவு மதிப்பாய்வில் உள்ளது. தேவையான உள்ளடக்க மதிப்பாய்வுகள் ஒப்புதல் பெற்ற பிறகு இது கிடைக்கும்.';
+  String get systemGeneratedArtwork =>
+      'கணினியால் உருவாக்கப்பட்ட திசையன் வடிவம்';
+
+  @override
+  String get referenceBasedArtwork =>
+      'குறிப்பிடப்பட்ட கலைப்படைப்பை அடிப்படையாகக் கொண்டது';
+
+  @override
+  String get styleReferences => 'பாணி ஆதாரங்கள்';
+
+  @override
+  String get sourceOpenError => 'இந்த ஆதார இணைப்பைத் திறக்க முடியவில்லை.';
 
   @override
   String get step => 'படி';
@@ -250,14 +239,11 @@ class AppLocalizationsTa extends AppLocalizations {
   String get lessonComplete => 'முன்னோட்டம் முடிந்தது';
 
   @override
-  String get metadataUnassigned => 'மதிப்பாய்வு வரை ஒதுக்கப்படவில்லை';
-
-  @override
   String get practiceDesign => 'பயிற்சி / தடமறி';
 
   @override
   String get practiceGuideNotice =>
-      'கேன்வாஸில் மங்கலான வழிகாட்டுதலைப் பின்தொடர்ந்து வரையுங்கள். இந்த மாதிரி பண்பாட்டுத் தளத்தில் சரிபார்க்கப்பட்ட பாடம் அல்ல.';
+      'மங்கலான வழிகாட்டைப் பின்தொடர்ந்து வரைந்து, உங்கள் நிறங்களையும் விவரங்களையும் சேர்க்கவும்.';
 
   @override
   String get back => 'பின்னால்';
@@ -475,7 +461,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get interestRangoli => 'ரங்கோலி';
 
   @override
-  String get interestAll => 'அனைத்து மரபுகள்';
+  String get interestAll => 'அனைத்து வடிவங்கள்';
 
   @override
   String get chooseExperienceTitle => 'உங்கள் அனுபவ நிலை என்ன?';

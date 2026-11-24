@@ -1,6 +1,6 @@
 import 'design_geometry.dart';
-import 'content_review.dart';
 import 'design_lesson_step.dart';
+import 'design_provenance.dart';
 import 'dot_grid.dart';
 import 'localized_text.dart';
 
@@ -27,11 +27,8 @@ class MugguDesign {
     required this.localizedName,
     required this.localizedDescription,
     required this.localizedTechnique,
-    required this.localizedRegion,
-    required this.localizedTradition,
-    required this.region,
-    required this.tradition,
     required this.construction,
+    required this.provenance,
     this.backgroundColor = '#FFF5E8',
     required this.technique,
     required this.difficulty,
@@ -40,10 +37,6 @@ class MugguDesign {
     required this.thumbnail,
     required this.paths,
     required this.recipe,
-    required this.rightsReview,
-    required this.culturalReview,
-    required this.localizationReview,
-    required this.lessonReview,
     required this.lessonSteps,
   });
 
@@ -51,11 +44,8 @@ class MugguDesign {
   final LocalizedText localizedName;
   final LocalizedText localizedDescription;
   final LocalizedText localizedTechnique;
-  final LocalizedText? localizedRegion;
-  final LocalizedText? localizedTradition;
-  final String? region;
-  final String? tradition;
   final DesignConstruction construction;
+  final DesignProvenance provenance;
   final String backgroundColor;
   final String technique;
   final DesignDifficulty difficulty;
@@ -64,29 +54,9 @@ class MugguDesign {
   final String thumbnail;
   final List<DesignPath> paths;
   final PatternRecipe? recipe;
-  final ReviewRecord rightsReview;
-  final ReviewRecord culturalReview;
-  final ReviewRecord localizationReview;
-  final ReviewRecord lessonReview;
   final List<DesignLessonStep> lessonSteps;
 
-  bool get isPublicationReady =>
-      rightsReview.isApproved &&
-      culturalReview.isApproved &&
-      localizationReview.isApproved &&
-      _supportsInitialLanguages(localizedName) &&
-      _supportsInitialLanguages(localizedDescription) &&
-      _supportsInitialLanguages(localizedTechnique) &&
-      (localizedRegion == null ||
-          _supportsInitialLanguages(localizedRegion!)) &&
-      (localizedTradition == null ||
-          _supportsInitialLanguages(localizedTradition!));
-
-  bool get hasReviewedLesson =>
-      isPublicationReady &&
-      lessonReview.isApproved &&
-      lessonSteps.isNotEmpty &&
-      lessonSteps.every((step) => _supportsInitialLanguages(step.instruction));
+  bool get isLessonPlayable => lessonSteps.isNotEmpty;
 
   Set<String> get geometryGroupIds => paths.map((path) => path.groupId).toSet();
 
@@ -99,12 +69,6 @@ class MugguDesign {
   String techniqueFor(String languageCode) =>
       localizedTechnique.forLanguage(languageCode);
 
-  String? regionFor(String languageCode) =>
-      localizedRegion?.forLanguage(languageCode);
-
-  String? traditionFor(String languageCode) =>
-      localizedTradition?.forLanguage(languageCode);
-
   factory MugguDesign.fromJson(Object? value, String fieldName) {
     if (value is! Map<String, dynamic>) {
       throw FormatException('$fieldName must be an object.');
@@ -116,11 +80,6 @@ class MugguDesign {
     final rawTags = value['searchTags'];
     final rawPaths = value['paths'];
     final rawGrid = value['grid'];
-    final region = _optionalString(value['region'], '$fieldName.region');
-    final tradition = _optionalString(
-      value['tradition'],
-      '$fieldName.tradition',
-    );
     final rawBackgroundColor = value['backgroundColor'];
     if (rawBackgroundColor != null &&
         (rawBackgroundColor is! String ||
@@ -139,8 +98,6 @@ class MugguDesign {
         '$fieldName.construction must be dot_guided or illustrated.',
       ),
     };
-    final localizedRegionValue = value['localizedRegion'];
-    final localizedTraditionValue = value['localizedTradition'];
     if (id is! String || !RegExp(r'^[a-z0-9_]+$').hasMatch(id)) {
       throw FormatException(
         '$fieldName.id must be a stable lowercase identifier.',
@@ -148,12 +105,6 @@ class MugguDesign {
     }
     if (technique is! String || technique.trim().isEmpty) {
       throw FormatException('$fieldName.technique must be a non-empty string.');
-    }
-    if ((region == null) != (localizedRegionValue == null) ||
-        (tradition == null) != (localizedTraditionValue == null)) {
-      throw FormatException(
-        '$fieldName localized region and tradition must match their identifiers.',
-      );
     }
     if (thumbnail is! String ||
         !thumbnail.startsWith('assets/designs/thumbnails/')) {
@@ -207,36 +158,6 @@ class MugguDesign {
       }
       lessonSteps.add(step);
     }
-    final rightsReview = ReviewRecord.fromJson(
-      value['rightsReview'],
-      '$fieldName.rightsReview',
-    );
-    final culturalReview = ReviewRecord.fromJson(
-      value['culturalReview'],
-      '$fieldName.culturalReview',
-    );
-    final localizationReview = ReviewRecord.fromJson(
-      value['localizationReview'],
-      '$fieldName.localizationReview',
-    );
-    final lessonReview = ReviewRecord.fromJson(
-      value['lessonReview'],
-      '$fieldName.lessonReview',
-    );
-    if (lessonReview.isApproved && lessonSteps.isEmpty) {
-      throw FormatException(
-        '$fieldName.lessonReview cannot be approved without lesson steps.',
-      );
-    }
-    if (lessonReview.isApproved &&
-        lessonSteps.any(
-          (step) => !_supportsInitialLanguages(step.instruction),
-        )) {
-      throw FormatException(
-        '$fieldName.lessonReview requires reviewed English, Telugu and Tamil instructions.',
-      );
-    }
-
     final localizedName = LocalizedText.fromJson(
       value['localizedName'],
       '$fieldName.localizedName',
@@ -249,41 +170,19 @@ class MugguDesign {
       value['localizedTechnique'],
       '$fieldName.localizedTechnique',
     );
-    final localizedRegion = localizedRegionValue == null
-        ? null
-        : LocalizedText.fromJson(
-            localizedRegionValue,
-            '$fieldName.localizedRegion',
-          );
-    final localizedTradition = localizedTraditionValue == null
-        ? null
-        : LocalizedText.fromJson(
-            localizedTraditionValue,
-            '$fieldName.localizedTradition',
-          );
-    if (localizationReview.isApproved &&
-        (!_supportsInitialLanguages(localizedName) ||
-            !_supportsInitialLanguages(localizedDescription) ||
-            !_supportsInitialLanguages(localizedTechnique) ||
-            (localizedRegion != null &&
-                !_supportsInitialLanguages(localizedRegion)) ||
-            (localizedTradition != null &&
-                !_supportsInitialLanguages(localizedTradition)))) {
-      throw FormatException(
-        '$fieldName.localizationReview requires reviewed English, Telugu and Tamil catalogue text.',
-      );
-    }
+    final provenance = DesignProvenance.fromJson(
+      value['provenance'] ??
+          {'origin': 'system_generated', 'sources': <String>[]},
+      '$fieldName.provenance',
+    );
 
     return MugguDesign(
       id: id,
       localizedName: localizedName,
       localizedDescription: localizedDescription,
       localizedTechnique: localizedTechnique,
-      localizedRegion: localizedRegion,
-      localizedTradition: localizedTradition,
-      region: region,
-      tradition: tradition,
       construction: construction,
+      provenance: provenance,
       backgroundColor: backgroundColor,
       technique: technique,
       difficulty: DesignDifficulty.parse(
@@ -299,24 +198,7 @@ class MugguDesign {
       recipe: value['recipe'] == null
           ? null
           : PatternRecipe.fromJson(value['recipe'], '$fieldName.recipe'),
-      rightsReview: rightsReview,
-      culturalReview: culturalReview,
-      localizationReview: localizationReview,
-      lessonReview: lessonReview,
       lessonSteps: List.unmodifiable(lessonSteps),
     );
   }
-
-  static String? _optionalString(Object? value, String fieldName) {
-    if (value == null) {
-      return null;
-    }
-    if (value is! String || value.trim().isEmpty) {
-      throw FormatException('$fieldName must be a non-empty string or null.');
-    }
-    return value;
-  }
-
-  static bool _supportsInitialLanguages(LocalizedText text) =>
-      const ['en', 'te', 'ta'].every(text.values.containsKey);
 }

@@ -95,19 +95,12 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Geometric Sample 01'), findsOneWidget);
     await tester.scrollUntilVisible(
-      find.text(
-        'This is an original vector preview, not a culturally verified lesson.',
-      ),
+      find.text('Draw the highlighted design'),
       200,
     );
-    expect(
-      find.text(
-        'This is an original vector preview, not a culturally verified lesson.',
-      ),
-      findsOneWidget,
-    );
-    expect(find.text('Draw the next stroke'), findsNothing);
-    expect(find.text('Next'), findsNothing);
+    expect(find.text('Draw the highlighted design'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Next'), 200);
+    expect(find.text('Next'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Design details'), 250);
     await tester.pumpAndSettle();
     expect(find.text('Design details'), findsOneWidget);
@@ -129,12 +122,9 @@ void main() {
 
     await tester.tap(find.text('Practise / Trace'));
     await tester.pumpAndSettle();
-    // PracticeScreen now shows a live tracing canvas (Phase 2 upgrade).
-    // Verify the disclaimer info card text is visible.
+    // Verify the tracing guidance is visible.
     expect(
-      find.text(
-        'Trace the faint guide with the canvas. This sample is not a culturally verified lesson.',
-      ),
+      find.text('Trace the faint guide, then add your own colors and details.'),
       findsOneWidget,
     );
     expect(
@@ -150,7 +140,6 @@ void main() {
     await tester.tap(find.text('Explore').last);
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
-    expect(find.textContaining('original geometric samples'), findsOneWidget);
     expect(find.text('Geometric Sample 01'), findsOneWidget);
     final designCard = find.byKey(
       const ValueKey('design-card-geometric_sample_001'),
@@ -272,9 +261,7 @@ void main() {
     expect(storage.languageCode, 'te');
   });
 
-  testWidgets('lesson drafts stay hidden until required reviews are approved', (
-    tester,
-  ) async {
+  testWidgets('design lessons play without approval gates', (tester) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -284,9 +271,7 @@ void main() {
           localeStorageProvider.overrideWithValue(_MemoryLocaleStorage()),
           initialLocaleProvider.overrideWithValue(const Locale('en')),
           favoritesDaoProvider.overrideWithValue(_MemoryFavorites()),
-          catalogProvider.overrideWith(
-            (ref) async => _testCatalog(includeLessonDraft: true),
-          ),
+          catalogProvider.overrideWith((ref) async => _testCatalog()),
         ],
         child: const MugguStudioApp(),
       ),
@@ -297,20 +282,19 @@ void main() {
     await tester.tap(find.text('Learn this design'));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
-      find.text(
-        'A step-by-step lesson draft is being reviewed. It will be available after the required content reviews are approved.',
-      ),
+      find.text('Draw the highlighted design'),
       200,
     );
-
-    expect(
-      find.text(
-        'A step-by-step lesson draft is being reviewed. It will be available after the required content reviews are approved.',
-      ),
-      findsOneWidget,
+    expect(find.text('Draw the highlighted design'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Next'), 200);
+    expect(find.text('Next'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('System-generated vector design'),
+      200,
     );
-    expect(find.text('Draft instruction hidden'), findsNothing);
-    expect(find.text('Next'), findsNothing);
+    expect(find.text('System-generated vector design'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('example.com'), 200);
+    expect(find.text('example.com'), findsOneWidget);
   });
 
   testWidgets('Explore clear empties the search field and restores results', (
@@ -377,8 +361,7 @@ void main() {
   });
 }
 
-List<MugguDesign> _testCatalog({bool includeLessonDraft = false}) =>
-    DesignRepository.parseCatalog('''
+List<MugguDesign> _testCatalog() => DesignRepository.parseCatalog('''
   {
     "schemaVersion": 2,
     "designs": [
@@ -386,12 +369,15 @@ List<MugguDesign> _testCatalog({bool includeLessonDraft = false}) =>
         "id": "geometric_sample_001",
         "localizedName": {"en": "Geometric Sample 01"},
         "localizedDescription": {
-          "en": "An original geometric vector sample; cultural classification is unassigned and pending review."
+          "en": "A system-generated geometric vector design."
         },
-        "region": null,
-        "tradition": null,
         "technique": "geometric_lines",
         "localizedTechnique": {"en": "Geometric lines"},
+        "provenance": {
+          "origin": "system_generated",
+          "sources": ["https://example.com/art"],
+          "note": "Fixture reference."
+        },
         "difficulty": "easy",
         "grid": null,
         "searchTags": ["geometric", "sample"],
@@ -399,27 +385,11 @@ List<MugguDesign> _testCatalog({bool includeLessonDraft = false}) =>
         "strokes": [
           {"id": "stroke_01", "points": [[0.1, 0.1], [0.9, 0.9]]}
         ],
-        "rightsReview": {
-          "status": "pending",
-          "reviewer": "",
-          "evidence": "Original widget-test fixture."
-        },
-        "culturalReview": {
-          "status": "pending",
-          "reviewer": "",
-          "evidence": ""
-        },
-        "localizationReview": {
-          "status": "pending",
-          "reviewer": "",
-          "evidence": ""
-        },
-        "lessonReview": {
-          "status": "pending",
-          "reviewer": "",
-          "evidence": ""
-        },
-        "lessonSteps": ${includeLessonDraft ? '[{"id":"step_01","strokeIds":["stroke_01"],"instruction":{"en":"Draft instruction hidden"}}]' : '[]'}
+        "lessonSteps": [{
+          "id": "step_01",
+          "strokeIds": ["stroke_01"],
+          "instruction": {"en": "Draw the highlighted design"}
+        }]
       }
     ]
   }

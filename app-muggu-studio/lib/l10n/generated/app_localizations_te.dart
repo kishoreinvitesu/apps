@@ -98,28 +98,7 @@ class AppLocalizationsTe extends AppLocalizations {
       'శోధన లేదా వడపోతలను మార్చి మళ్లీ ప్రయత్నించండి.';
 
   @override
-  String get sampleContentNotice =>
-      'ఇవి అసలు జ్యామితీయ నమూనాలు. సమీక్ష పూర్తయ్యే వరకు ప్రాంతం, సంప్రదాయం కేటాయించలేదు.';
-
-  @override
-  String get pendingReview => 'సమీక్ష పెండింగ్‌లో ఉంది';
-
-  @override
-  String get unassigned => 'కేటాయించలేదు';
-
-  @override
-  String get noReviewedCategories =>
-      'సమీక్షించిన ప్రాంతం లేదా సంప్రదాయం వర్గాలు ఇంకా అందుబాటులో లేవు.';
-
-  @override
-  String get noDotGridCategories =>
-      'చుక్కల గ్రిడ్ వర్గాలు ఇంకా అందుబాటులో లేవు.';
-
-  @override
-  String get region => 'ప్రాంతం';
-
-  @override
-  String get tradition => 'సంప్రదాయం';
+  String get noCategoriesAvailable => 'ఎంపికలు అందుబాటులో లేవు.';
 
   @override
   String get technique => 'విధానం';
@@ -215,12 +194,19 @@ class AppLocalizationsTe extends AppLocalizations {
   String get previewLesson => 'వెక్టర్ ప్రివ్యూ';
 
   @override
-  String get sampleLessonNotice =>
-      'ఇది సాంస్కృతికంగా ధృవీకరించబడిన పాఠం కాదు, అసలు వెక్టర్ ప్రివ్యూ.';
+  String get artworkSource => 'కళాకృతి మూలం';
 
   @override
-  String get lessonDraftReviewNotice =>
-      'దశలవారీ పాఠం ముసాయిదా సమీక్షలో ఉంది. అవసరమైన కంటెంట్ సమీక్షలు ఆమోదం పొందిన తర్వాత అందుబాటులో ఉంటుంది.';
+  String get systemGeneratedArtwork => 'సిస్టమ్ రూపొందించిన వెక్టర్ డిజైన్';
+
+  @override
+  String get referenceBasedArtwork => 'సూచించిన కళాకృతి ఆధారంగా';
+
+  @override
+  String get styleReferences => 'శైలి మూలాలు';
+
+  @override
+  String get sourceOpenError => 'ఈ మూల లింక్‌ను తెరవడం సాధ్యం కాలేదు.';
 
   @override
   String get step => 'అడుగు';
@@ -250,14 +236,11 @@ class AppLocalizationsTe extends AppLocalizations {
   String get lessonComplete => 'ప్రివ్యూ పూర్తయింది';
 
   @override
-  String get metadataUnassigned => 'సమీక్ష పూర్తయ్యే వరకు కేటాయించలేదు';
-
-  @override
   String get practiceDesign => 'సాధన / ట్రేస్';
 
   @override
   String get practiceGuideNotice =>
-      'క్యాన్వాస్‌పై మసక మార్గదర్శకాన్ని అనుసరించి గీయండి. ఈ నమూనా సాంస్కృతికంగా ధృవీకరించిన పాఠం కాదు.';
+      'మసక మార్గదర్శకాన్ని అనుసరించి గీయండి; ఆపై మీ రంగులు, వివరాలు జోడించండి.';
 
   @override
   String get back => 'వెనక్కి';
@@ -474,7 +457,7 @@ class AppLocalizationsTe extends AppLocalizations {
   String get interestRangoli => 'రంగోలి';
 
   @override
-  String get interestAll => 'అన్ని సంప్రదాయాలు';
+  String get interestAll => 'అన్ని శైలులు';
 
   @override
   String get chooseExperienceTitle => 'మీ అనుభవ స్థాయి ఏమిటి?';

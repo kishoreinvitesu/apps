@@ -88,21 +88,6 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Card(
-          color: Theme.of(context).colorScheme.secondaryContainer,
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(Icons.info_outline_rounded),
-                const SizedBox(width: 10),
-                Expanded(child: Text(l10n.sampleContentNotice)),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 12),
         TextField(
           controller: _searchController,
           onChanged: ref
@@ -217,20 +202,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     var filters = initialFilters;
     final l10n = AppLocalizations.of(context)!;
     final languageCode = Localizations.localeOf(context).languageCode;
-    final regions = _sortedValues(designs.map((design) => design.region));
-    final traditions = _sortedValues(designs.map((design) => design.tradition));
     final techniques = _sortedValues(designs.map((design) => design.technique));
-    final regionLabels = {
-      for (final design in designs)
-        if (design.region != null)
-          design.region!: design.regionFor(languageCode) ?? design.region!,
-    };
-    final traditionLabels = {
-      for (final design in designs)
-        if (design.tradition != null)
-          design.tradition!:
-              design.traditionFor(languageCode) ?? design.tradition!,
-    };
     final techniqueLabels = {
       for (final design in designs)
         design.technique: design.techniqueFor(languageCode),
@@ -272,40 +244,8 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                     ),
                     const SizedBox(height: 16),
                     _FilterSection(
-                      title: l10n.region,
-                      emptyMessage: l10n.noReviewedCategories,
-                      values: regions,
-                      selectedValue: filters.region,
-                      labelForValue: (value) => regionLabels[value] ?? value,
-                      onSelected: (value) => update(
-                        DesignFilters(
-                          region: filters.region == value ? null : value,
-                          tradition: filters.tradition,
-                          technique: filters.technique,
-                          difficulty: filters.difficulty,
-                          grid: filters.grid,
-                        ),
-                      ),
-                    ),
-                    _FilterSection(
-                      title: l10n.tradition,
-                      emptyMessage: l10n.noReviewedCategories,
-                      values: traditions,
-                      selectedValue: filters.tradition,
-                      labelForValue: (value) => traditionLabels[value] ?? value,
-                      onSelected: (value) => update(
-                        DesignFilters(
-                          region: filters.region,
-                          tradition: filters.tradition == value ? null : value,
-                          technique: filters.technique,
-                          difficulty: filters.difficulty,
-                          grid: filters.grid,
-                        ),
-                      ),
-                    ),
-                    _FilterSection(
                       title: l10n.technique,
-                      emptyMessage: l10n.noReviewedCategories,
+                      emptyMessage: l10n.noCategoriesAvailable,
                       values: techniques,
                       selectedValue: filters.technique,
                       labelForValue: (value) => value == 'geometric_lines'
@@ -313,8 +253,6 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                           : techniqueLabels[value] ?? value,
                       onSelected: (value) => update(
                         DesignFilters(
-                          region: filters.region,
-                          tradition: filters.tradition,
                           technique: filters.technique == value ? null : value,
                           difficulty: filters.difficulty,
                           grid: filters.grid,
@@ -323,7 +261,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                     ),
                     _FilterSection<DesignDifficulty>(
                       title: l10n.difficulty,
-                      emptyMessage: l10n.noReviewedCategories,
+                      emptyMessage: l10n.noCategoriesAvailable,
                       values: [
                         for (final difficulty in DesignDifficulty.values)
                           if (difficulties.contains(difficulty)) difficulty,
@@ -332,8 +270,6 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                       labelForValue: (value) => _difficultyLabel(l10n, value),
                       onSelected: (value) => update(
                         DesignFilters(
-                          region: filters.region,
-                          tradition: filters.tradition,
                           technique: filters.technique,
                           difficulty: filters.difficulty == value
                               ? null
@@ -344,15 +280,13 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                     ),
                     _FilterSection<DotGrid>(
                       title: l10n.dotGrid,
-                      emptyMessage: l10n.noDotGridCategories,
+                      emptyMessage: l10n.noCategoriesAvailable,
                       values: grids,
                       selectedValue: filters.grid,
                       labelForValue: (value) =>
                           '${value.rows} × ${value.columns}',
                       onSelected: (value) => update(
                         DesignFilters(
-                          region: filters.region,
-                          tradition: filters.tradition,
                           technique: filters.technique,
                           difficulty: filters.difficulty,
                           grid: filters.grid == value ? null : value,

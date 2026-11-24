@@ -107,8 +107,13 @@ void main() {
       }
 
       try {
-        expect(pixelAt(2, 2), [0x12, 0x34, 0x56, 0xFF]);
-        expect(pixelAt(32, 32), [0xF4, 0xCB, 0xD2, 0xFF]);
+        expect(pixelAt(2, 2), [0x24, 0x43, 0x63, 0xFF]);
+        expect(pixelAt(32, 32), [
+          closeTo(0xF4, 3),
+          closeTo(0xCB, 3),
+          closeTo(0xD2, 3),
+          0xFF,
+        ]);
       } finally {
         image.dispose();
         codec.dispose();

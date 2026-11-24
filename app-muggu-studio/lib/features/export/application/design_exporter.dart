@@ -54,14 +54,16 @@ class DesignExporter {
     // --- Layer 0: Background Solid Fill ---
     paintDesignBackground(canvas, size, backgroundColor);
 
-    paintDotGrid(
-      canvas,
-      size,
-      grid,
-      color: strokeColor,
-      opacity: 0.35,
-      radiusFactor: 0.005,
-    );
+    for (final designPath in paths) {
+      paintDesignPath(
+        canvas,
+        size,
+        designPath,
+        defaultStrokeColor: strokeColor,
+        defaultStrokeWidth: 0.0055,
+        drawStroke: false,
+      );
+    }
 
     for (final designPath in paths) {
       paintDesignPath(
@@ -70,8 +72,20 @@ class DesignExporter {
         designPath,
         defaultStrokeColor: strokeColor,
         defaultStrokeWidth: 0.0055,
+        drawFill: false,
+        drawShadow: false,
       );
     }
+
+    paintDotGrid(
+      canvas,
+      size,
+      grid,
+      color: strokeColor,
+      opacity: 0.35,
+      radiusFactor: 0.005,
+      haloColor: Color.lerp(Colors.white, backgroundColor, 0.92)!,
+    );
 
     // --- Layer 3: Cultural Branding / Attribution Footer ---
     if (includeBranding) {

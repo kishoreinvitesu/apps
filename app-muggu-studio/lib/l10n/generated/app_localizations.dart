@@ -268,47 +268,11 @@ abstract class AppLocalizations {
   /// **'Try changing your search or filters.'**
   String get exploreNoResultsDescription;
 
-  /// No description provided for @sampleContentNotice.
+  /// No description provided for @noCategoriesAvailable.
   ///
   /// In en, this message translates to:
-  /// **'These are original geometric samples. Region and tradition are unassigned while content review is pending.'**
-  String get sampleContentNotice;
-
-  /// No description provided for @pendingReview.
-  ///
-  /// In en, this message translates to:
-  /// **'Pending review'**
-  String get pendingReview;
-
-  /// No description provided for @unassigned.
-  ///
-  /// In en, this message translates to:
-  /// **'Unassigned'**
-  String get unassigned;
-
-  /// No description provided for @noReviewedCategories.
-  ///
-  /// In en, this message translates to:
-  /// **'No reviewed region or tradition categories are available yet.'**
-  String get noReviewedCategories;
-
-  /// No description provided for @noDotGridCategories.
-  ///
-  /// In en, this message translates to:
-  /// **'No dot-grid categories are available yet.'**
-  String get noDotGridCategories;
-
-  /// No description provided for @region.
-  ///
-  /// In en, this message translates to:
-  /// **'Region'**
-  String get region;
-
-  /// No description provided for @tradition.
-  ///
-  /// In en, this message translates to:
-  /// **'Tradition'**
-  String get tradition;
+  /// **'No options available.'**
+  String get noCategoriesAvailable;
 
   /// No description provided for @technique.
   ///
@@ -490,17 +454,35 @@ abstract class AppLocalizations {
   /// **'Vector preview'**
   String get previewLesson;
 
-  /// No description provided for @sampleLessonNotice.
+  /// No description provided for @artworkSource.
   ///
   /// In en, this message translates to:
-  /// **'This is an original vector preview, not a culturally verified lesson.'**
-  String get sampleLessonNotice;
+  /// **'Artwork'**
+  String get artworkSource;
 
-  /// No description provided for @lessonDraftReviewNotice.
+  /// No description provided for @systemGeneratedArtwork.
   ///
   /// In en, this message translates to:
-  /// **'A step-by-step lesson draft is being reviewed. It will be available after the required content reviews are approved.'**
-  String get lessonDraftReviewNotice;
+  /// **'System-generated vector design'**
+  String get systemGeneratedArtwork;
+
+  /// No description provided for @referenceBasedArtwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Based on referenced artwork'**
+  String get referenceBasedArtwork;
+
+  /// No description provided for @styleReferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Style references'**
+  String get styleReferences;
+
+  /// No description provided for @sourceOpenError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open this source link.'**
+  String get sourceOpenError;
 
   /// No description provided for @step.
   ///
@@ -556,12 +538,6 @@ abstract class AppLocalizations {
   /// **'Preview complete'**
   String get lessonComplete;
 
-  /// No description provided for @metadataUnassigned.
-  ///
-  /// In en, this message translates to:
-  /// **'Not assigned until content review'**
-  String get metadataUnassigned;
-
   /// No description provided for @practiceDesign.
   ///
   /// In en, this message translates to:
@@ -571,7 +547,7 @@ abstract class AppLocalizations {
   /// No description provided for @practiceGuideNotice.
   ///
   /// In en, this message translates to:
-  /// **'Trace the faint guide with the canvas. This sample is not a culturally verified lesson.'**
+  /// **'Trace the faint guide, then add your own colors and details.'**
   String get practiceGuideNotice;
 
   /// No description provided for @back.
@@ -991,7 +967,7 @@ abstract class AppLocalizations {
   /// No description provided for @interestAll.
   ///
   /// In en, this message translates to:
-  /// **'All traditions'**
+  /// **'All styles'**
   String get interestAll;
 
   /// No description provided for @chooseExperienceTitle.

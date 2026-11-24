@@ -9,45 +9,25 @@ import '../models/dot_grid.dart';
 import '../models/muggu_design.dart';
 
 const catalogAssetPath = 'assets/designs/catalog.json';
-const catalogSchemaVersion = 4;
-const supportedCatalogSchemaVersions = {2, 3, catalogSchemaVersion};
+const catalogSchemaVersion = 5;
+const supportedCatalogSchemaVersions = {2, 3, 4, catalogSchemaVersion};
 
 enum DesignSort { recommended, name, difficulty }
 
 class DesignFilters {
-  const DesignFilters({
-    this.region,
-    this.tradition,
-    this.technique,
-    this.difficulty,
-    this.grid,
-  });
+  const DesignFilters({this.technique, this.difficulty, this.grid});
 
-  final String? region;
-  final String? tradition;
   final String? technique;
   final DesignDifficulty? difficulty;
   final DotGrid? grid;
 
-  bool get isEmpty =>
-      region == null &&
-      tradition == null &&
-      technique == null &&
-      difficulty == null &&
-      grid == null;
+  bool get isEmpty => technique == null && difficulty == null && grid == null;
 
-  int get activeCount => [
-    region,
-    tradition,
-    technique,
-    difficulty,
-    grid,
-  ].where((value) => value != null).length;
+  int get activeCount =>
+      [technique, difficulty, grid].where((value) => value != null).length;
 
   bool matches(MugguDesign design) {
-    return (region == null || design.region == region) &&
-        (tradition == null || design.tradition == tradition) &&
-        (technique == null || design.technique == technique) &&
+    return (technique == null || design.technique == technique) &&
         (difficulty == null || design.difficulty == difficulty) &&
         (grid == null || design.grid == grid);
   }
@@ -92,6 +72,21 @@ class DesignRepository {
         _ => rawDesign,
       };
       final design = MugguDesign.fromJson(normalizedDesign, 'designs[$index]');
+      if (schemaVersion == catalogSchemaVersion && design.lessonSteps.isEmpty) {
+        throw FormatException(
+          'designs[$index].lessonSteps must contain a playable lesson.',
+        );
+      }
+      if (schemaVersion == catalogSchemaVersion &&
+          !design.geometryGroupIds.every(
+            (groupId) => design.lessonSteps.any(
+              (step) => step.groupIds.contains(groupId),
+            ),
+          )) {
+        throw FormatException(
+          'designs[$index].lessonSteps must cover every geometry group.',
+        );
+      }
       if (design.construction == DesignConstruction.dotGuided) {
         _validateDotConnectivity(design, 'designs[$index]');
       }
@@ -281,8 +276,6 @@ class DesignRepository {
           ...design.localizedName.values.values,
           ...design.localizedDescription.values.values,
           ...design.localizedTechnique.values.values,
-          ...?design.localizedRegion?.values.values,
-          ...?design.localizedTradition?.values.values,
           ...design.searchTags,
         ].join(' '),
       );

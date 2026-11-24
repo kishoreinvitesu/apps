@@ -98,27 +98,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Try changing your search or filters.';
 
   @override
-  String get sampleContentNotice =>
-      'These are original geometric samples. Region and tradition are unassigned while content review is pending.';
-
-  @override
-  String get pendingReview => 'Pending review';
-
-  @override
-  String get unassigned => 'Unassigned';
-
-  @override
-  String get noReviewedCategories =>
-      'No reviewed region or tradition categories are available yet.';
-
-  @override
-  String get noDotGridCategories => 'No dot-grid categories are available yet.';
-
-  @override
-  String get region => 'Region';
-
-  @override
-  String get tradition => 'Tradition';
+  String get noCategoriesAvailable => 'No options available.';
 
   @override
   String get technique => 'Technique';
@@ -214,12 +194,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get previewLesson => 'Vector preview';
 
   @override
-  String get sampleLessonNotice =>
-      'This is an original vector preview, not a culturally verified lesson.';
+  String get artworkSource => 'Artwork';
 
   @override
-  String get lessonDraftReviewNotice =>
-      'A step-by-step lesson draft is being reviewed. It will be available after the required content reviews are approved.';
+  String get systemGeneratedArtwork => 'System-generated vector design';
+
+  @override
+  String get referenceBasedArtwork => 'Based on referenced artwork';
+
+  @override
+  String get styleReferences => 'Style references';
+
+  @override
+  String get sourceOpenError => 'Couldn\'t open this source link.';
 
   @override
   String get step => 'Step';
@@ -249,14 +236,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lessonComplete => 'Preview complete';
 
   @override
-  String get metadataUnassigned => 'Not assigned until content review';
-
-  @override
   String get practiceDesign => 'Practise / Trace';
 
   @override
   String get practiceGuideNotice =>
-      'Trace the faint guide with the canvas. This sample is not a culturally verified lesson.';
+      'Trace the faint guide, then add your own colors and details.';
 
   @override
   String get back => 'Back';
@@ -474,7 +458,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get interestRangoli => 'Rangoli';
 
   @override
-  String get interestAll => 'All traditions';
+  String get interestAll => 'All styles';
 
   @override
   String get chooseExperienceTitle => 'What\'s your experience level?';

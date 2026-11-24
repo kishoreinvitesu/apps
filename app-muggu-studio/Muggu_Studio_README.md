@@ -3,14 +3,11 @@
 **Document purpose:** Source of truth for product scope, UX,
 architecture, content, implementation rules and release acceptance.
 
-**Status:** The Creator now includes deterministic template generators and a
-freehand canvas, with local creation storage and export/share support. The
-bundled catalogue contains 60 design samples, including 40 original geometric
-artworks. All designs use visible dot grids and connect path endpoints to
-grid dots. The original patterns are not verified South Indian traditions;
-none count toward the reviewed-content target until rights, cultural,
-localization and lesson reviews are approved. See the Development Log for
-verified implementation status.
+**Status:** The app includes a local-first creator, export/share support and
+67 system-generated vector designs. Every bundled design has a guided lesson.
+Design details show system-generated provenance or the references used for
+general style context. Region/tradition assignments and review gates are not
+part of the catalogue.
 
 **Working product name:** Muggu Studio\
 **Platform:** Android first\
@@ -25,14 +22,22 @@ Premium unlock\
 > records verified implementation progress, commands, test results,
 > issues and environment-specific fixes.
 
+> **Current content direction:** Earlier plans in this document that require
+> regional assignment, practitioner review or approval gates are superseded.
+> Designs are available for learning by default; provenance identifies
+> system-generated artwork and any source links without claiming a source
+> depicts the exact vector design. Illustrated artwork preserves its vector
+> curves, while dot-guided designs keep guide dots and outlines visible above
+> color fills.
+
 ------------------------------------------------------------------------
 
 ## 1. Product vision
 
-Muggu Studio is a beginner-friendly creative and learning app for
-traditional Indian floor art. It helps people discover regional designs,
-understand how they are made, learn them step by step, practise tracing
-and create their own patterns.
+Muggu Studio is a beginner-friendly creative and learning app for Indian
+floor art and decorative patterns. It helps people explore a broad design
+library, learn each design step by step, practise tracing and create their
+own patterns.
 
 The app must be understandable to people who do not know the word
 "Muggu".
@@ -46,7 +51,7 @@ Suggested tagline: **Create. Learn. Preserve. Share.**
 
 Suggested product promise:
 
-> Discover beautiful traditional floor-art designs, learn them step by
+> Discover beautiful floor-art designs, learn them step by
 > step, practise at your own pace and create your own patterns.
 
 Keep Muggu Studio as the distinctive working brand. Use Rangoli, Kolam
@@ -56,19 +61,20 @@ chase keywords.
 
 ### Product principles
 
-1.  Regional traditions must be represented accurately and respectfully.
+1.  Do not assign a design exclusively to a region or tradition.
 2.  Learning is the central differentiator; the creator is an important
     supporting feature.
 3.  The basic experience must work offline.
 4.  No registration or account is required.
-5.  Original or properly licensed content only.
+5.  Prefer system-generated artwork; show a source when one informed a
+    design's style or content.
 6.  Keep the app simple enough for one developer to maintain.
 7.  Build and validate in small increments; do not build the entire
     product at once.
 
 ------------------------------------------------------------------------
 
-## 2. Audience and regional strategy
+## 2. Audience and discovery strategy
 
 ### Initial audience
 
@@ -79,30 +85,13 @@ chase keywords.
 -   International users interested in Indian floor art and geometric
     patterns.
 
-### Regional content strategy
+### Design discovery strategy
 
-Treat regional names and styles as related but distinct traditions. Do
-not label every design as interchangeable Rangoli or Kolam.
-
-Initial launch focus:
-
-1.  Andhra Pradesh and Telangana: Muggu / Muggulu and relevant dot-based
-    traditions.
-2.  Tamil Nadu: Pulli Kolam, Sikku Kolam and other verified Kolam forms.
-3.  A carefully curated general Rangoli collection for broader
-    discovery.
-
-Later expansion, only after research and native/regional review:
-
--   Karnataka: relevant local Rangoli and dot-design traditions.
--   Maharashtra and Gujarat: regional Rangoli styles.
--   Bengal: Alpana.
--   Rajasthan: Mandana.
--   Other regional traditions, including Aripana and Chowk Purana, only
-    with knowledgeable content review.
-
-For every design, record its actual tradition, region, local name and
-technique. Do not infer origin from appearance alone.
+Organize the library around visual families and use cases such as floral,
+dot-grid, mandala, border, corner, festival-inspired and geometric designs.
+Names can include familiar art-style terms for search, but no design is
+restricted to one region or tradition. Record an external source only when it
+was actually used; otherwise identify the artwork as system-generated.
 
 ### Language strategy
 
@@ -110,12 +99,11 @@ Initial UI languages: English, Telugu and Tamil.
 
 -   Language choice must be independent of the selected regional
     collection.
--   A Telugu-speaking user must be able to browse Tamil Kolam designs,
-    and an English-speaking user must be able to explore Muggu.
--   Add Hindi, Kannada, Marathi, Gujarati and other languages only when
-    translations can be reviewed by fluent speakers.
+-   Language choice is independent of the selected design or style.
+-   Add Hindi, Kannada, Marathi, Gujarati and other languages as the app
+    grows.
 -   Use appropriate fonts and test actual rendering on Android devices.
--   Avoid machine-translated cultural instructions without human review.
+-   Keep instructions concise and check translations for clarity.
 
 ### Search terminology
 
@@ -137,19 +125,17 @@ regional origin.
 
 -   Daily design or rotating featured design.
 -   Clear entry points to Explore, Learn and Create.
--   Regional collections and beginner-friendly collections.
+-   Visual collections and beginner-friendly collections.
 -   Festival/occasion collection entry points when relevant.
 -   Recently viewed or saved designs where useful.
 -   No login prompt.
 
 #### Explore and gallery
 
--   Initial target: 60 original or properly licensed designs, added
-    progressively.
--   Search by localized name, English name, technique, region and
-    synonyms.
--   Filters: region/tradition, style/technique, difficulty, dot-grid
-    size and occasion.
+-   Initial target: 60 colorful system-generated or source-attributed
+    designs.
+-   Search by localized name, technique and synonyms.
+-   Filters: style/technique, difficulty and dot-grid size.
 -   Sort by recommended, newest and difficulty where meaningful.
 -   Clear empty and no-results states.
 -   Favourites.
@@ -158,24 +144,23 @@ regional origin.
 
 -   Large, clear preview.
 -   Localized name and description.
--   Region/tradition and technique.
+-   Artwork provenance and style references, when applicable.
 -   Difficulty, dot-grid dimensions and estimated learning time when
     known.
 -   Actions: Learn, Trace/Practise, Favourite, Save or Share.
--   Do not show metadata that has not been verified.
+-   Keep the design origin and source information visible.
 
 #### Guided learning
 
--   Initial target: 20 verified tutorials; begin implementation with 5
-    complete lessons.
+-   Provide a playable lesson for every bundled design.
 -   Step-by-step drawing order.
 -   Previous/next, play/pause, replay and restart.
 -   Current step and total step count.
 -   Localized short instructions.
 -   Optional tracing/guide overlay.
 -   Allow users to learn at their own pace; no punitive scoring.
--   A lesson must be checked against the intended original design before
-    it is published.
+-   Generate step groups from the vector artwork when no authored lesson
+    exists.
 
 #### Practice / tracing
 
@@ -365,27 +350,29 @@ Suggested model:
 
 ``` json
 {
-  "schemaVersion": 3,
+  "schemaVersion": 5,
   "designs": [
     {
       "id": "geometric_sample_001",
       "localizedName": {
-        "en": "<reviewed English name>",
-        "te": "<fluent-speaker-reviewed Telugu name>",
-        "ta": "<fluent-speaker-reviewed Tamil name>"
+        "en": "<English name>",
+        "te": "<Telugu name>",
+        "ta": "<Tamil name>"
       },
       "localizedDescription": {
-        "en": "<reviewed English description>",
-        "te": "<fluent-speaker-reviewed Telugu description>",
-        "ta": "<fluent-speaker-reviewed Tamil description>"
+        "en": "<English description>",
+        "te": "<Telugu description>",
+        "ta": "<Tamil description>"
       },
-      "region": null,
-      "tradition": null,
+      "provenance": {
+        "origin": "system_generated",
+        "sources": []
+      },
       "technique": "geometric_lines",
       "localizedTechnique": {
-        "en": "<reviewed English technique>",
-        "te": "<fluent-speaker-reviewed Telugu technique>",
-        "ta": "<fluent-speaker-reviewed Tamil technique>"
+        "en": "<English technique>",
+        "te": "<Telugu technique>",
+        "ta": "<Tamil technique>"
       },
       "difficulty": "easy",
       "grid": null,
@@ -407,7 +394,10 @@ Suggested model:
               "y": 0.14
             },
             {"type": "close"}
-          ]
+          ],
+          "fillColor": "#F4CBD2",
+          "strokeColor": "#80535E",
+          "shadowColor": "#A96F67"
         }
       ],
       "recipe": {
@@ -424,56 +414,29 @@ Suggested model:
           "id": "step_01",
           "groupIds": ["petal_01"],
           "instruction": {
-            "en": "<human-reviewed instruction>"
+            "en": "<short drawing instruction>"
           }
         }
-      ],
-      "rightsReview": {
-        "status": "pending",
-        "reviewer": "",
-        "evidence": "<permission or provenance record>"
-      },
-      "localizationReview": {
-        "status": "pending",
-        "reviewer": "",
-        "evidence": ""
-      },
-      "culturalReview": {
-        "status": "pending",
-        "reviewer": "",
-        "evidence": ""
-      },
-      "lessonReview": {
-        "status": "pending",
-        "reviewer": "",
-        "evidence": ""
-      }
+      ]
     }
   ]
 }
 ```
 
-This is an illustrative schema only. Coordinates, regional attribution,
-instructions and artwork must be verified before publication. Rights,
-cultural classification, localization and lesson accuracy are independent
-review gates. Schema version 3 stores normalized path commands, optional
-explicit dot coordinates, reusable geometry groups and optional versioned
-generation recipes. Existing schema-version-2 stroke paths migrate to
-equivalent line-command paths without claiming they are parametric recipes.
-Lesson steps reference geometry groups so the same paths can be used by
-preview, lesson, tracing and future creation flows. The parser accepts v2
-and v3; reviewed content and reviewed translations remain separate gates.
-Missing translations use a safe fallback rather than crashing.
+Schema version 5 stores normalized vector paths, optional dot grids, visual
+color/shadow styles, provenance and lesson groups. A system-generated design
+uses an empty `sources` list; a design informed by an external reference lists
+its source URLs and clarifies whether the source informed only the style.
+Every bundled design has a lesson. Steps reference geometry groups so the
+same paths are reused by preview, playback and tracing. Legacy schema versions
+remain readable for migration, but no review or region/tradition fields are
+required.
 
-### Content review
+### Artwork provenance
 
-Rights/provenance, cultural classification and localized content are
-independent review gates. Each published design must have evidence for
-each applicable gate. Cultural review checks regional/traditional label,
-local name and spelling, dot layout, and technique. Lesson review checks
-that explicit step instructions and geometry-group references match.
-Telugu and Tamil content must be reviewed by fluent speakers. A "reviewed"
-status in one gate must never imply approval in another.
+Label artwork as system-generated unless the artwork itself is based on a
+specific cited source. List sources only when they were actually used. General
+style references are not presented as the source of the exact vector artwork.
 
 ------------------------------------------------------------------------
 
@@ -762,10 +725,10 @@ are planning aids, not deadlines.
 Goal: users can browse and find real designs.
 
 -   Finalize catalogue schema and validation.
--   Add 10 authentic, reviewed designs initially.
--   Add thumbnails and localized metadata.
+-   Maintain a growing library of system-generated designs with provenance.
+-   Add colorful thumbnails, lessons and localized metadata.
 -   Implement Explore gallery, search, filters and sorting.
--   Add regional/tradition categories.
+-   Group designs by visual family and use case.
 -   Add synonym search.
 -   Implement favourites and local persistence.
 -   Add empty/error states.
@@ -783,24 +746,21 @@ Goal: a user can open a design and follow a complete lesson.
 
 -   Design detail screen.
 -   Vector rendering foundation.
--   First 5 verified lessons.
+-   A playable lesson for every bundled design.
 -   Correct stroke order and instructions.
 -   Previous/next, play/pause and restart.
 -   Localized lesson instructions.
 
-Acceptance: - Lesson matches the verified reference design. - Playback
+Acceptance: - Playback highlights the right vector groups. - Playback
 controls work. - Rendering preserves proportions. - Lesson works
 offline. - Tests cover lesson-step ordering and playback state.
 
 ### Sprint 4 --- Practice and tracing
 
-Goal: provide a basic offline drawing engine for both creation and guided
+Goal: provide a polished offline drawing engine for both creation and guided
 practice. This scope combines the creator engine and tracing work shown in
-the Sprint 4 architecture diagram; stabilization and content-governance
-foundations are complete. The geometry model and explicit lesson-step
-groundwork are available. Generic original-pattern creation may use this
-engine, while human rights, cultural review and fluent-speaker localization
-remain required before shipping tradition-specific attribution or lessons.
+the Sprint 4 architecture diagram. The geometry model and lesson-step
+groundwork are available; no review gate blocks lesson playback.
 
 -   CustomPainter drawing engine with normalized pointer-down/move/up input.
 -   Layered canvas architecture: Background, Dot Grid, Ghost Tracing Guide, Committed Strokes, and Live Active Stroke.
@@ -844,8 +804,8 @@ restart and app upgrade. - Core app works in airplane mode.
 
 ### Sprint 7 --- Content expansion and release candidate
 
--   Expand toward 60 reviewed designs and 20 lessons.
--   Regional content and language review.
+-   Expand the colorful design library and improve lessons from user feedback.
+-   Add source links when external references informed a design.
 -   Accessibility, performance and device testing.
 -   Store listing assets and privacy policy draft.
 -   Resolve critical defects.
@@ -872,7 +832,7 @@ features.
 -   Search, synonyms and filters.
 -   Design details and metadata.
 -   Favourites.
--   Correct tutorial stroke order.
+-   Every design has a complete, playable tutorial.
 -   Pause, replay and restart.
 -   Tracing input.
 -   Dot-grid selection.
@@ -903,7 +863,7 @@ features.
 -   Target crash-free sessions above 99.5% once sufficient production
     data exists; this is a monitoring target, not a pre-launch
     guarantee.
--   All published designs have rights and content-review records.
+-   Every design has clear system-generated or source-based provenance.
 -   Store listing and privacy declarations match actual app behaviour.
 
 ### Metrics after launch
@@ -918,7 +878,7 @@ features.
 -   Ad impressions/revenue.
 -   Crashes and ANRs.
 
-Use actual behaviour and reviews to decide what to build next. Do not
+Use actual behaviour and user feedback to decide what to build next. Do not
 treat target metrics as guaranteed outcomes.
 
 ------------------------------------------------------------------------

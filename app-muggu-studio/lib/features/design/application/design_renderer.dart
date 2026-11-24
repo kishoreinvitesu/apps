@@ -8,7 +8,15 @@ import '../../../data/models/dot_grid.dart';
 import 'geometry_path_builder.dart';
 
 void paintDesignBackground(Canvas canvas, Size size, Color color) {
-  canvas.drawRect(Offset.zero & size, Paint()..color = color);
+  canvas.drawRect(
+    Offset.zero & size,
+    Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [Color.lerp(Colors.white, color, 0.92)!, color],
+      ).createShader(Offset.zero & size),
+  );
 }
 
 void paintDotGrid(
@@ -18,15 +26,21 @@ void paintDotGrid(
   Color color = MugguColors.leafGreen,
   double opacity = 0.58,
   double radiusFactor = 0.008,
+  Color? haloColor,
 }) {
   if (grid == null) {
     return;
   }
   final radius = math.min(size.width, size.height) * radiusFactor;
+  final haloPaint = Paint()..color = haloColor ?? Colors.transparent;
   final paint = Paint()..color = color.withValues(alpha: opacity);
   for (final dot in grid.dots) {
+    final center = Offset(dot.x * size.width, dot.y * size.height);
+    if (haloColor != null) {
+      canvas.drawCircle(center, radius * 1.8, haloPaint);
+    }
     canvas.drawCircle(
-      Offset(dot.x * size.width, dot.y * size.height),
+      center,
       radius,
       paint,
     );
@@ -43,6 +57,7 @@ void paintDesignPath(
   double opacity = 1,
   bool drawFill = true,
   bool drawShadow = true,
+  bool drawStroke = true,
 }) {
   final path = buildDesignPath(designPath, size);
   final minDimension = math.min(size.width, size.height);
@@ -63,10 +78,26 @@ void paintDesignPath(
 
   final fillColor = designPath.fillColor;
   if (drawFill && fillColor != null) {
+    final baseColor = designColorFromHex(fillColor);
     canvas.drawPath(
       path,
-      Paint()..color = designColorFromHex(fillColor).withValues(alpha: opacity),
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color.lerp(baseColor, Colors.white, 0.25)!,
+            baseColor,
+            Color.lerp(baseColor, Colors.black, 0.1)!,
+          ],
+          stops: const [0, 0.62, 1],
+        ).createShader(path.getBounds())
+        ..color = Colors.white.withValues(alpha: opacity),
     );
+  }
+
+  if (!drawStroke) {
+    return;
   }
 
   final strokeColor =

@@ -1,10 +1,11 @@
 import argparse
+from functools import lru_cache
 import json
 import math
 import tempfile
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -12,9 +13,10 @@ CATALOG_PATH = ROOT / "assets" / "designs" / "catalog.json"
 THUMBNAIL_DIR = ROOT / "assets" / "designs" / "thumbnails"
 SIZE = 320
 MARGIN = 28
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 IVORY = "#FFF8EE"
 OUTLINE = "#80535E"
+SHADOW = "#A96F67"
 PALETTE = (
     "#F4CBD2",
     "#F4A99B",
@@ -23,6 +25,7 @@ PALETTE = (
     "#A9D7D1",
     "#D8C9EC",
 )
+LINE_PALETTE = ("#80535E", "#765F8A", "#467A72", "#A36C3D")
 
 
 def polar(radius, angle, center=(0.5, 0.5)):
@@ -187,6 +190,81 @@ def _styled_path(
     return path
 
 
+def _smooth_closed_path(path):
+    commands = path["commands"]
+    if (
+        sum(command["type"] == "moveTo" for command in commands) != 1
+        or sum(command["type"] == "close" for command in commands) != 1
+        or any(
+            command["type"] not in {"moveTo", "lineTo", "close"}
+            for command in commands
+        )
+    ):
+        return path
+
+    points = [
+        [command["x"], command["y"]]
+        for command in commands
+        if command["type"] in {"moveTo", "lineTo"}
+    ]
+    if len(points) > 1 and points[0] == points[-1]:
+        points.pop()
+    if len(points) < 4:
+        return path
+
+    curved_commands = [{"type": "moveTo", "x": points[0][0], "y": points[0][1]}]
+    for index, start in enumerate(points):
+        end = points[(index + 1) % len(points)]
+        previous = points[(index - 1) % len(points)]
+        following = points[(index + 2) % len(points)]
+        control1 = [
+            min(1.0, max(
+                0.0,
+                start[axis] + (end[axis] - previous[axis]) / 6,
+            ))
+            for axis in (0, 1)
+        ]
+        control2 = [
+            min(1.0, max(
+                0.0,
+                end[axis] - (following[axis] - start[axis]) / 6,
+            ))
+            for axis in (0, 1)
+        ]
+        curved_commands.append({
+            "type": "cubicTo",
+            "control1X": control1[0],
+            "control1Y": control1[1],
+            "control2X": control2[0],
+            "control2Y": control2[1],
+            "x": end[0],
+            "y": end[1],
+        })
+    curved_commands.append({"type": "close"})
+    path["commands"] = curved_commands
+    return path
+
+
+def _style_design_paths(paths, design_id, construction):
+    groups = list(dict.fromkeys(path["groupId"] for path in paths))
+    palette_offset = sum(map(ord, design_id)) % len(PALETTE)
+    group_indexes = {group_id: index for index, group_id in enumerate(groups)}
+
+    for path in paths:
+        if construction == "dot_guided":
+            _smooth_closed_path(path)
+        group_index = group_indexes[path["groupId"]]
+        palette_index = (palette_offset + group_index) % len(PALETTE)
+        color_index = (palette_offset + group_index) % len(LINE_PALETTE)
+        is_closed = any(command["type"] == "close" for command in path["commands"])
+        path.setdefault("strokeColor", LINE_PALETTE[color_index])
+        path.setdefault("strokeWidth", 0.0065)
+        if is_closed:
+            path.setdefault("fillColor", PALETTE[palette_index])
+            path.setdefault("shadowColor", SHADOW)
+    return paths
+
+
 def _ellipse_points(center, radius_x, radius_y, rotation=0, count=36):
     return [
         [
@@ -290,7 +368,7 @@ def _original_artform_designs():
         _base_design(
             "art_pookalam_lotus_dawn",
             "Lotus Dawn",
-            "An original, app-created floral carpet study inspired by layered Pookalam colors; cultural review is pending.",
+            "A system-generated floral carpet study with layered flower colors.",
             "intermediate",
             pookalam_paths,
             ["original", "pookalam-inspired", "floral", "layered", "featured"],
@@ -406,7 +484,7 @@ def _original_artform_designs():
         _base_design(
             "art_border_jasmine_vine",
             "Jasmine Vine Border",
-            "An original repeating floral border illustration for decorative edges; app-created and awaiting cultural review.",
+            "A system-generated repeating floral border illustration for decorative edges.",
             "easy",
             border_paths,
             ["original", "border", "jasmine", "floral", "repeat", "featured"],
@@ -479,7 +557,7 @@ def _original_artform_designs():
         _base_design(
             "art_corner_lotus_flourish",
             "Lotus Corner Flourish",
-            "An original pastel corner ornament that can be mirrored for a pair; it is a decorative study, not a sourced traditional motif.",
+            "A system-generated pastel corner ornament that can be mirrored for a pair.",
             "easy",
             corner_paths,
             ["original", "corner", "lotus", "floral", "mirrorable", "featured"],
@@ -641,7 +719,7 @@ def _original_artform_designs():
         _base_design(
             "art_warli_rhythm_panel",
             "Warli-inspired Rhythm Panel",
-            "An original folk-art-inspired illustration study. Warli is presented separately from rangoli and this artwork is not a documented traditional composition.",
+            "A system-generated folk-art-inspired composition featuring stylized human forms and rhythmic shapes.",
             "intermediate",
             warli_paths,
             ["original", "warli-inspired", "folk-art", "story-panel", "featured"],
@@ -661,7 +739,7 @@ def _original_artform_designs():
         _base_design(
             "art_kolam_sikku_study",
             "Sikku Loop Study",
-            "An original app-created loop study whose path endpoints follow the visible 5 by 5 dot grid; cultural review is pending.",
+            "A system-generated loop study anchored to a visible 5 by 5 dot grid.",
             "intermediate",
             kolam_paths,
             ["original", "kolam", "sikku-inspired", "dot-connected", "loop", "featured"],
@@ -826,13 +904,13 @@ def _base_design(
     construction="dot_guided",
     background_color=IVORY,
 ):
+    paths = _style_design_paths(paths, design_id, construction)
     return {
         "id": design_id,
         "localizedName": localized_name or {"en": name},
         "localizedDescription": localized_description or {"en": description},
-        "region": None,
-        "tradition": None,
         "construction": construction,
+        "provenance": {"origin": "system_generated", "sources": []},
         "backgroundColor": background_color,
         "technique": technique,
         "localizedTechnique": localized_technique or {"en": "Geometric lines"},
@@ -843,21 +921,6 @@ def _base_design(
         "paths": paths,
         "recipe": None,
         "lessonSteps": [],
-        "rightsReview": {
-            "status": "pending",
-            "reviewer": "",
-            "evidence": (
-                "Original app-created vector artwork; provenance and rights "
-                "documentation pending."
-            ),
-        },
-        "culturalReview": {"status": "pending", "reviewer": "", "evidence": ""},
-        "localizationReview": {
-            "status": "pending",
-            "reviewer": "",
-            "evidence": "",
-        },
-        "lessonReview": {"status": "pending", "reviewer": "", "evidence": ""},
     }
 
 
@@ -871,7 +934,15 @@ def _attach_initial_kolam_lesson_drafts(designs):
                     "en": (
                         "Set out a square 3 by 3 guide-dot grid. Join the four "
                         "middle-edge dots to draw the central diamond."
-                    )
+                    ),
+                    "te": (
+                        "3 వరుసలు, 3 నిలువు వరుసల చుక్కల గ్రిడ్‌ను అమర్చండి. "
+                        "మధ్య అంచుల నాలుగు చుక్కలను కలిపి మధ్య వజ్రాన్ని గీయండి."
+                    ),
+                    "ta": (
+                        "3 வரிசை × 3 நெடுவரிசைப் புள்ளிக் கட்டத்தை அமைக்கவும். "
+                        "நடுவோர விளிம்புப் புள்ளிகளை இணைத்து மைய வைரத்தை வரையவும்."
+                    ),
                 },
             },
             {
@@ -881,7 +952,15 @@ def _attach_initial_kolam_lesson_drafts(designs):
                     "en": (
                         "Add the four corner strokes, connecting each outer "
                         "corner dot to its neighboring edge dots."
-                    )
+                    ),
+                    "te": (
+                        "నాలుగు మూల గీతలను జోడించండి. ప్రతి బయటి మూల చుక్కను "
+                        "దాని పక్కనున్న అంచు చుక్కలతో కలపండి."
+                    ),
+                    "ta": (
+                        "நான்கு மூலைக் கோடுகளையும் சேர்க்கவும். ஒவ்வொரு வெளி "
+                        "மூலைப் புள்ளியையும் அடுத்துள்ள விளிம்புப் புள்ளிகளுடன் இணைக்கவும்."
+                    ),
                 },
             },
         ],
@@ -893,7 +972,15 @@ def _attach_initial_kolam_lesson_drafts(designs):
                     "en": (
                         "Set out a square 5 by 5 guide-dot grid. Join the four "
                         "dots around the center to make the small diamond."
-                    )
+                    ),
+                    "te": (
+                        "5×5 చుక్కల గ్రిడ్‌ను అమర్చండి. మధ్య చుక్క చుట్టూ ఉన్న "
+                        "నాలుగు చుక్కలను కలిపి చిన్న వజ్రాన్ని గీయండి."
+                    ),
+                    "ta": (
+                        "5×5 புள்ளிக் கட்டத்தை அமைக்கவும். மையத்தைச் சுற்றியுள்ள "
+                        "நான்கு புள்ளிகளை இணைத்து சிறிய வைரத்தை வரையவும்."
+                    ),
                 },
             },
             {
@@ -903,7 +990,15 @@ def _attach_initial_kolam_lesson_drafts(designs):
                     "en": (
                         "Trace the four surrounding petal contours, following "
                         "their guide dots toward the center and outer rows."
-                    )
+                    ),
+                    "te": (
+                        "చుట్టూ ఉన్న నాలుగు రేకుల ఆకృతులను, మధ్య భాగం మరియు "
+                        "బయటి వరుసల చుక్కలను అనుసరిస్తూ గీయండి."
+                    ),
+                    "ta": (
+                        "சுற்றியுள்ள நான்கு இதழ் விளிம்புகளையும், மையம் மற்றும் "
+                        "வெளிப்புற வரிசைப் புள்ளிகளைப் பின்பற்றி வரையவும்."
+                    ),
                 },
             },
             {
@@ -913,7 +1008,15 @@ def _attach_initial_kolam_lesson_drafts(designs):
                     "en": (
                         "Connect the outer guide dots to complete the frame. "
                         "Check that each side meets its corner cleanly."
-                    )
+                    ),
+                    "te": (
+                        "బయటి చుక్కలను కలిపి చట్రాన్ని పూర్తి చేయండి. ప్రతి "
+                        "వైపు మూల వద్ద సరిగ్గా కలుస్తుందో చూడండి."
+                    ),
+                    "ta": (
+                        "வெளிப்புற வழிகாட்டிப் புள்ளிகளை இணைத்து சட்டகத்தை "
+                        "முடிக்கவும். ஒவ்வொரு பக்கமும் மூலையில் சரியாகச் சந்திக்கிறதா பார்க்கவும்."
+                    ),
                 },
             },
         ],
@@ -925,7 +1028,15 @@ def _attach_initial_kolam_lesson_drafts(designs):
                     "en": (
                         "Set out a square 5 by 5 guide-dot grid and draw the "
                         "small diamond around its center."
-                    )
+                    ),
+                    "te": (
+                        "5×5 చుక్కల గ్రిడ్‌ను అమర్చండి. మధ్య భాగం చుట్టూ చిన్న "
+                        "వజ్రాన్ని గీయండి."
+                    ),
+                    "ta": (
+                        "5×5 புள்ளிக் கட்டத்தை அமைத்து, அதன் மையத்தைச் சுற்றி "
+                        "சிறிய வைரத்தை வரையவும்."
+                    ),
                 },
             },
             {
@@ -935,7 +1046,15 @@ def _attach_initial_kolam_lesson_drafts(designs):
                     "en": (
                         "Trace the four surrounding loop paths, keeping every "
                         "turn aligned to the dots."
-                    )
+                    ),
+                    "te": (
+                        "చుట్టూ ఉన్న నాలుగు లూప్ మార్గాలను గీయండి; ప్రతి మలుపు "
+                        "చుక్కలతో సరిపోలేలా ఉంచండి."
+                    ),
+                    "ta": (
+                        "சுற்றியுள்ள நான்கு வளைவுப் பாதைகளையும் வரையவும்; "
+                        "ஒவ்வொரு திருப்பமும் புள்ளிகளுடன் பொருந்தட்டும்."
+                    ),
                 },
             },
             {
@@ -945,7 +1064,15 @@ def _attach_initial_kolam_lesson_drafts(designs):
                     "en": (
                         "Finish with the two diagonal paths. Treat them as "
                         "separate strokes; do not force a single continuous line."
-                    )
+                    ),
+                    "te": (
+                        "చివరగా రెండు వికర్ణ మార్గాలను గీయండి. వాటిని వేర్వేరు "
+                        "గీతలుగా గీయండి; ఒకే నిరంతర గీతగా బలవంతం చేయకండి."
+                    ),
+                    "ta": (
+                        "இறுதியாக இரண்டு மூலைவிட்டப் பாதைகளை வரையவும். அவற்றைத் "
+                        "தனித்த கோடுகளாக வரையவும்; ஒரே தொடர்கோடாக இணைக்க வேண்டாம்."
+                    ),
                 },
             },
         ],
@@ -957,7 +1084,15 @@ def _attach_initial_kolam_lesson_drafts(designs):
                     "en": (
                         "Set out a square 5 by 5 guide-dot grid. Trace the "
                         "three nested diamonds from the smallest outward."
-                    )
+                    ),
+                    "te": (
+                        "5×5 చుక్కల గ్రిడ్‌ను అమర్చండి. చిన్న వజ్రం నుంచి బయటికి "
+                        "మూడు లోపలి వజ్రాలను క్రమంగా గీయండి."
+                    ),
+                    "ta": (
+                        "5×5 புள்ளிக் கட்டத்தை அமைக்கவும். சிறிய வைரத்திலிருந்து "
+                        "வெளிப்புறமாக மூன்று அடுக்கு வைரங்களையும் வரையவும்."
+                    ),
                 },
             },
             {
@@ -967,7 +1102,15 @@ def _attach_initial_kolam_lesson_drafts(designs):
                     "en": (
                         "Add the four short corner steps, following the dots "
                         "beside each diamond."
-                    )
+                    ),
+                    "te": (
+                        "ప్రతి వజ్రం పక్కనున్న చుక్కలను అనుసరించి నాలుగు చిన్న "
+                        "మూల మెట్లను జోడించండి."
+                    ),
+                    "ta": (
+                        "ஒவ்வொரு வைரத்தின் அருகிலுள்ள புள்ளிகளைப் பின்பற்றி "
+                        "நான்கு சிறிய மூலைப் படிகளைச் சேர்க்கவும்."
+                    ),
                 },
             },
         ],
@@ -979,7 +1122,15 @@ def _attach_initial_kolam_lesson_drafts(designs):
                     "en": (
                         "Set out a square 5 by 5 guide-dot grid and trace the "
                         "small flower at the center."
-                    )
+                    ),
+                    "te": (
+                        "5×5 చుక్కల గ్రిడ్‌ను అమర్చండి. మధ్యలోని చిన్న పువ్వును "
+                        "గీయండి."
+                    ),
+                    "ta": (
+                        "5×5 புள்ளிக் கட்டத்தை அமைத்து, நடுவிலுள்ள சிறிய "
+                        "மலரை வரையவும்."
+                    ),
                 },
             },
             {
@@ -989,7 +1140,15 @@ def _attach_initial_kolam_lesson_drafts(designs):
                     "en": (
                         "Draw the four lamp bases pointing north, east, south "
                         "and west from the center."
-                    )
+                    ),
+                    "te": (
+                        "మధ్య నుంచి ఉత్తరం, తూర్పు, దక్షిణం, పడమర దిశల్లో "
+                        "నాలుగు దీపాల అడుగు భాగాలను గీయండి."
+                    ),
+                    "ta": (
+                        "மையத்திலிருந்து வடக்கு, கிழக்கு, தெற்கு, மேற்கு "
+                        "திசைகளில் நான்கு விளக்குகளின் அடிப்பகுதிகளை வரையவும்."
+                    ),
                 },
             },
             {
@@ -999,21 +1158,78 @@ def _attach_initial_kolam_lesson_drafts(designs):
                     "en": (
                         "Add the flame shapes above each base, keeping their "
                         "tips aligned with the guide dots."
-                    )
+                    ),
+                    "te": (
+                        "ప్రతి అడుగు భాగం పైన జ్వాల ఆకృతులను జోడించి, వాటి "
+                        "కొనలను మార్గదర్శక చుక్కలకు సరిపోల్చండి."
+                    ),
+                    "ta": (
+                        "ஒவ்வொரு அடிப்பகுதியின் மேலேயும் சுடர் வடிவங்களைச் "
+                        "சேர்த்து, அவற்றின் முனைகளை வழிகாட்டிப் புள்ளிகளுடன் பொருத்தவும்."
+                    ),
                 },
             },
         ],
     }
-    evidence = (
-        "Draft only; practitioner, cultural, source, and localization reviews "
-        "are still pending. The user named Rishika as a prospective reviewer "
-        "and supplied the source label 'Home'; no review or source evidence "
-        "has been received."
-    )
     for design in designs:
         if design["id"] in drafts:
             design["lessonSteps"] = drafts[design["id"]]
-            design["lessonReview"]["evidence"] = evidence
+            design["provenance"]["sources"] = [
+                "https://www.sahapedia.org/significance-of-kolam-tamil-culture",
+                "https://www.tamilnadutourism.tn.gov.in/experiences/kolam",
+            ]
+            design["provenance"]["note"] = (
+                "General Kolam background references; the vector artwork and "
+                "lesson steps are system-generated."
+            )
+    return designs
+
+
+def _attach_default_lessons(designs):
+    instructions = (
+        (
+            "Begin with the highlighted shapes near the center, following the "
+            "guide dots or outline.",
+            "Add the next highlighted layer, keeping the curves and spacing "
+            "even.",
+            "Finish the outer shapes, then check the balance of the complete "
+            "design.",
+        ),
+        (
+            "మధ్యలోని హైలైట్ చేసిన ఆకృతులతో ప్రారంభించి, చుక్కలు లేదా "
+            "ఆకృతి రేఖను అనుసరించండి.",
+            "తర్వాతి హైలైట్ చేసిన పొరను జోడించి, వక్రతలు మరియు ఖాళీలను "
+            "సమానంగా ఉంచండి.",
+            "బయటి ఆకృతులను పూర్తి చేసి, మొత్తం డిజైన్ సమతుల్యంగా ఉందో "
+            "చూడండి.",
+        ),
+        (
+            "மையத்தில் காட்டப்படும் வடிவங்களுடன் தொடங்கி, வழிகாட்டிப் "
+            "புள்ளிகள் அல்லது வெளிக்கோட்டை பின்பற்றவும்.",
+            "அடுத்த அடுக்கைச் சேர்த்து, வளைவுகளும் இடைவெளியும் சீராக "
+            "இருக்கச் செய்யவும்.",
+            "வெளிப்புற வடிவங்களை முடித்து, முழு வடிவத்தின் சமநிலையைச் "
+            "சரிபார்க்கவும்.",
+        ),
+    )
+    for design in designs:
+        if design["lessonSteps"]:
+            continue
+        groups = list(dict.fromkeys(
+            path["groupId"] for path in design["paths"]
+        ))
+        step_count = min(3, len(groups))
+        for index in range(step_count):
+            start = index * len(groups) // step_count
+            end = (index + 1) * len(groups) // step_count
+            design["lessonSteps"].append({
+                "id": f"step_{index + 1:02}",
+                "groupIds": groups[start:end],
+                "instruction": {
+                    language: instructions[language_index][index]
+                    for language_index, language in enumerate(("en", "te", "ta"))
+                },
+            })
     return designs
 
 
@@ -1116,62 +1332,102 @@ def build_catalog(radial_petals=8, grid_size=5, grid_layout="square"):
     }
     designs.append(dot_pattern)
 
-    # ── Additional traditional dot-grid and motif designs ───────────────────
+    # ── Additional dot-grid and motif designs ────────────────────────────────
     extra_configs = [
         (
             "dot_grid_sample_001",
-            "3×3 Chukkala Muggu (Little Star)",
-            {"en": "3×3 Chukkala Muggu (Little Star)", "te": "3×3 చుక్కల ముగ్గు (చిన్న నక్షత్రం)", "ta": "3×3 புள்ளி கோலம் (சிறு நட்சத்திரம்)"},
-            "A traditional 4-point star motif connecting corner loops on a 3 by 3 dot grid.",
-            {"en": "A traditional 4-point star motif connecting corner loops on a 3 by 3 dot grid.", "te": "3x3 చుక్కల పై మూలల లూప్‌లతో రూపొందించిన సాంప్రదాయ నక్షత్ర ముగ్గు.", "ta": "3x3 புள்ளிகளில் மூலை சுழிகளுடன் கூடிய பாரம்பரிய நட்சத்திரக் கோலம்."},
+            "3×3 Star Dot-Grid Practice",
+            {
+                "en": "3×3 Star Dot-Grid Practice",
+                "te": "3×3 నక్షత్ర చుక్కల-గ్రిడ్ సాధన",
+                "ta": "3×3 நட்சத்திரப் புள்ளி-கட்டப் பயிற்சி",
+            },
+            "System-generated dot-grid practice design.",
+            {
+                "en": "System-generated dot-grid practice design.",
+                "te": "సిస్టమ్ రూపొందించిన చుక్కల-గ్రిడ్ సాధన డిజైన్.",
+                "ta": "கணினி உருவாக்கிய புள்ளி-கட்டப் பயிற்சி வடிவம்.",
+            },
             "easy",
             dot_grid(3, 3, "square"),
             dot_grid_chikka_star,
-            ["dot grid", "chukkala", "muggu", "kolam", "3x3", "star", "beginner"],
+            ["AI practice", "dot grid", "kolam inspired", "muggu inspired", "3x3", "star", "beginner"],
         ),
         (
             "dot_grid_sample_002",
-            "5×5 Pulli Kolam (Lotus Nelavu)",
-            {"en": "5×5 Pulli Kolam (Lotus Nelavu)", "te": "5×5 చుక్కల ముగ్గు (కమలం)", "ta": "5×5 புள்ளி கோலம் (தாமரை நிலவு)"},
-            "A classic stepped lotus and floral contour embracing a 5 by 5 dot grid.",
-            {"en": "A classic stepped lotus and floral contour embracing a 5 by 5 dot grid.", "te": "5x5 చుక్కలపై కమల పుష్ప ఆకృతితో అమర్చిన ముగ్గు.", "ta": "5x5 புள்ளிகளில் அமைந்த பாரம்பரிய தாமரை இதழ் கோலம்."},
+            "5×5 Lotus Dot-Grid Practice",
+            {
+                "en": "5×5 Lotus Dot-Grid Practice",
+                "te": "5×5 కమల చుక్కల-గ్రిడ్ సాధన",
+                "ta": "5×5 தாமரைப் புள்ளி-கட்டப் பயிற்சி",
+            },
+            "System-generated dot-grid practice design.",
+            {
+                "en": "System-generated dot-grid practice design.",
+                "te": "సిస్టమ్ రూపొందించిన చుక్కల-గ్రిడ్ సాధన డిజైన్.",
+                "ta": "கணினி உருவாக்கிய புள்ளி-கட்டப் பயிற்சி வடிவம்.",
+            },
             "easy",
             dot_grid(5, 5, "square"),
             dot_grid_lotus_nelavu,
-            ["dot grid", "pulli", "kolam", "lotus", "nelavu", "5x5", "flower"],
+            ["AI practice", "dot grid", "kolam inspired", "lotus", "5x5", "flower"],
         ),
         (
             "dot_grid_sample_003",
-            "5×5 Sikku Kolam (Brahma Mudi)",
-            {"en": "5×5 Sikku Kolam (Brahma Mudi)", "te": "5×5 చిక్కు ముగ్గు (బ్రహ్మముడి)", "ta": "5×5 சிக்கு கோலம் (பிரம்முடி)"},
-            "An unbroken auspicious knot looping symmetrically through a 5 by 5 dot grid.",
-            {"en": "An unbroken auspicious knot looping symmetrically through a 5 by 5 dot grid.", "te": "5x5 చుక్కల మధ్య తిరుగుతూ సాగే పవిత్రమైన బ్రహ్మముడి చిక్కు ముగ్గు.", "ta": "5x5 புள்ளிகளைச் சுற்றி வளைந்து வரும் மங்களகரமான பிரம்முடி சிக்கு கோலம்."},
+            "5×5 Interlaced Loop Practice",
+            {
+                "en": "5×5 Interlaced Loop Practice",
+                "te": "5×5 అల్లిన లూప్ సాధన",
+                "ta": "5×5 பின்னிய வளைவுப் பயிற்சி",
+            },
+            "System-generated dot-grid practice design.",
+            {
+                "en": "System-generated dot-grid practice design.",
+                "te": "సిస్టమ్ రూపొందించిన చుక్కల-గ్రిడ్ సాధన డిజైన్.",
+                "ta": "கணினி உருவாக்கிய புள்ளி-கட்டப் பயிற்சி வடிவம்.",
+            },
             "intermediate",
             dot_grid(5, 5, "square"),
             dot_grid_brahma_mudi,
-            ["dot grid", "sikku", "kolam", "brahma mudi", "knot", "5x5", "traditional"],
+            ["AI practice", "dot grid", "kolam inspired", "loops", "5x5"],
         ),
         (
             "dot_grid_sample_004",
-            "5×5 Padi Muggu (Step Diamond)",
-            {"en": "5×5 Padi Muggu (Step Diamond)", "te": "5×5 పడి ముగ్గు (మెట్ల వజ్రం)", "ta": "5×5 படி கோலம் (படி வைரம்)"},
-            "Concentric threshold stepped diamonds with auspicious corner lines.",
-            {"en": "Concentric threshold stepped diamonds with auspicious corner lines.", "te": "గడప వద్ద వేసే సాంప్రదాయ మెట్ల వజ్ర పడి ముగ్గు.", "ta": "வாசல் படியில் போடும் மங்களகரமான படி வைரக் கோலம்."},
+            "5×5 Step-Diamond Practice",
+            {
+                "en": "5×5 Step-Diamond Practice",
+                "te": "5×5 మెట్ల వజ్ర సాధన",
+                "ta": "5×5 படிநிலை வைரப் பயிற்சி",
+            },
+            "System-generated dot-grid practice design.",
+            {
+                "en": "System-generated dot-grid practice design.",
+                "te": "సిస్టమ్ రూపొందించిన చుక్కల-గ్రిడ్ సాధన డిజైన్.",
+                "ta": "கணினி உருவாக்கிய புள்ளி-கட்டப் பயிற்சி வடிவம்.",
+            },
             "easy",
             dot_grid(5, 5, "square"),
             dot_grid_padi_muggu,
-            ["dot grid", "padi", "muggu", "kolam", "step", "diamond", "5x5"],
+            ["AI practice", "dot grid", "muggu inspired", "steps", "diamond", "5x5"],
         ),
         (
             "dot_grid_sample_005",
-            "5×5 Deepam Muggu (Four Lamps)",
-            {"en": "5×5 Deepam Muggu (Four Lamps)", "te": "5×5 దీపం ముగ్గు (నాలుగు దీపాలు)", "ta": "5×5 தீபம் கோலம் (நான்கு விளக்குகள்)"},
-            "Four festive oil lamps radiating outward from a central flower on 5 by 5 dots.",
-            {"en": "Four festive oil lamps radiating outward from a central flower on 5 by 5 dots.", "te": "మధ్య కమలం నుండి నాలుగు దిక్కులా వెలిగే దీపాలతో కూడిన ముగ్గు.", "ta": "மைய மலரிலிருந்து நான்கு திசைகளிலும் ஒளிரும் அகல் விளக்குகள் கொண்ட கோலம்."},
+            "5×5 Four-Lamp Dot-Grid Practice",
+            {
+                "en": "5×5 Four-Lamp Dot-Grid Practice",
+                "te": "5×5 నాలుగు దీపాల చుక్కల-గ్రిడ్ సాధన",
+                "ta": "5×5 நான்கு விளக்குப் புள்ளி-கட்டப் பயிற்சி",
+            },
+            "System-generated dot-grid practice design.",
+            {
+                "en": "System-generated dot-grid practice design.",
+                "te": "సిస్టమ్ రూపొందించిన చుక్కల-గ్రిడ్ సాధన డిజైన్.",
+                "ta": "கணினி உருவாக்கிய புள்ளி-கட்டப் பயிற்சி வடிவம்.",
+            },
             "intermediate",
             dot_grid(5, 5, "square"),
             dot_grid_deepam,
-            ["dot grid", "deepam", "diya", "lamp", "festival", "karthika", "5x5"],
+            ["AI practice", "dot grid", "muggu inspired", "lamp", "4 lamps", "5x5"],
         ),
         (
             "dot_grid_sample_006",
@@ -1233,24 +1489,25 @@ def build_catalog(radial_petals=8, grid_size=5, grid_layout="square"):
         designs.append(design_item)
 
     catalog = _original_artform_designs() + [
-        _attach_dot_grid(design)
+        design
+        if design["construction"] == "illustrated"
+        else _attach_dot_grid(design)
         for design in _original_geometric_designs() + designs
     ]
-    return _attach_initial_kolam_lesson_drafts(catalog)
+    return _attach_default_lessons(
+        _attach_initial_kolam_lesson_drafts(catalog)
+    )
 
 
 def _original_design(design_id, name, description, difficulty, paths, family):
     return _base_design(
         design_id,
         name,
-        (
-            f"Original dot-grid artwork: {description} "
-            "Lines connect visible guide dots. This app-made sample is not a "
-            "documented traditional design."
-        ),
+        f"System-generated vector artwork: {description}",
         difficulty,
         paths,
         ["original", "geometric", family],
+        construction="illustrated",
     )
 
 
@@ -2048,24 +2305,38 @@ def _flatten_path(commands, curve_steps=16):
     return points
 
 
+@lru_cache(maxsize=32)
+def _gradient_layer(color, highlight=0.25, shade=0.1):
+    base = tuple(int(color[index + 1:index + 3], 16) for index in (0, 2, 4))
+    top = tuple(round(channel + (255 - channel) * highlight) for channel in base)
+    bottom = tuple(round(channel * (1 - shade)) for channel in base)
+    strip = Image.new("RGBA", (1, SIZE))
+    gradient_pixels = []
+    for y in range(SIZE):
+        amount = y / max(SIZE - 1, 1)
+        gradient_pixels.append(
+            (
+                *(
+                    round(
+                        top[index] + (bottom[index] - top[index]) * amount
+                    )
+                    for index in range(3)
+                ),
+                255,
+            )
+        )
+    strip.putdata(gradient_pixels)
+    return strip.resize((SIZE, SIZE), Image.Resampling.NEAREST)
+
+
 def draw_thumbnail(paths, destination, grid=None, background_color=IVORY):
-    image = Image.new("RGBA", (SIZE, SIZE), background_color)
+    image = _gradient_layer(
+        background_color,
+        highlight=0.06,
+        shade=0.02,
+    ).copy()
     draw = ImageDraw.Draw(image)
     scale = SIZE - 2 * MARGIN
-    if grid is not None:
-        for x, y in grid["dots"]:
-            point = (MARGIN + x * scale, MARGIN + y * scale)
-            radius = 2
-            draw.ellipse(
-                (
-                    point[0] - radius,
-                    point[1] - radius,
-                    point[0] + radius,
-                    point[1] + radius,
-                ),
-                fill="#779A83",
-            )
-
     flattened_paths = [
         (
             design_path,
@@ -2095,12 +2366,34 @@ def draw_thumbnail(paths, destination, grid=None, background_color=IVORY):
     shadow_layer = shadow_layer.filter(ImageFilter.GaussianBlur(radius=2))
     image = Image.alpha_composite(image, shadow_layer)
     draw = ImageDraw.Draw(image)
+    fill_mask = Image.new("L", (SIZE, SIZE), 0)
+    fill_mask_draw = ImageDraw.Draw(fill_mask)
 
     for design_path, points in flattened_paths:
         if len(points) < 2:
             continue
         if design_path.get("fillColor") is not None:
             draw.polygon(points, fill=design_path["fillColor"])
+            fill_mask_draw.polygon(points, fill=255)
+
+    if any(design_path.get("fillColor") for design_path, _ in flattened_paths):
+        overlay = Image.new("RGBA", (SIZE, SIZE))
+        overlay_alpha = Image.new("L", (SIZE, SIZE))
+        overlay_draw = ImageDraw.Draw(overlay)
+        alpha_draw = ImageDraw.Draw(overlay_alpha)
+        for y in range(SIZE):
+            amount = y / max(SIZE - 1, 1)
+            light = round(255 * (1 - amount))
+            alpha = round(28 * (1 - amount) + 10 * amount)
+            overlay_draw.line((0, y, SIZE, y), fill=(light, light, light, alpha))
+            alpha_draw.line((0, y, SIZE, y), fill=alpha)
+        overlay.putalpha(ImageChops.multiply(fill_mask, overlay_alpha))
+        image.alpha_composite(overlay)
+        draw = ImageDraw.Draw(image)
+
+    for design_path, points in flattened_paths:
+        if len(points) < 2:
+            continue
         stroke_color = design_path.get(
             "strokeColor",
             "#862B37",
@@ -2115,6 +2408,29 @@ def draw_thumbnail(paths, destination, grid=None, background_color=IVORY):
             width=stroke_width,
             joint="curve",
         )
+    if grid is not None:
+        for x, y in grid["dots"]:
+            point = (MARGIN + x * scale, MARGIN + y * scale)
+            halo_radius = 4
+            radius = 2
+            draw.ellipse(
+                (
+                    point[0] - halo_radius,
+                    point[1] - halo_radius,
+                    point[0] + halo_radius,
+                    point[1] + halo_radius,
+                ),
+                fill=IVORY,
+            )
+            draw.ellipse(
+                (
+                    point[0] - radius,
+                    point[1] - radius,
+                    point[0] + radius,
+                    point[1] + radius,
+                ),
+                fill="#557B68",
+            )
     image.save(
         destination,
         format="WEBP",

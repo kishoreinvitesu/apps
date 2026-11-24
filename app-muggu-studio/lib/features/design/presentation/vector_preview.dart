@@ -71,7 +71,6 @@ class _VectorPreviewPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     paintDesignBackground(canvas, size, backgroundColor);
-    paintDotGrid(canvas, size, grid);
 
     for (final designPath in paths) {
       final isVisible =
@@ -86,8 +85,27 @@ class _VectorPreviewPainter extends CustomPainter {
         opacity: isVisible ? 1 : 0.42,
         drawFill: isVisible,
         drawShadow: isVisible,
+        drawStroke: false,
       );
     }
+
+    for (final designPath in paths) {
+      final isVisible =
+          showAllPaths ||
+          (visibleGroupIds?.contains(designPath.groupId) ?? false);
+      paintDesignPath(
+        canvas,
+        size,
+        designPath,
+        defaultStrokeColor: color,
+        strokeOverride: isVisible ? null : guideColor,
+        opacity: isVisible ? 1 : 0.42,
+        drawFill: false,
+        drawShadow: false,
+      );
+    }
+
+    paintDotGrid(canvas, size, grid, haloColor: Colors.white);
   }
 
   @override

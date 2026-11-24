@@ -10,38 +10,58 @@ from tools import generate_sample_catalog as generator
 
 
 class GenerateSampleCatalogTests(unittest.TestCase):
-    def test_initial_kolam_lesson_drafts_are_pending_and_grouped(self):
+    def test_every_design_has_a_lesson_and_explicit_provenance(self):
         catalog = generator.build_catalog()
-        expected_ids = {
+        referenced_ids = {
             "dot_grid_sample_001",
             "dot_grid_sample_002",
             "dot_grid_sample_003",
             "dot_grid_sample_004",
             "dot_grid_sample_005",
         }
-        found_ids = set()
-
         for design in catalog:
-            if design["id"] not in expected_ids:
-                self.assertEqual(design["lessonSteps"], [])
-                continue
-
-            found_ids.add(design["id"])
+            for removed_field in (
+                "region",
+                "tradition",
+                "localizedRegion",
+                "localizedTradition",
+                "aiPractice",
+                "rightsReview",
+                "culturalReview",
+                "localizationReview",
+                "lessonReview",
+            ):
+                self.assertNotIn(removed_field, design)
             self.assertGreater(len(design["lessonSteps"]), 0)
-            self.assertEqual(design["lessonReview"]["status"], "pending")
-            self.assertEqual(design["lessonReview"]["reviewer"], "")
-            self.assertIn(
-                "prospective reviewer",
-                design["lessonReview"]["evidence"],
+            self.assertEqual(
+                design["provenance"]["origin"],
+                "system_generated",
             )
+            if design["id"] in referenced_ids:
+                self.assertEqual(len(design["provenance"]["sources"]), 2)
+                self.assertIn(
+                    "sahapedia.org",
+                    design["provenance"]["sources"][0],
+                )
+                self.assertIn(
+                    "tamilnadutourism.tn.gov.in",
+                    design["provenance"]["sources"][1],
+                )
+                self.assertIn("General Kolam background", design["provenance"]["note"])
+            else:
+                self.assertEqual(design["provenance"]["sources"], [])
+
             group_ids = {path["groupId"] for path in design["paths"]}
+            taught_groups = set()
             for step in design["lessonSteps"]:
                 self.assertTrue(step["groupIds"])
                 self.assertTrue(set(step["groupIds"]).issubset(group_ids))
-                self.assertEqual(set(step["instruction"]), {"en"})
-                self.assertTrue(step["instruction"]["en"].strip())
-
-        self.assertEqual(found_ids, expected_ids)
+                taught_groups.update(step["groupIds"])
+                self.assertEqual(set(step["instruction"]), {"en", "te", "ta"})
+                self.assertTrue(
+                    all(text.strip() for text in step["instruction"].values())
+                )
+            self.assertEqual(taught_groups, group_ids)
 
     def test_catalog_comparison_tolerates_only_cross_platform_float_noise(self):
         generated = {"point": [0.3, {"radius": 0.125}]}
@@ -86,13 +106,9 @@ class GenerateSampleCatalogTests(unittest.TestCase):
         ]
         self.assertEqual(len(original_designs), 40)
         for design in original_designs:
-            self.assertIsNone(design["region"])
-            self.assertIsNone(design["tradition"])
-            self.assertIn(
-                "not a documented traditional design",
-                design["localizedDescription"]["en"],
-            )
-            self.assertEqual(design["culturalReview"]["status"], "pending")
+            self.assertEqual(design["provenance"]["origin"], "system_generated")
+            self.assertEqual(design["construction"], "illustrated")
+            self.assertIsNone(design["grid"])
         self.assertEqual(
             generator._catalog_json(catalog),
             generator._catalog_json(
@@ -102,18 +118,6 @@ class GenerateSampleCatalogTests(unittest.TestCase):
                     grid_layout="staggered",
                 )
             ),
-        )
-        self.assertTrue(
-            all(
-                design[review]["status"] == "pending"
-                for design in catalog
-                for review in (
-                    "rightsReview",
-                    "culturalReview",
-                    "localizationReview",
-                    "lessonReview",
-                )
-            )
         )
         for design in catalog:
             if design["construction"] == "illustrated":
@@ -129,9 +133,16 @@ class GenerateSampleCatalogTests(unittest.TestCase):
                     for command in path["commands"]:
                         if command["type"] == "close":
                             continue
-                        self.assertIn(command["type"], ("moveTo", "lineTo"))
+                        self.assertIn(
+                            command["type"],
+                            ("moveTo", "lineTo", "cubicTo"),
+                        )
                         self.assertIn((command["x"], command["y"]), grid_dots)
             for path in design["paths"]:
+                self.assertIn("strokeColor", path)
+                if any(command["type"] == "close" for command in path["commands"]):
+                    self.assertIn("fillColor", path)
+                    self.assertIn("shadowColor", path)
                 for command in path["commands"]:
                     for key in (
                         "x",
@@ -178,10 +189,7 @@ class GenerateSampleCatalogTests(unittest.TestCase):
             },
         )
         for design_id, design in featured.items():
-            self.assertEqual(design["rightsReview"]["status"], "pending")
-            self.assertEqual(design["culturalReview"]["status"], "pending")
-            self.assertIsNone(design["region"])
-            self.assertIsNone(design["tradition"])
+            self.assertEqual(design["provenance"]["origin"], "system_generated")
             if design_id == "art_kolam_sikku_study":
                 self.assertEqual(design["construction"], "dot_guided")
                 self.assertIsNotNone(design["grid"])
@@ -214,9 +222,12 @@ class GenerateSampleCatalogTests(unittest.TestCase):
         )
         self.assertTrue(
             all(
-                "fillColor" not in path
-                and path.get("strokeColor") == generator.OUTLINE
+                {"fillColor", "strokeColor", "shadowColor"} <= path.keys()
                 for path in diamonds["paths"]
+                if any(
+                    command["type"] == "close"
+                    for command in path["commands"]
+                )
             )
         )
 
@@ -260,6 +271,25 @@ class GenerateSampleCatalogTests(unittest.TestCase):
                 generator._decoded_thumbnail(webp_path),
                 generator._decoded_thumbnail(png_path),
             )
+
+    def test_thumbnail_keeps_strokes_and_guide_dots_visible_over_fills(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            thumbnail_path = Path(temporary_directory) / "layered-design.webp"
+            path = generator._styled_path(
+                "square",
+                "square",
+                [[0.25, 0.25], [0.75, 0.25], [0.75, 0.75], [0.25, 0.75]],
+                fill_color="#A9D7D1",
+                stroke_color="#862B37",
+                stroke_width=0.02,
+            )
+            grid = {"dots": [[0.5, 0.5]]}
+
+            generator.draw_thumbnail([path], thumbnail_path, grid=grid)
+            image = Image.open(thumbnail_path).convert("RGB")
+
+            self.assertEqual(image.getpixel((94, 150)), (134, 43, 55))
+            self.assertEqual(image.getpixel((160, 160)), (85, 123, 104))
 
     def test_catalog_writer_emits_json_and_all_thumbnails(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
